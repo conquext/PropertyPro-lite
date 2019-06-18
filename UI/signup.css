@@ -1,0 +1,92 @@
+.login-box {
+    display: none;
+}
+
+.signup-box {
+    display: none;
+}
+
+form #msg {
+    display: none;
+}
+
+.show {
+    display: block;
+}
+
+.avatar{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    position: fixed;
+    top: -50px;
+    left: calc(50% - 50px);
+}
+
+.close-modal{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    position: relative;
+    top: -10rem;
+    right: -8rem;
+}
+
+h2 {
+    margin: 0;
+    padding: 0 0 20px;
+    text-align: center;
+    font-size: 22px;
+}
+
+form p{
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+}
+
+form input{
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+form input[type="text"], input[type="password"]
+{
+    border: none;
+    border-bottom: 1px solid #0e4f1f;
+    background: transparent;
+    outline: none;
+    height: 40px;
+    color: grey;
+    font-size: 16px;
+}
+
+form input[type="submit"]
+{
+    border: none;
+    outline: none;
+    height: 40px;
+    background: rgba(251, 37, 37, 0.5);
+    color: black;
+    font-size: 18px;
+    border-radius: 20px;
+}
+
+form input[type="submit"]:hover,
+form input[type="submit"]:active
+{
+    cursor: pointer;
+    background: rgba(241, 179, 4, 0.8);
+    color: #000;
+}
+form a{
+    text-decoration: none;
+    font-size: 12px;
+    line-height: 20px;
+    color: darkgrey;
+}
+
+form a:hover
+{
+    color: #ffc107;
+}
