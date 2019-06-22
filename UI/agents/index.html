@@ -12,16 +12,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../shared.css">
     <link rel="stylesheet" href="agents.css">
-    <link rel="stylesheet" href="modal.css">
+    <link rel="stylesheet" href="../modal.css">
 
 </head>
 <body>
     <header class="main-header">
         <div>
-                <a href="../index.html" class="main-header__brand">
-                    <img src="../images/PropertyPro-Icon.png" alt="PropertyPro - A Property Listing company">
-                    <p class = "main-header__text">PropertyPro</p> 
-                </a>
+            <a href="../index.html" class="main-header__brand">
+                <img src="../images/PropertyPro-Icon.png" alt="PropertyPro - A Property Listing company">
+                <p class = "main-header__text">PropertyPro</p> 
+            </a>
         </div>
         <nav class="main-nav">
             <ul class="main-nav__items">
@@ -34,6 +34,7 @@
                     </li>
                 </span>    
                 <span class="main-nav__action">
+                    <li style="color: #0e4f1f; align-self: center"><i class="fa fa-bell"></i></li>
                     <li class="main-nav__item main-nav__item--cta">
                         <div class="dropdown">
                             <button class="dropbtn">Account 
@@ -64,7 +65,7 @@
                         <input type="radio" name="property-status" id="for-rent" value="rent" checked />
                         <label for="for-rent"><span class="yellow">For Rent</span></label>
 
-                        <input type="radio" name="property-status" id="for-sale" />
+                        <input type="radio" name="property-status" id="for-sale" value="sale" />
                         <label for="for-sale"><span class="red">For Sale</span></label>
                     </div>
                     <label for="pdesc"><b>Property Decription</b></label>
@@ -78,42 +79,49 @@
                             <label for="paddress"><b>Property Type</b></label>
                             <select class="form-select" name="ptype" id="ptype">
                                 <option value="" disabled="disabled" selected="selected">Choose a propery type</option>
-                                <option>Apartment</option>
-                                <option>Boys Quarter</option>
-                                <option>Duplex</option>
-                                <option>TownHouse</option>
-                                <option>Flat</option>
-                                <option>Storey Building</option>
-                                <option>Sky Skraper</option>
-                                <option>Underground</option>
+                                <option value="Residential">Residential</option>
+                                <option value="Flat">Flat</option>
+                                <option value="Luxury">Luxury</option>
+                                <option value="Rental">Rental</option>
+                                <option value="Commercial">Commercial</option>
+                                <option value="Office Space">Office Space</option>
+                                <option value="Garage">Garage</option>    
+                                <option value="Apartment">Apartment</option>
+                                <option value="Boys Quarter">Boys Quarter</option>
+                                <option value="Duplex">Duplex</option>
+                                <option value="TownHouse">TownHouse</option>
                             </select>
                         </div>
                         <div>
                             <label for="prooms"><b>No of Rooms</b></label>
                             <select class="form-select" name="prooms" id="prooms">
-                                <option value="" disabled="disabled" selected="selected">Select number of rooms</option>
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                                <option>6</option>
-                                <option>7</option>
-                                <option>8</option>
+                                <option value="*" disabled="disabled" selected="selected">Select number of rooms</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="8">9</option>
+                                <option value="8">10</option>
                             </select>
                         </div>
                         <div>
                             <label for="pbaths"><b>No of Baths</b></label>
                             <select class="form-select" name="pbaths" id="pbaths">
-                                <option value="" disabled="disabled" selected="selected">Select number of baths</option>
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                                <option>6</option>
-                                <option>7</option>
-                                <option>8</option>
+                                <option value="*" disabled="disabled" selected="selected">Select number of baths</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="8">9</option>
+                                <option value="8">10</option>
                             </select>
                         </div>
                     </div>
@@ -136,7 +144,7 @@
                     </div>
                     
                     <label>
-                        <input type="checkbox" checked="checked" name="list-property__space" style="margin-bottom:15px"> 
+                        <input type="checkbox" checked="checked" name="list-property__space" /> 
                         This is a room for rent with a shared living space
                     </label>
 
@@ -525,7 +533,6 @@
             </nav>
         </footer>
     </section> 
-    <script src="shared.js"></script>
     <script src="../modal.js"></script>
     <script>
         var imgUpload = document.getElementById('upload_imgs')
@@ -537,10 +544,10 @@
         , img;
 
         imgUpload.addEventListener('change', previewImgs, false);
-        imgUploadForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-        alert('Images Uploaded!');
-        }, false);
+        // imgUploadForm.addEventListener('submit', function (e) {
+        // e.preventDefault();
+        // alert('Images Uploaded!');
+        // }, false);
 
         function previewImgs(event) {
             totalFiles = imgUpload.files.length;
@@ -563,6 +570,5 @@
         }
     </script>
 </body>
-
 
 </html>

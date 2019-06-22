@@ -82,6 +82,11 @@ height: 100%;
   padding: 0.2rem 0;
 }
 
+.mobile-nav__item a {
+  align-self: center;
+  font-size: 0.7em;
+}
+
 .main-nav__item a:hover,
 .main-nav__item a:active {
   color: #66ddf1;
@@ -302,7 +307,12 @@ height: 100%;
   background: rgba(0, 0, 0, 0.5);
 }
 
-.modal {
+#main-auth__modal {
+  display: 
+}
+
+
+/* .modal {
   position: absolute;
   display: none;
   z-index: 200;
@@ -326,7 +336,7 @@ height: 100%;
   font: inherit;
   padding: 0.5rem 1rem;
   cursor: pointer;
-}
+} */
 
 .open {
   display: block !important;
@@ -336,7 +346,7 @@ height: 100%;
   display: none !important;
 }
 
-.modal__action--negative img {
+/* .modal__action--negative img {
   position: absolute;
   right: 3px;
   top: 1px;
@@ -347,7 +357,7 @@ height: 100%;
 .modal__action--negative img:hover,
 .modal__action--negative img:active {
   opacity: 1;
-}
+} */
 
 @media (min-width: 40rem) {
   .toggle-button {
@@ -361,3 +371,4 @@ height: 100%;
     justify-content: center;
   }
 }
+
