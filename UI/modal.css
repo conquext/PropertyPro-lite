@@ -1,0 +1,293 @@
+* {box-sizing: border-box;}
+
+input[type=text], 
+input[type=password], 
+input[type=address], 
+input[type=number], 
+input[type=tel],
+input[type=email]  {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+}
+
+input[type=text]:focus, 
+input[type=password]:focus, 
+input[type=address]:focus, 
+input[type=address]:focus, 
+input[type=email]:focus
+input[type=tel] {
+  background-color: #ddd;
+  outline: none;
+}
+
+.status-label input[type="radio"] {
+    display: none;
+    outline: none;
+}
+
+.status-label input[type="radio"]:checked + label span {
+    transform: scale(1.25);
+}
+
+.status-label input[type="radio"]:checked + label .red {
+    border: 2px solid #711313;
+    background: #db2828;
+}
+.status-label input[type="radio"]:checked + label .orange {
+    border: 2px solid #873a08;
+    background: #f2711c;
+}
+.status-label input[type="radio"]:checked + label .yellow {
+    border: 2px solid #816102;
+    background: #fbbd08;
+}
+.status-label input[type="radio"]:checked + label .olive {
+    border: 2px solid #505a0b;
+    background: #b5cc18;
+}
+.status-label input[type="radio"]:checked + label .green {
+    border: 2px solid #0e4e1d;
+    background: #21ba45;
+}
+
+.status-label label, .user-type__label label {
+    display: inline-table;
+    width: 9rem;
+    cursor: pointer;
+    margin-bottom: 10px;
+    padding-bottom: 1.3rem;
+} 
+
+.status-label label:hover span {
+    transform: scale(1.25);
+}
+.status-label label span {
+    width: auto;
+    font-family: initial;
+    color: black;
+    padding: 0.4rem;
+    text-align: center;
+    transition: transform 0.2s ease-in-out;
+}
+.status-label label span.red {
+    border: 2px solid #711313;
+}
+.status-label label span.orange {
+    border: 2px solid #873a08;
+}
+.status-label label span.yellow {
+    border: 2px solid #816102;
+}
+.status-label label span.olive {
+    border: 2px solid #505a0b;
+}
+.status-label label span.green {
+    border: 2px solid #0e4e1d;
+}
+
+.type-label {
+    width: 70%;
+    display: flex;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+.type-label .form-select:focus, .type-label .form-select:hover {
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.type-label .form-select:after {
+    content: '▾';
+    position: absolute;
+    top: 0;
+    right: 12px;
+    z-index: 1;
+    color: #bbb;
+    line-height: 40px;
+    font-size: 14px;
+}
+
+.type-label select {
+    position: relative;
+    font-family: inherit;
+    background: #f1f1f1;
+    display: flex;
+    flex-flow: row nowrap;
+    width: fit-content;
+    height: 2rem;
+    outline: none;
+    margin: 5px 0 22px 0;
+    color: #888;
+    cursor: pointer;
+    border: none;
+    text-overflow: '';
+    text-indent: 5px;
+}
+
+.type-label select option[disabled] {
+    color: #eee;
+    text-shadow: none;
+    border: none;
+}
+
+.image-upload__label {
+    width: 100%;
+    margin-left: 0;
+    display: flex;
+    flex-flow: column wrap;
+    align-items: flex-start;
+}
+
+.quote-imgs-thumbs {
+    background: #eee;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    margin: 0.5rem 0.4rem;
+    padding: 0.75rem;
+  }
+
+.quote-imgs-thumbs p {
+    font-weight: 50%;
+    font-variant: normal;
+    font-size: 14px;
+}
+.quote-imgs-thumbs--hidden {
+    display: none;
+}
+.img-preview-thumb {
+    background: #fff;
+    border: 1px solid #777;
+    border-radius: 0.25rem;
+    box-shadow: 0.125rem 0.125rem 0.0625rem rgba(0, 0, 0, 0.12);
+    margin-right: 1rem;
+    width: 140px;
+    padding: 0.25rem;
+}
+
+#main-auth__modal a {
+  text-decoration: none;
+  font-size: 12px;
+  line-height: 20px;
+  color: darkgrey;
+}
+
+#main-auth__modal {
+  display: none;
+}
+
+#main-auth__modal a:hover {
+  color: #ffc107;
+}
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  opacity: 0.9;
+}
+
+button:hover {
+  opacity:1;
+}
+
+.cancelbtn {
+  padding: 14px 20px;
+  background-color: #f44336;
+}
+
+.cancelbtn, .list-property__button, .signup-button, .login-button {
+  float: left;
+  width: 50%;
+}
+
+.container {
+  padding: 16px;
+}
+
+.modal {
+  display: none; 
+  position: fixed; 
+  z-index: 1; 
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  overflow: auto; 
+  background-color: rgba(71, 78, 93, 0.9);
+  padding-top: 50px;
+  z-index: 1001;
+}
+
+.main .modal {
+  background: #474e5d;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto 15% auto; 
+  border: 1px solid #888;
+  width: 80%; 
+}
+
+.modal-content__signup, .modal-content__login {
+  background-color: #fefefe;
+  margin: 5% auto 15% auto; 
+  border: 1px solid #888;
+  width: 60%; 
+}
+
+hr {
+  border: 1px solid #f1f1f1;
+  margin-bottom: 25px;
+}
+ 
+.close {
+  position: absolute;
+  right: 35px;
+  top: 15px;
+  font-size: 40px;
+  font-weight: bold;
+  color: #f1f1f1;
+}
+
+.close:hover,
+.close:focus {
+  color: #f44336;
+  cursor: pointer;
+}
+
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+@media screen and (max-width: 300px) {
+  .cancelbtn, .list-property__button {
+     width: 100%;
+  }
+}
+
+
+.modal-content__signup p, .modal-content__login p{
+  font-weight: normal;
+}
+
+.signup-terms__label {
+  display: flex;
+  align-items: center;
+}
+
+.signup-terms__label p, .signup-terms__label a {
+  text-decoration: none;
+  font-family: inherit;
+  font-size: 12px;
+}
