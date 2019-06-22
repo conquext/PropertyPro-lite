@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PropertyPro-lite</title>
+    <link rel="shortcut icon" href="../favicon.png">
+    <link href="https://fonts.googleapis.com/css?family=Anton" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../shared.css">
+    <link rel="stylesheet" href="../agents/agents.css">
+    <link rel="stylesheet" href="users.css">
+
+</head>
+<body>
+    <header class="main-header">
+        <div>
+                <a href="../index.html" class="main-header__brand">
+                    <img src="../images/PropertyPro-Icon.png" alt="PropertyPro - A Property Listing company">
+                    <p class = "main-header__text">PropertyPro</p> 
+                </a>
+        </div>
+        <nav class="main-nav">
+            <ul class="main-nav__items">
+                <span class="main-nav__lists">
+                    <li class="main-nav__item">
+                        <a href="#search">Search</a>
+                    </li>
+                    <li class="main-nav__item">
+                        <a href="listings.html">View Listings</a>
+                    </li>
+                </span>    
+                <span class="main-nav__action">
+                    <li style="color: #0e4f1f; align-self: center"><i class="fa fa-bell"></i></li>
+                    <li class="main-nav__item main-nav__item--cta">
+                        <div class="dropdown">
+                            <button class="dropbtn">Account 
+                                <i class="fa fa-caret-down"></i>
+                            </button>
+                            <div class="dropdown-content">
+                                <a href="#">Manage Properties</a>
+                                <a href="#">Favourites</a>
+                                <a href="#">Sign out</a>
+                            </div>
+                        </div>
+                    </li>
+                </span>
+            </ul>
+        </nav>
+    </header>
+    <section id="body-header">
+        <div id="body-main__properties">
+            <div class="property-search">
+                <!-- <h1 class="section-title">Search For Your Home</h1> -->
+                <div id="main-search__body">
+                    <div id="search"> <h2>Property Search</h2>
+                        <form name="" method="post">
+                            <table cellspacing="0" cellpadding="2" class="search-form">
+                                <tbody>
+                                    <tr>
+                                        <td colspan="2"><label for="search-city">City</label><br />
+                                        <select name="search-city" id="search-city" class="search-dropdown">
+                                        <option value="*">-- All --</option>
+                                        <option value="Lagos">Lagos</option>
+                                        <option value="Abuja">Abuja</option>
+                                        <option value="Calabar">Calabar</option>
+                                        <option value="Ikoyi">Ikoyi</option>
+                                        </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><label for="search-state">State</label><br />
+                                        <select name="search-state" id="search-state" class="search-dropdown">
+                                        <option value="*">-- All --</option>
+                                        <option value="Lagos">Lagos</option>
+                                        <option value="Ibadan">Ibadan</option>
+                                        <option value="Yaba">Yaba</option>
+                                        <option value="Lekki">Lekki</option>
+                                        <option value="Oshodi">Oshodi</option>
+                                        <option value="Gbagada">Gbagada</option>
+                                        </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="search-pricerange__from">Price Range</label><br />
+                                        <select name="search-pricerange1" id="search-pricerange1" class="search-dropdown__small">
+                                            <option value="*">-- All --</option>
+                                            <option value="0">0</option>
+                                            <option value="50000">50,000</option>
+                                            <option value="100000">100,000</option>
+                                            <option value="150000">150,000</option>
+                                            <option value="200000">200,000</option>
+                                            <option value="250000">250,000</option>
+                                            <option value="500000">500,000</option>
+                                            </select></td>
+                                        <td><label for="search-pricerange__to">To</label><br />
+                                        <select name="search-pricerange__to" id="search-pricerange__to" class="search-dropdown__small">
+                                        <option value="*">-- All --</option>
+                                            <option value="0">0</option>
+                                            <option value="150000">150,000</option>
+                                            <option value="200000">200,000</option>
+                                            <option value="350000">350,000</option>
+                                            <option value="500000">500,000</option>
+                                            <option value="1250000">1250,000</option>
+                                            <option value="10000000">10,000,000</option>
+                                        </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="search-bedcount">Bed</label><br />
+                                        <select name="search-bedcount" id="search-bedcount" class="search-dropdown__small">
+                                            <option value="*">-- All --</option>
+                                            <option value="0">0</option>
+                                            <option value="1">1</option>
+                                            <option value="1">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                        </select></td>
+                                        <td><label for="search-bathcount">Bath</label><br />
+                                        <select name="search-bathcount" id="search-bathcount" class="search-dropdown__small">
+                                            <option value="*">-- All --</option>
+                                            <option value="0">0</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                        </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><label for="search-propertytype">Property Type</label><br />
+                                        <select name="search-propertytype" id="search-propertytype" class="search-dropdown">
+                                        <option value="*">-- All --</option>
+                                            <option value="Residential">Residential</option>
+                                            <option value="Flat">Flat</option>
+                                            <option value="Luxury">Luxury</option>
+                                            <option value="Rental">Rental</option>
+                                            <option value="Commercial">Commercial</option>
+                                            <option value="Office Space">Office Space</option>
+                                            <option value="Garage">Garage</option>    
+                                            <option value="Apartment">Apartment</option>
+                                            <option value="Boys Quarter">Boys Quarter</option>
+                                            <option value="Duplex">Duplex</option>
+                                            <option value="TownHouse">TownHouse</option>
+                                        </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><input type="button" class="search-button" value="Search" /></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+                <div class="main-search__result" ></div>
+                <div class="featured-property__lists">
+                    <div class="featured-property__header">
+                        <h1 class="section-title">Featured Properties</h1>
+                    </div>    
+                    <div class="featured-property__items">
+                        <article class="property-item dropcard">                           
+                                <div class="image-div">
+                                    <img src="../images/property1.jpg" alt="Property 1">
+                                <div>
+                                <div class="property-status for-rent"> 
+                                    <a href="#for-rent">
+                                        <p>For Rent</p>
+                                    </a>
+                                </div>
+                                <div class="fav-icon"> 
+                                    <a href="#fav-list">
+                                        <i class="fa fa-heart fa-stack-2x" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                                <div class="description-body">
+                                    <h1 class="description-body__listing">A once in a lifetime opportunity! live in this grand home with its stunning entry and staircase, bedroom suites, firepla</h1>
+                                    <h1 class="property-price">N40,000</h1> 
+                                    <a href="#googlemap">
+                                        <div class="property-location">
+                                            <span class="fa-stack fa-lg">
+                                                <i class="fa fa-map-marker" ></i>
+                                            </span>
+                                                <p>133 Lekki, Lagos</p> 
+            
+                                        </div>
+                                    </a>
+                                    <div class="listing-details">
+                                            <span class="fa-stack fa-lg">
+                                                <i class="fa fa-bed" aria-hidden="true"></i>
+                                            </span>
+                                            <p>2 Rooms</p>
+                                            <span class="fa-stack fa-lg">
+                                                <i class="fa fa-bath" aria-hidden="true"></i>
+                                            </span>
+                                            <p>1 Bath</p>                                       
+                                    </div>
+                                </div>
+                                <div class="dropdown-card">
+                                    <div class="dropcard-content">
+                                        <button class="property-view">View</button>
+                                        <button class="property-favourite">Favourite</button>
+                                    </div>
+                                </div>
+                        </article>
+                        <article class="property-item dropcard">                           
+                            <div class="image-div">
+                                <img src="../images/property1.jpg" alt="Property 1">
+                            <div>
+                            <div class="property-status for-rent"> 
+                                <a href="#for-rent">
+                                    <p>For Rent</p>
+                                </a>
+                            </div>
+                            <div class="fav-icon"> 
+                                <a href="#fav-list">
+                                    <i class="fa fa-heart fa-stack-2x" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                            <div class="description-body">
+                                <h1 class="description-body__listing">Built in 1909 by pittsburgh steel magnate henry a. laughlin, greylock is a classic chestnut hill stone mansion once cons...</h1>
+                                <h1 class="property-price">N40,000</h1> 
+                                <a href="#googlemap">
+                                    <div class="property-location">
+                                        <span class="fa-stack fa-lg">
+                                            <i class="fa fa-map-marker" ></i>
+                                        </span>
+                                            <p>133 Lekki, Lagos</p> 
+        
+                                    </div>
+                                </a>
+                                <div class="listing-details">
+                                        <span class="fa-stack fa-lg">
+                                            <i class="fa fa-bed" aria-hidden="true"></i>
+                                        </span>
+                                        <p>2 Rooms</p>
+                                        <span class="fa-stack fa-lg">
+                                            <i class="fa fa-bath" aria-hidden="true"></i>
+                                        </span>
+                                        <p>1 Bath</p>                                       
+                                </div>
+                            </div>
+                            <div class="dropdown-card">
+                                <div class="dropcard-content">
+                                    <button class="property-view">View</button>
+                                    <button class="property-favourite">Favourite</button>
+                                </div>
+                            </div>
+                        </article>
+                    </div>             
+                </div>
+            </div>
+            <div class = "property-lists" id="property-listings"> 
+                <div class="recent-property__header">
+                    <h1 class="section-title">Recent Properties</h1>
+                </div>  
+                <div class="recent-properties__items">
+                    <article class="property-item dropcard">                           
+                    <div class="image-div">
+                        <img src="../images/property-bg3.jpg" alt="Property 1">
+                    <div>
+                    <div class="property-status for-sale"> 
+                        <a href="#for-sale">
+                            <p>For Sale</p>
+                        </a>
+                    </div>
+                    <div class="fav-icon"> 
+                        <a href="#fav-list">
+                            <i class="fa fa-heart fa-stack-2x" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                    <div class="description-body">
+                        <h1 class="description-body__listing">Exquisitely furnished rooms available now</h1>
+                        <h1 class="property-price">N40,000</h1> 
+                        <a href="#googlemap">
+                            <div class="property-location">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-map-marker" ></i>
+                                </span>
+                                    <p>133 Lekki, Lagos</p> 
+
+                            </div>
+                        </a>
+                        <div class="listing-details">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-bed" aria-hidden="true"></i>
+                                </span>
+                                <p>2 Rooms</p>
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-bath" aria-hidden="true"></i>
+                                </span>
+                                <p>1 Bath</p>                                       
+                        </div>
+                    </div>
+                    <div class="dropdown-card">
+                        <div class="dropcard-content">
+                            <button class="property-view">View</button>
+                            <button class="property-favourite">Favourite</button>
+                        </div>
+                    </div>
+                    </article>
+                    <article class="property-item dropcard">                           
+                        <div class="image-div">
+                            <img src="../images/property1.jpg" alt="Property 1">
+                        <div>
+                        <div class="property-status sold"> 
+                            <a href="#sold">
+                                <p>Sold</p>
+                            </a>
+                        </div>
+                        <div class="fav-icon"> 
+                            <a href="#fav-list">
+                                <i class="fa fa-heart fa-stack-2x" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                        <div class="description-body">
+                            <h1 class="description-body__listing">Local home on the hills of blah blah blah</h1>
+                            <h1 class="property-price">N40,000</h1> 
+                            <a href="#googlemap">
+                                <div class="property-location">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-map-marker" ></i>
+                                    </span>
+                                        <p>133 Lekki, Lagos</p> 
+
+                                </div>
+                            </a>
+                            <div class="listing-details">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-bed" aria-hidden="true"></i>
+                                    </span>
+                                    <p>2 Rooms</p>
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-bath" aria-hidden="true"></i>
+                                    </span>
+                                    <p>1 Bath</p>                                       
+                            </div>
+                        </div>
+                        <div class="dropdown-card">
+                            <div class="dropcard-content">
+                                <button class="property-view">View</button>
+                                <button class="property-favourite">Favourite</button>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="property-item dropcard">                           
+                        <div class="image-div">
+                            <img src="../images/property1.jpg" alt="Property 1">
+                        <div>
+                        <div class="property-status for-rent"> 
+                            <a href="#for-rent">
+                                <p>For Rent</p>
+                            </a>
+                        </div>
+                        <div class="fav-icon"> 
+                            <a href="#fav-list">
+                                <i class="fa fa-heart fa-stack-2x" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                        <div class="description-body">
+                            <h1 class="description-body__listing">Detached self contain apartment is badass blah blah blah</h1>
+                            <h1 class="property-price">N40,000</h1> 
+                            <a href="#googlemap">
+                                <div class="property-location">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-map-marker" ></i>
+                                    </span>
+                                        <p>133 Lekki, Lagos</p> 
+
+                                </div>
+                            </a>
+                            <div class="listing-details">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-bed" aria-hidden="true"></i>
+                                    </span>
+                                    <p>2 Rooms</p>
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-bath" aria-hidden="true"></i>
+                                    </span>
+                                    <p>1 Bath</p>                                       
+                            </div>
+                        </div>
+                        <div class="dropdown-card">
+                            <div class="dropcard-content">
+                                <button class="property-view">View</button>
+                                <button class="property-favourite">Favourite</button>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="property-item dropcard">                           
+                        <div class="image-div">
+                            <img src="../images/property1.jpg" alt="Property 1">
+                        <div>
+                        <div class="property-status for-rent"> 
+                            <a href="#for-rent">
+                                <p>For Rent</p>
+                            </a>
+                        </div>
+                        <div class="fav-icon"> 
+                            <a href="#fav-list">
+                                <i class="fa fa-heart fa-stack-2x" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                        <div class="description-body">
+                            <h1 class="description-body__listing">Impresively positioned overlooking blah blah</h1>
+                            <h1 class="property-price">N40,000</h1> 
+                            <a href="#googlemap">
+                                <div class="property-location">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-map-marker" ></i>
+                                    </span>
+                                        <p>133 Lekki, Lagos</p> 
+
+                                </div>
+                            </a>
+                            <div class="listing-details">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-bed" aria-hidden="true"></i>
+                                    </span>
+                                    <p>2 Rooms</p>
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-bath" aria-hidden="true"></i>
+                                    </span>
+                                    <p>1 Bath</p>                                       
+                            </div>
+                        </div>
+                        <div class="dropdown-card">
+                            <div class="dropcard-content">
+                                <button class="property-view">View</button>
+                                <button class="property-favourite">Favourite</button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                <div class="listing-all">
+                    <span class="fa-stack fa-lg">
+                        <i class="fa fa-stack-1x fa-long-arrow-right"></i>
+                    </span>
+                    <a href="listings.html">Browse all properties</a>
+                </div>
+            </div>       
+        </div>
+        <footer class="main-footer">
+            <nav>
+                <ul class="main-footer__links">
+                    <li class="main-footer__link">
+                        <a href="#">Support</a>
+                    </li>
+                    <li class="main-footer__link">
+                        <a href="#">Terms of Use</a>
+                    </li>
+                </ul>
+            </nav>
+        </footer>
+    </section> 
+    <script src=""></script>
+
+</body>
+
+</html>

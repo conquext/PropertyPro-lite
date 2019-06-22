@@ -1,0 +1,9 @@
+.property-search, 
+.listing-all {
+    display: none;
+}
+
+.main-footer {
+    position: relative;
+    bottom: 0;
+}
