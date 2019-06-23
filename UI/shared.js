@@ -10,6 +10,14 @@ const toggleButton = document.querySelector(".toggle-button__bar");
 const mobileNav = document.querySelector(".mobile-nav");
 const mobileNavItems = document.querySelector(".mobile-nav__items");
 const cancelButton = document.querySelectorAll(".cancelbtn");
+const closeIcon = document.querySelectorAll(".close");
+const editProperty = document.querySelectorAll("[href='#property-edit']");
+const soldProperty = document.querySelectorAll("[href='#property-sold']");
+const deleteProperty = document.querySelectorAll("[href='#property-delete']");
+const selectedProperty = document.querySelectorAll(".property-item");
+const updateListing = document.querySelector("#update-listing");
+const listingType = document.querySelectorAll(".property-status a");
+const propertyView = document.querySelectorAll(".property-view");
 
 
 for (var i = 0; i < signupButton.length; i++) {
@@ -49,7 +57,7 @@ backdrop.addEventListener("click", function() {
   closeModal();
 });
 
-function closeModal() {
+closeModal = () => {
   if (modal) {
     modal.classList.remove("open");
   }
@@ -69,7 +77,6 @@ window.onclick = function(event) {
     if (event.target == toggleButton ) {
     }
     else if (event.target !== mobileNavItems) {
-      console.log('i was actioned');
       mobileNav.classList.remove("open");
       backdrop.classList.remove("open");
     }
@@ -79,5 +86,112 @@ window.onclick = function(event) {
 for (var i = 0; i < cancelButton.length; i++) {
   cancelButton[i].addEventListener("click", function() {
     modal.classList.remove("open");
+    editingModal.classList.remove("open");
   });
 }
+
+for (var i = 0; i < closeIcon.length; i++) {
+  closeIcon[i].addEventListener("click", function() {
+    modal.classList.remove("open");
+    editingModal.classList.remove("open");
+  });
+}
+
+for (var i = 0; i < editProperty.length; i++) {
+  editProperty[i].addEventListener("click", function() {
+      editingModal.classList.add("open"); 
+      populateModal(editingModal); 
+  });
+}
+
+const updatePropertyItem = (event) => {
+  let currentNode = event.target; 
+
+
+  while(!currentNode.parentNode.classList.contains("property-item")) {
+    currentNode = currentNode.parentNode;
+  }
+  
+  let theNode = currentNode.querySelector(".property-status a");
+  if (theNode.textContent.trim() == "For Sale"){
+    theNode.classList.remove("for-sale");
+    theNode.textContent = "Sold";
+    theNode.classList.add("sold"); 
+  }
+  else if (theNode.textContent.trim() == "For Rent") {
+    theNode.classList.remove("for-rent");
+    theNode.textContent = "Taken";
+    theNode.classList.add("sold");
+  }
+  // currentNode.querySelector(".property-status a").textContent = "Sold";
+  // currentNode.querySelector(".property-status a").classList.add("sold"); 
+}
+
+for (var i = 0; i < soldProperty.length; i++) {
+  soldProperty[i].addEventListener("click", updatePropertyItem, false); 
+}
+
+const deletePropertyItem = (event) => {
+  let currentNode = event.target; 
+
+  while(!currentNode.parentNode.classList.contains("property-item")) {
+    currentNode = currentNode.parentNode;
+  }
+  
+  currentNode.parentNode.style.display = "none";
+}
+
+for (var i = 0; i < deleteProperty.length; i++) {
+  deleteProperty[i].addEventListener("click", deletePropertyItem, false); 
+}
+
+const enlargeView = (event) => {
+
+}
+
+for (var i = 0; i < propertyView.length; i++) {
+  propertyView[i].addEventListener("click", enlargeView, false); 
+}
+
+const populateModal = (theModal) => {
+  let currentNode = event.target; 
+  let formNode = theModal.childNodes[3];
+
+  while(!currentNode.parentNode.classList.contains("property-item")) {
+    currentNode = currentNode.parentNode;
+  }
+
+  formNode.querySelector('[name="pdesc"]').value = currentNode.querySelector('.description-body__listing').textContent.trim();
+  formNode.querySelector('[name="paddress"]').value = currentNode.querySelector('.property-location').textContent.trim();
+  // formNode.querySelector('[name="ptype"]').value = currentNode.querySelector('.property-location').textContent.trim();
+  formNode.querySelector('[name="prooms"]').value = currentNode.querySelector('.prooms').textContent.trim().charAt(0);
+  formNode.querySelector('[name="pbaths"]').value = currentNode.querySelector('.pbaths').textContent.trim().charAt(0);
+  formNode.querySelector('[name="pprice"]').value = currentNode.querySelector('.property-price').textContent.trim().match(/\d/g).join("");
+  previewImage(formNode.querySelector('#img_preview'), currentNode.querySelectorAll('div.image-div img'));
+
+  // updateListing.addEventListener('click', (event) => updateProperty(event, currentNode, formNode), false);
+  // updateListing.addEventListener('click', updateProperty.apply(this, [currentNode, formNode]), false);
+
+  currentNode.querySelector('.description-body__listing').textContent = formNode.querySelector('[name="pdesc"]').value.trim();
+  currentNode.querySelector('.property-location').textContent = formNode.querySelector('[name="paddress"]').value.trim();
+  // currentNode.querySelector('.property-location').textContent = formNode.querySelector('[name="ptype"]').value.trim();
+  currentNode.querySelector('.prooms').textContent = `${formNode.querySelector('[name="prooms"]').value}  Rooms`;
+  currentNode.querySelector('.pbaths').textContent =  `${formNode.querySelector('[name="pbaths"]').value} Baths`; 
+  currentNode.querySelector('.property-price').textContent = formNode.querySelector('[name="pprice"]').value;
+
+}
+
+function updateProperty(currentNode, formNode) {
+  console.log(currentNode);
+  console.log(formNode);
+  currentNode.querySelector('.description-body__listing').textContent = formNode.querySelector('[name="pdesc"]').value.trim();
+  currentNode.querySelector('.property-location').textContent = formNode.querySelector('[name="paddress"]').value.trim();
+  // currentNode.querySelector('.property-location').textContent = formNode.querySelector('[name="ptype"]').value.trim();
+  currentNode.querySelector('.prooms').textContent = `${formNode.querySelector('[name="prooms"]').value}  Rooms`;
+  currentNode.querySelector('.pbaths').textContent =  `${formNode.querySelector('[name="pbaths"]').value} Baths`; 
+  currentNode.querySelector('.property-price').textContent = formNode.querySelector('[name="pprice"]').value;
+}
+
+
+
+

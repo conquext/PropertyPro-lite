@@ -178,6 +178,111 @@
                 </div>
             </form>
             </div>
+            <div id="edit-property-modal" class="modal">
+            <span onclick="document.getElementById('edit-property-modal').style.display='none'" class="close" title="Close Modal">&times;</span>
+            <form class="modal-content" action="">
+                <div class="container">
+                    <h1>Update Property</h1>
+                    <p>Please provide your new property's info.</p>
+                    <hr>
+                    <div class="status-label">
+                        <input type="radio" name="property-status" id="for-rent" value="rent" checked />
+                        <label for="for-rent"><span class="yellow">For Rent</span></label>
+
+                        <input type="radio" name="property-status" id="for-sale" value="sale" />
+                        <label for="for-sale"><span class="red">For Sale</span></label>
+                    </div>
+                    <label for="pdesc"><b>Property Decription</b></label>
+                    <input type="text" placeholder="Describe your property" name="pdesc" required>
+
+                    <label for="paddress"><b>Property Address</b></label>
+                    <input type="address" placeholder="Enter Property Address" name="paddress" required>
+
+                    <div class="type-label">
+                        <div>
+                            <label for="paddress"><b>Property Type</b></label>
+                            <select class="form-select" name="ptype" id="ptype">
+                                <option value="" disabled="disabled" selected="selected">Choose a propery type</option>
+                                <option value="Residential">Residential</option>
+                                <option value="Flat">Flat</option>
+                                <option value="Luxury">Luxury</option>
+                                <option value="Rental">Rental</option>
+                                <option value="Commercial">Commercial</option>
+                                <option value="Office Space">Office Space</option>
+                                <option value="Garage">Garage</option>    
+                                <option value="Apartment">Apartment</option>
+                                <option value="Boys Quarter">Boys Quarter</option>
+                                <option value="Duplex">Duplex</option>
+                                <option value="TownHouse">TownHouse</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="prooms"><b>No of Rooms</b></label>
+                            <select class="form-select" name="prooms" id="prooms">
+                                <option value="*" disabled="disabled" selected="selected">Select number of rooms</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="8">9</option>
+                                <option value="8">10</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="pbaths"><b>No of Baths</b></label>
+                            <select class="form-select" name="pbaths" id="pbaths">
+                                <option value="*" disabled="disabled" selected="selected">Select number of baths</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="8">9</option>
+                                <option value="8">10</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <label for="pprice"><b>Annual Property Value</b></label>
+                    <input type="number" placeholder="Enter annual property value" name="pprice" required>
+
+                    <label for="image-upload__label"><b>Upload Property Image</b></label>
+                    <div class="image-upload__label">
+                        <form action="" id="img-upload-form" method="post" enctype="multipart/form-data">
+                        <p>
+                            <label for="upload_imgs" class="image-upload__button">Select Images</label>
+                            <input type="file" id="upload_imgs" name="upload_imgs[]" multiple/>
+                        </p>
+                        <div class="quote-imgs-thumbs quote-imgs-thumbs--hidden" id="img_preview"></div>
+                        <p>
+                            <input class="button large expanded" type="submit" id = "update-listing" name="update" value="Upload Images"/>
+                        </p>
+                        </form>
+                    </div>
+                    
+                    <label>
+                        <br></br>
+                        <input type="checkbox" name="list-property__space" /> 
+                        This is a room for rent with a shared living space
+                        <br><br><br>
+                    </label>
+
+                    <!-- <p>By listing your property you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p> -->
+
+                    <div class="clearfix">
+                        <button type="button" onclick="document.getElementById('edit-property-modal').style.display='none'" class="cancelbtn">Cancel</button>
+                        <button type="submit" class="list-property__button">Update</button>
+                    </div>
+                </div>
+            </form>
+            </div>
             <div class = "agent-property__lists">
                 <article class="property-item__add">
                     <a href="#post-advert" onclick="document.getElementById('add-property-modal').style.display='block'" style="width:auto;">
@@ -219,19 +324,18 @@
                                 <span class="fa-stack fa-lg">
                                     <i class="fa fa-map-marker" ></i>
                                 </span>
-                                    <p>133 Lekki, Lagos</p> 
-
+                                    <p>133 Lekki, Lagos</p>
                             </div>
                         </a>
                         <div class="listing-details">
                                 <span class="fa-stack fa-lg">
                                     <i class="fa fa-bed" aria-hidden="true"></i>
                                 </span>
-                                <p>2 Rooms</p>
+                                <p class = prooms>2 Rooms</p>
                                 <span class="fa-stack fa-lg">
                                     <i class="fa fa-bath" aria-hidden="true"></i>
                                 </span>
-                                <p>1 Bath</p>                                       
+                                <p class = "pbaths">1 Bath</p>                                      
                         </div>
                     </div>
                     <div class="dropdown-card">
@@ -241,12 +345,12 @@
                                     <i class="fa fa-edit"></i>
                                 </span>
                             </a>
-                            <a href="#property-edit">
+                            <a href="#property-delete">
                                 <span>
                                     <i class="fa fa-trash"></i>
                                 </span>
                             </a>
-                            <a href="#property-edit">
+                            <a href="#property-sold">
                                 <span>
                                     <i class="fa fa-check-circle"></i>
                                 </span>
@@ -284,11 +388,11 @@
                                 <span class="fa-stack fa-lg">
                                     <i class="fa fa-bed" aria-hidden="true"></i>
                                 </span>
-                                <p>2 Rooms</p>
+                                <p class = prooms>2 Rooms</p>
                                 <span class="fa-stack fa-lg">
                                     <i class="fa fa-bath" aria-hidden="true"></i>
                                 </span>
-                                <p>1 Bath</p>                                       
+                                <p class = "pbaths">1 Bath</p>                                      
                         </div>
                     </div>
                     <div class="dropdown-card">
@@ -298,12 +402,12 @@
                                     <i class="fa fa-edit"></i>
                                 </span>
                             </a>
-                            <a href="#property-edit">
+                            <a href="#property-delete">
                                 <span>
                                     <i class="fa fa-trash"></i>
                                 </span>
                             </a>
-                            <a href="#property-edit">
+                            <a href="#property-sold">
                                 <span>
                                     <i class="fa fa-check-circle"></i>
                                 </span>
@@ -341,11 +445,11 @@
                                 <span class="fa-stack fa-lg">
                                     <i class="fa fa-bed" aria-hidden="true"></i>
                                 </span>
-                                <p>2 Rooms</p>
+                                <p class = prooms>2 Rooms</p>
                                 <span class="fa-stack fa-lg">
                                     <i class="fa fa-bath" aria-hidden="true"></i>
                                 </span>
-                                <p>1 Bath</p>                                       
+                                <p class = "pbaths">1 Bath</p>                                      
                         </div>
                     </div>
                     <div class="dropdown-card">
@@ -355,12 +459,12 @@
                                     <i class="fa fa-edit"></i>
                                 </span>
                             </a>
-                            <a href="#property-edit">
+                            <a href="#property-delete">
                                 <span>
                                     <i class="fa fa-trash"></i>
                                 </span>
                             </a>
-                            <a href="#property-edit">
+                            <a href="#property-sold">
                                 <span>
                                     <i class="fa fa-check-circle"></i>
                                 </span>
@@ -398,11 +502,11 @@
                                 <span class="fa-stack fa-lg">
                                     <i class="fa fa-bed" aria-hidden="true"></i>
                                 </span>
-                                <p>2 Rooms</p>
+                                <p class = prooms>2 Rooms</p>
                                 <span class="fa-stack fa-lg">
                                     <i class="fa fa-bath" aria-hidden="true"></i>
                                 </span>
-                                <p>1 Bath</p>                                       
+                                <p class = "pbaths">1 Bath</p>                                      
                         </div>
                     </div>
                     <div class="dropdown-card">
@@ -412,12 +516,12 @@
                                     <i class="fa fa-edit"></i>
                                 </span>
                             </a>
-                            <a href="#property-edit">
+                            <a href="#property-delete">
                                 <span>
                                     <i class="fa fa-trash"></i>
                                 </span>
                             </a>
-                            <a href="#property-edit">
+                            <a href="#property-sold">
                                 <span>
                                     <i class="fa fa-check-circle"></i>
                                 </span>
@@ -455,11 +559,11 @@
                                 <span class="fa-stack fa-lg">
                                     <i class="fa fa-bed" aria-hidden="true"></i>
                                 </span>
-                                <p>2 Rooms</p>
+                                <p class = prooms>2 Rooms</p>
                                 <span class="fa-stack fa-lg">
                                     <i class="fa fa-bath" aria-hidden="true"></i>
                                 </span>
-                                <p>1 Bath</p>                                       
+                                <p class = "pbaths">1 Bath</p>                                      
                         </div>
                     </div>
                     <div class="dropdown-card">
@@ -469,12 +573,12 @@
                                     <i class="fa fa-edit"></i>
                                 </span>
                             </a>
-                            <a href="#property-edit">
+                            <a href="#property-delete">
                                 <span>
                                     <i class="fa fa-trash"></i>
                                 </span>
                             </a>
-                            <a href="#property-edit">
+                            <a href="#property-sold">
                                 <span>
                                     <i class="fa fa-check-circle"></i>
                                 </span>
@@ -512,11 +616,11 @@
                                 <span class="fa-stack fa-lg">
                                     <i class="fa fa-bed" aria-hidden="true"></i>
                                 </span>
-                                <p>2 Rooms</p>
+                                <p class = prooms>2 Rooms</p>
                                 <span class="fa-stack fa-lg">
                                     <i class="fa fa-bath" aria-hidden="true"></i>
                                 </span>
-                                <p>1 Bath</p>                                       
+                                <p class = "pbaths">1 Bath</p>                                      
                         </div>
                     </div>
                     <div class="dropdown-card">
@@ -526,12 +630,12 @@
                                     <i class="fa fa-edit"></i>
                                 </span>
                             </a>
-                            <a href="#property-edit">
+                            <a href="#property-delete">
                                 <span>
                                     <i class="fa fa-trash"></i>
                                 </span>
                             </a>
-                            <a href="#property-edit">
+                            <a href="#property-sold">
                                 <span>
                                     <i class="fa fa-check-circle"></i>
                                 </span>
@@ -556,7 +660,7 @@
     </section> 
     <script src="../modal.js"></script>
     <script>
-        var imgUpload = document.getElementById('upload_imgs')
+        let imgUpload = document.getElementById('upload_imgs')
         , imgPreview = document.getElementById('img_preview')
         , imgUploadForm = document.getElementById('img-upload-form')
         , totalFiles
@@ -573,7 +677,7 @@
         function previewImgs(event) {
             totalFiles = imgUpload.files.length;
             
-            if(!!totalFiles) {
+            if(totalFiles) {
                 imgPreview.classList.remove('quote-imgs-thumbs--hidden');
                 previewTitle = document.createElement('p');
                 previewTitle.style.fontWeight = 'bold';
@@ -588,6 +692,52 @@
                 img.classList.add('img-preview-thumb');
                 imgPreview.appendChild(img);
             }
+        }
+
+        function addImages(event) {
+            let currentNode = event.target.parentNode.parentNode;
+            let container = currentNode.querySelector('#img_preview');
+            let imgUpload = currentNode.querySelector('#upload_imgs');
+            totalFiles = imgUpload.files.length;
+
+            for(var i = 0; i < totalFiles; i++) {
+                img = document.createElement('img');
+                img.src = URL.createObjectURL(event.target.files[i]);
+                img.classList.add('img-preview-thumb');
+                container.appendChild(img);
+            }
+
+            totalFiles = currentNode.querySelectorAll('#img_preview').length;
+            if(totalFiles) {
+                previewTitle = document.createElement('p');
+                previewTitle.style.fontWeight = 'bold';
+                previewTitleText = document.createTextNode(totalFiles + ' Additional Images Selected');
+                previewTitle.appendChild(previewTitleText);
+                container.appendChild(previewTitle);
+            }
+        }
+
+        const previewImage = (container, imageDiv) => {
+            totalFiles = imageDiv.length;
+            container.classList.remove('quote-imgs-thumbs--hidden');
+
+            if(imageDiv) {
+                container.classList.remove('quote-imgs-thumbs--hidden');
+                previewTitle = document.createElement('p');
+                previewTitle.style.fontWeight = 'bold';
+                previewTitleText = document.createTextNode(totalFiles + ' Total Images');
+                previewTitle.appendChild(previewTitleText);
+                container.appendChild(previewTitle);
+            }
+
+            for(var i = 0; i < totalFiles; i++) {
+                img = document.createElement('img');
+                img.src = imageDiv[i].src;
+                img.classList.add('img-preview-thumb');
+                container.appendChild(img);
+            }
+            let imgUpload = container.parentNode.querySelector('#upload_imgs');
+            imgUpload.addEventListener('change', addImages, false);
         }
     </script>
     <script src="../shared.js"></script>
