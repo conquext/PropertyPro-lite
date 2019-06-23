@@ -240,3 +240,15 @@ body {
     display: block !important;
 }
 
+@media (min-width: 40rem) {
+  .toggle-button {
+    display: none;
+  }
+  .main-footer__link {
+    margin: 0 1rem;
+  }
+  .main-footer__links {
+    flex-direction: row;
+    justify-content: center;
+  }
+}

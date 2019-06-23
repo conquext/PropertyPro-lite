@@ -6,8 +6,9 @@ const loginButton  = document.querySelectorAll(".login");
 const loginLinks  = document.querySelectorAll("[href='#login']");
 const signupForm = document.querySelector("#signup");
 const loginForm = document.querySelector("#login");
-const toggleButton = document.querySelector(".toggle-button");
+const toggleButton = document.querySelector(".toggle-button__bar");
 const mobileNav = document.querySelector(".mobile-nav");
+const mobileNavItems = document.querySelector(".mobile-nav__items");
 const cancelButton = document.querySelectorAll(".cancelbtn");
 
 
@@ -61,9 +62,18 @@ toggleButton.addEventListener("click", function() {
 });
         
 window.onclick = function(event) {
-    if (event.target == modal) {
-      modal.style.display = "none";
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+  if (mobileNav.classList.contains("open")) {
+    if (event.target == toggleButton ) {
     }
+    else if (event.target !== mobileNavItems) {
+      console.log('i was actioned');
+      mobileNav.classList.remove("open");
+      backdrop.classList.remove("open");
+    }
+  }
 }
 
 for (var i = 0; i < cancelButton.length; i++) {

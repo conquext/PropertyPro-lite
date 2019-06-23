@@ -1,9 +1,9 @@
  // Get the modal
- var modal = document.getElementById('add-property-modal');
+ var listingModal = document.getElementById('add-property-modal');
         
  // When the user clicks anywhere outside of the modal, close it
  window.onclick = function(event) {
-     if (event.target == modal) {
-     modal.style.display = "none";
+     if (event.target == listingModal) {
+     listingModal.style.display = "none";
      }
  }

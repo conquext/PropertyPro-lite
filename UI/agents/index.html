@@ -13,10 +13,17 @@
     <link rel="stylesheet" href="../shared.css">
     <link rel="stylesheet" href="agents.css">
     <link rel="stylesheet" href="../modal.css">
+    <link rel="stylesheet" href="../mobile.css">
 
 </head>
 <body>
+    <div class="main-auth__backdrop"></div>
     <header class="main-header">
+        <button class="toggle-button">
+            <span class="toggle-button__bar"></span>
+            <span class="toggle-button__bar"></span>
+            <span class="toggle-button__bar"></span>
+        </button>
         <div>
             <a href="../index.html" class="main-header__brand">
                 <img src="../images/PropertyPro-Icon.png" alt="PropertyPro - A Property Listing company">
@@ -27,14 +34,14 @@
             <ul class="main-nav__items">
                 <span class="main-nav__lists">
                     <li class="main-nav__item">
-                        <a href="#item-features" onclick="document.getElementById('add-property-modal').style.display='block'" style="width:auto;">Post Advert</a>
+                        <a href="#add-property-modal" onclick="document.getElementById('add-property-modal').style.display='block'" style="width:auto;">Post Advert</a>
                     </li>
                     <li class="main-nav__item">
                         <a href="../users/listings.html">View Listings</a>
                     </li>
                 </span>    
                 <span class="main-nav__action">
-                    <li style="color: #0e4f1f; align-self: center"><i class="fa fa-bell"></i></li>
+                    <li class = "main-nav__item" style="color: #0e4f1f; align-self: center"><i class="fa fa-bell"></i></li>
                     <li class="main-nav__item main-nav__item--cta">
                         <div class="dropdown">
                             <button class="dropbtn">Account 
@@ -43,7 +50,7 @@
                             <div class="dropdown-content">
                                 <a href="#">Your Listings</a>
                                 <a href="#">Profile</a>
-                                <a href="#">Sign out</a>
+                                <a href="../index.html">Sign out</a>
                             </div>
                         </div>
                     </li>
@@ -51,6 +58,18 @@
             </ul>
         </nav>
     </header>
+    <nav class="mobile-nav">
+        <ul class="mobile-nav__items">
+            <span class="mobile-nav__lists">
+                <li class="mobile-nav__item">
+                        <a href="#add-property-modal" onclick="document.getElementById('add-property-modal').style.display='block'" style="width:auto;">Post Advert</a>
+                </li>
+                <li class="mobile-nav__item">
+                        <a href="../users/listings.html">View Listings</a>
+                </li>
+            </span>
+        </ul>
+    </nav>
     <section id="body-header">
         <div id="body-main__properties">
             <h1 class="section-title">Manage Properties</h1>
@@ -144,11 +163,13 @@
                     </div>
                     
                     <label>
-                        <input type="checkbox" checked="checked" name="list-property__space" /> 
+                        <br></br>
+                        <input type="checkbox" name="list-property__space" /> 
                         This is a room for rent with a shared living space
+                        <br><br><br>
                     </label>
 
-                    <p>By listing your property you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
+                    <!-- <p>By listing your property you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p> -->
 
                     <div class="clearfix">
                         <button type="button" onclick="document.getElementById('add-property-modal').style.display='none'" class="cancelbtn">Cancel</button>
@@ -569,6 +590,7 @@
             }
         }
     </script>
+    <script src="../shared.js"></script>
 </body>
 
 </html>

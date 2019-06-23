@@ -96,6 +96,10 @@ input[type=tel] {
     overflow: hidden;
 }
 
+.type-label .form-select {
+  width: 10rem;
+}
+
 .type-label .form-select:focus, .type-label .form-select:hover {
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 }
@@ -290,4 +294,23 @@ hr {
   text-decoration: none;
   font-family: inherit;
   font-size: 12px;
+}
+
+
+@media (max-width: 500px) {
+  .type-label {
+    width: 100%;
+    flex-flow: column;
+    overflow: auto;
+  }
+
+  .type-label .form-select {
+    width: 100%;
+    border-radius: 0;
+    user-select: auto;
+  }
+
+  .type-label .form-select::before, .type-label .form-select:after {
+    content: '▾';
+  }
 }
