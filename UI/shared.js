@@ -158,10 +158,10 @@ const enlargeView = (event) => {
 
 for (var i = 0; i < propertyView.length; i++) {
   propertyView[i].addEventListener("click", function() {
-    modal.classList.add("open");
+    // modal.classList.add("open");
     viewModal.classList.add("open"); 
     enlargeView(viewModal); 
-});
+  });
   propertyView[i].addEventListener("click", enlargeView, false); 
 }
 

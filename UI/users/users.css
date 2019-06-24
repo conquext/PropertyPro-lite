@@ -140,12 +140,20 @@
     background: rgb(6, 148, 124);
     width: 50%;
     cursor: pointer;
+    color: black;
+    padding: 0.15rem;
+    margin: 0.15rem;
+    line-height: 1rem;
 }
 
 .dropcard-content .property-favourite {
     background: #cedf71;
     width: 50%;
     cursor: pointer;
+    color: black;
+    padding: 0.15rem;
+    margin: 0.15rem;
+    line-height: 1rem;
 }
 
 .main-footer {
