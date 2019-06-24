@@ -314,3 +314,9 @@ hr {
     content: '▾';
   }
 }
+
+#view-property-modal .image-div img {
+  border-radius: 10px 10px 0px 0px;
+  overflow: hidden;
+  margin: 0;
+}

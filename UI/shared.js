@@ -18,6 +18,7 @@ const selectedProperty = document.querySelectorAll(".property-item");
 const updateListing = document.querySelector("#update-listing");
 const listingType = document.querySelectorAll(".property-status a");
 const propertyView = document.querySelectorAll(".property-view");
+const viewModal = document.getElementById('view-property-modal');
 
 
 for (var i = 0; i < signupButton.length; i++) {
@@ -87,6 +88,7 @@ for (var i = 0; i < cancelButton.length; i++) {
   cancelButton[i].addEventListener("click", function() {
     modal.classList.remove("open");
     editingModal.classList.remove("open");
+    viewModal.classList.remove("open");
   });
 }
 
@@ -94,6 +96,7 @@ for (var i = 0; i < closeIcon.length; i++) {
   closeIcon[i].addEventListener("click", function() {
     modal.classList.remove("open");
     editingModal.classList.remove("open");
+    viewModal.classList.remove("open");
   });
 }
 
@@ -146,10 +149,19 @@ for (var i = 0; i < deleteProperty.length; i++) {
 }
 
 const enlargeView = (event) => {
+  let currentNode = event.target; 
 
+  while(!currentNode.parentNode.classList.contains("property-item")) {
+    currentNode = currentNode.parentNode;
+  }
 }
 
 for (var i = 0; i < propertyView.length; i++) {
+  propertyView[i].addEventListener("click", function() {
+    modal.classList.add("open");
+    viewModal.classList.add("open"); 
+    enlargeView(viewModal); 
+});
   propertyView[i].addEventListener("click", enlargeView, false); 
 }
 

@@ -1,6 +1,7 @@
  // Get the modal
 const listingModal = document.getElementById('add-property-modal');
 const editingModal = document.getElementById('edit-property-modal');
+const viewModal = document.getElementById('view-property-modal');
      
  // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
