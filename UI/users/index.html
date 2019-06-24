@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="../shared.css">
     <link rel="stylesheet" href="../agents/agents.css">
     <link rel="stylesheet" href="users.css">
+    <link rel="stylesheet" href="../modal.css">
     <link rel="stylesheet" href="../mobile.css">
 
 </head>
@@ -72,6 +73,102 @@
     </nav>
     <section id="body-header">
         <div id="body-main__properties">
+            <div id="view-property-modal" class="modal">
+                <span onclick="document.getElementById('view-property-modal').style.display='none'" class="close" title="Close Modal">&times;</span>
+                <div class="modal-content">
+                    <div class="container">
+                        <div class="pdesc-head">
+                            <div class="pdesc1-2">
+                                <p class="pdesc"></p>
+                                <label for="paddress"><b>Property Address</b></label>
+                                <a href="#googlemap">
+                                <div class="property-location">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-map-marker" ></i>
+                                    </span>
+                                    <p class="paddress">133 Lekki, Lagos</p> 
+                                </div>
+                                </a>
+                            </div>
+                            <div class="pdesc2-2">
+                                <p class="pprice"></p> 
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="image-div">
+                            <img src="../images/property1.jpg" alt="Property 1">
+                        <div>
+                        <div class="listing-details">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-bed" aria-hidden="true"></i>
+                            </span>
+                            <p>2 Rooms</p>
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-bath" aria-hidden="true"></i>
+                            </span>
+                            <p>1 Bath</p>                                       
+                        </div>
+                        <div class="pdetails">
+                            <div class="pdesc-text"></div>
+                            <div class="pdetails-body">
+                                <div class="p-id"></div>
+                                <div class="p-added-on"></div>
+                                <div class="p-updated-on"></div>
+                                <div class="p-status"></div>
+                                <div class="ptype"></div>
+                                <div class="prooms"></div>
+                                <div class="pbaths"></div>
+                                <div class="p-shared-space"></div>
+                            </div>
+                        </div>
+                        <div class="paction">
+                            <div class="save">
+                                <a href="#">Save</a>
+                            </div>
+                            <div>
+                                <p>Interested in this property?</p>
+                                <a href="">Contact the seller</a>
+                            </div>
+                        </div>
+
+                        <!-- <p>Please provide your new property's info.</p> -->
+                        
+                        <!-- <div class="status-label">
+                            <input type="radio" name="property-status" id="for-rent" value="rent" checked />
+                            <label for="for-rent"><span class="yellow">For Rent</span></label>
+
+                            <input type="radio" name="property-status" id="for-sale" value="sale" />
+                            <label for="for-sale"><span class="red">For Sale</span></label>
+                        </div> -->
+                        <!-- <label for="pdesc"><b>Property Decription</b></label>
+                        <input type="text" placeholder="Describe your property" name="pdesc" required>
+
+                        <label for="paddress"><b>Property Address</b></label>
+                        <input type="address" placeholder="Enter Property Address" name="paddress" required> -->
+
+                        <!-- <label for="image-upload__label"><b>Upload Property Image</b></label>
+                        <div class="image-upload__label">
+                            <form action="" id="img-upload-form" method="post" enctype="multipart/form-data">
+                            <p>
+                                <label for="upload_imgs" class="image-upload__button">Select Images</label>
+                                <input type="file" id="upload_imgs" name="upload_imgs[]" multiple/>
+                            </p>
+                            <div class="quote-imgs-thumbs quote-imgs-thumbs--hidden" id="img_preview"></div>
+                            <p>
+                                <input class="button large expanded" type="submit" id = "update-listing" name="update" value="Upload Images"/>
+                            </p>
+                            </form>
+                        </div> -->
+
+                        <div class="clearfix">
+                            <button type="button" onclick="document.getElementById('view-property-modal').style.display='none'" class="cancelbtn">Cancel</button>
+                            <button type="submit" class="list-property__button">Contact Seller</button>
+                        </div>
+                    </div>
+                </div>
+                    </div>   
+                </div> 
+            </div>
             <div class="property-search">
                 <!-- <h1 class="section-title">Search For Your Home</h1> -->
                 <div id="main-search__body">
