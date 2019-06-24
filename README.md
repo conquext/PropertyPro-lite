@@ -3,7 +3,9 @@
 Property Pro Lite is a platform where people can create and/or search properties for sale or rent.
 
 #### Views/Templates
-> * https://conquext.github.io/PropertyPro-lite/UI/
+> * [Landing Page/Sign Up/ Sign In](https://conquext.github.io/PropertyPro-lite/UI/)
+> * [User Page/Search/Views](https://conquext.github.io/PropertyPro-lite/UI/users)
+> * [Agent Page/Edit/Delete/Update listing](https://conquext.github.io/PropertyPro-lite/UI/agents)
 
 #### Project Management
 > * Pivotal Tracker https://www.pivotaltracker.com/n/projects/2354400
