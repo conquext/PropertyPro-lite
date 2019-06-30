@@ -1,3 +1,4 @@
+/* eslint-disable spaced-comment */
 export const users = [
   {
     userId: 1,
@@ -38,7 +39,7 @@ export const users = [
     email: 'email3@email.com',
     firstName: 'Namethree',
     lastName: 'Jones',
-    password: '$2b$15$l2ofh4pVyG7k2fKJ1KXspOL.vsXDoSHzPH8vkJDaYmCSzoTsUWMD.',
+    password: '$2a$10$mRLrXtSI/KMDivF8GUBwXuHqEYGEziZjL0hBwMNd5p.ZZ4K8aBgoC', //password1
     phoneNumber: '080003',
     address: 'Plot 10, Block 20, Lekki',
     isAdmin: true,
@@ -46,7 +47,7 @@ export const users = [
     state: 'Lagos',
     country: 'Nigeria',
     loggedIn: false,
-    type: 'cashier',
+    type: 'agent',
     createdAt: new Date(1, 3, 2019),
     lastLoggedInAt: new Date(1, 3, 2019),
   },
@@ -98,8 +99,8 @@ export const property = [
     type: 'Flat',
     createdOn: new Date(1, 1, 2019),
     image_url: 'www.wwwww',
-    pbaths: '2',
-    prooms: '3',
+    baths: '2',
+    rooms: '3',
     marketer: 'Etihad Properties',
   },
   {
@@ -113,8 +114,8 @@ export const property = [
     type: 'Apartment',
     createdOn: new Date(1, 2, 2019),
     image_url: 'www.wwwww',
-    pbaths: '1',
-    prooms: '3',
+    baths: '1',
+    rooms: '3',
     marketer: 'Lebadi Properties',
   },
   {
@@ -128,8 +129,8 @@ export const property = [
     type: 'Flat',
     createdOn: new Date(1, 1, 2019),
     image_url: 'www.wwwww',
-    pbaths: '2',
-    prooms: '4',
+    baths: '2',
+    rooms: '4',
     marketer: 'Lemlem Properties',
   },
   {
@@ -143,8 +144,8 @@ export const property = [
     type: 'Duplex',
     createdOn: new Date(1, 1, 2019),
     image_url: 'www.wwwww',
-    pbaths: '4',
-    prooms: '7',
+    baths: '4',
+    rooms: '7',
     marketer: 'Etihad Properties',
   },
   {
@@ -158,8 +159,8 @@ export const property = [
     type: 'Flat',
     createdOn: new Date(1, 1, 2019),
     image_url: 'www.wwwww',
-    pbaths: '2',
-    prooms: '3',
+    baths: '2',
+    rooms: '3',
     marketer: 'Lemlem Properties',
   },
 ];

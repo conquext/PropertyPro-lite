@@ -9,13 +9,13 @@ export default class UserController {
       const userFound = UserHelper.findUserByEmail(email);
       if (!userFound) {
         return res.status(401).json({
-          status: 'fail',
+          status: 'false',
           error: 'Incorrect email',
         });
       }
       if (!UserHelper.comparePassword(password, userFound.password)) {
         return res.status(401).json({
-          status: 'fail',
+          status: 'false',
           error: 'Incorrect email or Wrong password',
         });
       }
@@ -37,23 +37,26 @@ export default class UserController {
         data: loginData,
       });
     } catch (error) {
-      return res.status(500).json({
-        success: 'false',
-        error: 'Something went wrong',
-      });
+      throw new Error('Something went wrong. Try again.');
     }
   }
 
   static signup(req, res) {
     try {
       const {
-        firstName, lastName, email, password, phoneNumber, address, type,
+        firstName, lastName, email, phoneNumber, address, type, password, confirmPassword,
       } = req.body;
       const registeredUser = UserHelper.findUserByEmail(email);
       if (registeredUser) {
         return res.status(409).json({
-          success: 'false',
+          status: 'false',
           error: 'User already exists',
+        });
+      }
+      if (password !== confirmPassword) {
+        return res.status(400).json({
+          status: 'false',
+          error: 'Passwords must match',
         });
       }
       const newUserId = users[users.length - 1].userId + 1;
@@ -61,6 +64,7 @@ export default class UserController {
         userId: newUserId, firstName, lastName, email, phoneNumber, address, type,
       });
 
+      newUser.password = UserHelper.hashPassword(req.body.password);
       const jwtToken = UserHelper.generateToken(newUser);
       newUser.token = jwtToken;
       newUser.logIn();
@@ -82,11 +86,7 @@ export default class UserController {
         data: signupData,
       });
     } catch (error) {
-      res.status(500).json({
-        status: 500,
-        success: 'false',
-        error: 'Something went wrong. Try again.',
-      });
+      throw new Error('Something went wrong. Try again.');
     }
   }
 }

@@ -4,7 +4,7 @@ import * as config from '../config';
 export default class AuthMiddleware {
   static errorResponse(res, statusCode, error) {
     return res.status(statusCode).json({
-      status: 'fail',
+      status: 'false',
       error: error[0],
     });
   }
@@ -25,7 +25,7 @@ export default class AuthMiddleware {
     const currentToken = req.headers.authorization;
     if (!currentToken) {
       return res.status(403).json({
-        status: 'fail',
+        status: 'false',
         error: 'Unathorized. Token not found',
       });
     }
@@ -33,17 +33,15 @@ export default class AuthMiddleware {
     const decoded = jwt.decode(req.headers.authorization, { secret: config.secret });
     if (!decoded) {
       return res.status(403).json({
-        status: 'fail',
+        status: 'false',
         error: 'Unathorized. Token invalid. Please login',
       });
     }
     req.data = {
-      type: decoded.user.type,
-      userId: decoded.user.userId,
-      firstName: decoded.user.firstName,
-      lastName: decoded.user.lastName,
-    //   decoded
+      type: decoded.payload.type,
+      userId: decoded.payload.userId,
     };
+
     next();
   }
 }

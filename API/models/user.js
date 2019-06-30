@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 export default class User {
   constructor({
     userId,
@@ -14,7 +15,7 @@ export default class User {
     loggedIn,
     type,
     createdAt,
-    lastLoggedInAt
+    lastLoggedInAt,
   }) {
     this.userId = userId || '';
     this.email = email;
@@ -73,9 +74,9 @@ export default class User {
     return this.email;
   }
 
-  // setEmail(email) {
-  //   this.email = email;
-  // }
+  setEmail(email) {
+    this.email = email;
+  }
 
   getUserId() {
     return this.userId;
