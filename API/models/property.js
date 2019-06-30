@@ -13,6 +13,7 @@ class Property {
     baths,
     rooms,
     marketer,
+    deleted,
     lastUpdatedOn,
   }) {
     this.propertyId = propertyId;
@@ -22,14 +23,14 @@ class Property {
     this.city = city;
     this.address = address;
     this.price = price;
-    this.createdOn = new Date().toLocaleString();
+    this.createdOn = createdOn || new Date().toLocaleString();
     this.imageUrl = imageUrl;
     this.baths = baths;
     this.rooms = rooms;
     this.marketer = marketer || owner;
-    this.lastUpdatedOn = new Date().toLocaleString();
+    this.lastUpdatedOn = lastUpdatedOn || new Date().toLocaleString();
     this.owner = owner; // userId
-    this.deleted = 'false';
+    this.deleted = deleted || false;
   }
 
   setStatus(status) {
@@ -48,8 +49,8 @@ class Property {
     return this.owner;
   }
 
-  setDelete() {
-    this.deleted = 'true';
+  delete() {
+    this.deleted = true;
   }
 
   isDeleted() {

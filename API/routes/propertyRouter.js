@@ -11,7 +11,7 @@ const {
 } = propertyController;
 
 const { authAgent, authPropertyOwner } = permissionMiddleware;
-const { propertyListingCheck, listingEditCheck, listingUpdateCheck } = validateMiddleware;
+const { propertyListingCheck, listingEditCheck } = validateMiddleware;
 const { authenticateUser } = authMiddleware;
 
 router.use(authenticateUser);
@@ -30,7 +30,7 @@ router.get('/', getAllProperty);
 
 router.get('/:propertyId', getProperty);
 router.patch('/:propertyId', authPropertyOwner, listingEditCheck, editProperty);
-router.patch('/:propertyId/sold', authPropertyOwner, listingUpdateCheck, updateProperty);
+router.patch('/:propertyId/sold', authPropertyOwner, updateProperty);
 router.delete('/:propertyId', authPropertyOwner, deleteProperty);
 
 export default router;

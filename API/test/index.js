@@ -1,17 +1,23 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
+import chaiLike from 'chai-like';
+import chaiThings from 'chai-things';
 import app from '../app';
 import UserController from '../controllers/userController';
+import PropertyController from '../controllers/propertyController';
+import { property } from '../db/db';
 
 const { expect } = chai;
-
 chai.use(chaiHttp);
+chai.use(chaiLike);
+chai.use(chaiThings);
 chai.should();
 
 const apiVersion = '/api/v1';
 
 const authLoginURL = `${apiVersion}/auth/login`;
 const authSignupURL = `${apiVersion}/auth/signup`;
+const propertyURL = `${apiVersion}/property`;
 
 let userToken = '';
 let agentToken = '';
@@ -37,7 +43,7 @@ before((done) => {
 });
 
 before((done) => {
-  const cashierCredentials = {
+  const agentCredentials = {
     firstName: 'Jega',
     lastName: 'Luve',
     email: 'email13@email.com',
@@ -48,7 +54,7 @@ before((done) => {
   chai
     .request(app)
     .post(`${authSignupURL}`)
-    .send(cashierCredentials)
+    .send(agentCredentials)
     .end((err, res) => {
       agentToken = res.body.data.token;
       done();
@@ -401,6 +407,7 @@ describe('POST /api/v1/auth/signup', () => {
     done();
   });
 });
+
 // Test Auth Controller for login
 describe('POST /api/v1/auth/login', () => {
   it('should not login with incorrect email', (done) => {
@@ -501,6 +508,1183 @@ describe('POST /api/v1/auth/login', () => {
     const { login } = UserController;
     expect(login.bind(loginParams)).to.throw('Something went wrong. Try again.');
 
+    done();
+  });
+});
+
+// Test Property Controller
+describe('POST /api/v1/property', () => {
+  const newListing = {
+    status: 'For Sale',
+    address: 'Oshodi Park',
+    city: 'Lekki',
+    state: 'Lagos',
+    type: 'Flat',
+    rooms: 2,
+    baths: '3',
+    price: 40000,
+    image_url: 'www.google.com',
+  };
+  const noStatus = {
+    address: 'Oshodi Park',
+    city: 'Lekki',
+    state: 'Lagos',
+    type: 'Flat',
+    rooms: 2,
+    baths: '3',
+    price: 40000,
+    image_url: 'www.google.com',
+  };
+  const notCorrectStatus = {
+    status: 'Sold',
+    address: 'Oshodi Park',
+    city: 'Lekki',
+    state: 'Lagos',
+    type: 'Flat',
+    rooms: 2,
+    baths: '3',
+    price: 40000,
+    image_url: 'www.google.com',
+  };
+  const noAddress = {
+    status: 'For Sale',
+    city: 'Lekki',
+    state: 'Lagos',
+    type: 'Flat',
+    rooms: 2,
+    baths: '3',
+    price: 40000,
+    image_url: 'www.google.com',
+  };
+  const notCorrectAddress = {
+    status: 'For Sale',
+    address: 55,
+    city: 'Lekki',
+    state: 'Lagos',
+    type: 'Flat',
+    rooms: 2,
+    baths: '3',
+    price: 40000,
+    image_url: 'www.google.com',
+  };
+  const noType = {
+    status: 'For Sale',
+    address: 'Oshodi Park',
+    city: 'Lekki',
+    state: 'Lagos',
+    rooms: 2,
+    baths: '3',
+    price: 40000,
+    image_url: 'www.google.com',
+  };
+  const notCorrectType = {
+    status: 'For Sale',
+    address: 'Oshodi Park',
+    city: 'Lekki',
+    state: 'Lagos',
+    type: 'Bingo',
+    rooms: 2,
+    baths: '3',
+    price: 40000,
+    image_url: 'www.google.com',
+  };
+  const noRooms = {
+    status: 'For Sale',
+    address: 'Oshodi Park',
+    city: 'Lekki',
+    state: 'Lagos',
+    type: 'Flat',
+    baths: '3',
+    price: 40000,
+    image_url: 'www.google.com',
+  };
+  const notCorrectRooms = {
+    status: 'For Sale',
+    address: 'Oshodi Park',
+    city: 'Lekki',
+    state: 'Lagos',
+    type: 'Flat',
+    rooms: 'two',
+    baths: '3',
+    price: 40000,
+    image_url: 'www.google.com',
+  };
+  const noBaths = {
+    status: 'For Sale',
+    address: 'Oshodi Park',
+    city: 'Lekki',
+    state: 'Lagos',
+    type: 'Flat',
+    rooms: 2,
+    price: 40000,
+    image_url: 'www.google.com',
+  };
+  const notCorrectBaths = {
+    status: 'For Sale',
+    address: 'Oshodi Park',
+    city: 'Lekki',
+    state: 'Lagos',
+    type: 'Flat',
+    rooms: 2,
+    baths: 'three',
+    price: 40000,
+    image_url: 'www.google.com',
+  };
+  const noPrice = {
+    status: 'For Sale',
+    address: 'Oshodi Park',
+    city: 'Lekki',
+    state: 'Lagos',
+    type: 'Flat',
+    rooms: 2,
+    baths: '3',
+    image_url: 'www.google.com',
+  };
+  const notCorrectPirce = {
+    status: 'For Sale',
+    address: 'Oshodi Park',
+    city: 'Lekki',
+    state: 'Lagos',
+    type: 'Flat',
+    rooms: 2,
+    baths: '3',
+    price: 'Twenty-Four thousand',
+    image_url: 'www.google.com',
+  };
+  const noImageLink = {
+    status: 'For Sale',
+    address: 'Oshodi Park',
+    city: 'Lekki',
+    state: 'Lagos',
+    type: 'Flat',
+    rooms: 2,
+    baths: '3',
+    price: 40000,
+  };
+  const notCorrectImageLink = {
+    status: 'For Sale',
+    address: 'Oshodi Park',
+    city: 'Lekki',
+    state: 'Lagos',
+    type: 'Flat',
+    rooms: 2,
+    baths: '3',
+    price: 40000,
+    image_url: 'wwwcom',
+  };
+  it('should create a new property listing for an agent', (done) => {
+    chai
+      .request(app)
+      .post(`${propertyURL}`)
+      .set('Authorization', agentToken)
+      .send(
+        newListing,
+      )
+      .end((err, res) => {
+        expect(res).to.have.status(201);
+        expect(res.body.success).to.be.equal('true');
+        expect(res.body.message).to.be.equal('New property listed successfully');
+        expect(res.body.data).to.include.key('propertyId', 'owner', 'status', 'price', 'state', 'city', 'address', 'type', 'baths', 'rooms');
+        done();
+      });
+  });
+  it('should not allow a user to create property listing', (done) => {
+    chai
+      .request(app)
+      .post(`${propertyURL}`)
+      .set('Authorization', userToken)
+      .send(
+        newListing,
+      )
+      .end((err, res) => {
+        expect(res).to.have.status(403);
+        expect(res.body.success).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Unauthorized');
+        done();
+      });
+  });
+  it('should require a property status', (done) => {
+    chai
+      .request(app)
+      .post(`${propertyURL}`)
+      .set('Authorization', agentToken)
+      .send(noStatus)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Specify property status');
+        done();
+      });
+  });
+  it('should require appropriate property status', (done) => {
+    chai
+      .request(app)
+      .post(`${propertyURL}`)
+      .set('Authorization', agentToken)
+      .send(notCorrectStatus)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Select the property status [For Sale or For Rent]');
+        done();
+      });
+  });
+  it('should require property address', (done) => {
+    chai
+      .request(app)
+      .post(`${propertyURL}`)
+      .set('Authorization', agentToken)
+      .send(noAddress)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Provide address of your property');
+        done();
+      });
+  });
+  it('should require property address', (done) => {
+    chai
+      .request(app)
+      .post(`${propertyURL}`)
+      .set('Authorization', agentToken)
+      .send(notCorrectAddress)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Address should contain more than 4 characters');
+        done();
+      });
+  });
+  it('should require property type', (done) => {
+    chai
+      .request(app)
+      .post(`${propertyURL}`)
+      .set('Authorization', agentToken)
+      .send(noType)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Select type of property');
+        done();
+      });
+  });
+  it('should require appropriate property type', (done) => {
+    chai
+      .request(app)
+      .post(`${propertyURL}`)
+      .set('Authorization', agentToken)
+      .send(notCorrectType)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Select the appropritate property type');
+        done();
+      });
+  });
+  it('should require no of rooms ', (done) => {
+    chai
+      .request(app)
+      .post(`${propertyURL}`)
+      .set('Authorization', agentToken)
+      .send(noRooms)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Select number of rooms');
+        done();
+      });
+  });
+  it('should require require number of rooms as a number', (done) => {
+    chai
+      .request(app)
+      .post(`${propertyURL}`)
+      .set('Authorization', agentToken)
+      .send(notCorrectRooms)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Number of rooms should be numeric');
+        done();
+      });
+  });
+  it('should require no of baths ', (done) => {
+    chai
+      .request(app)
+      .post(`${propertyURL}`)
+      .set('Authorization', agentToken)
+      .send(noBaths)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Select number of baths');
+        done();
+      });
+  });
+  it('should require require number of baths as a number', (done) => {
+    chai
+      .request(app)
+      .post(`${propertyURL}`)
+      .set('Authorization', agentToken)
+      .send(notCorrectBaths)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Number of baths should be numeric');
+        done();
+      });
+  });
+  it('should require price of property ', (done) => {
+    chai
+      .request(app)
+      .post(`${propertyURL}`)
+      .set('Authorization', agentToken)
+      .send(noPrice)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Provide price information');
+        done();
+      });
+  });
+  it('should require price of property in decimal', (done) => {
+    chai
+      .request(app)
+      .post(`${propertyURL}`)
+      .set('Authorization', agentToken)
+      .send(notCorrectPirce)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Price should be in decimal');
+        done();
+      });
+  });
+  it('should require link to property image', (done) => {
+    chai
+      .request(app)
+      .post(`${propertyURL}`)
+      .set('Authorization', agentToken)
+      .send(noImageLink)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Provide image link');
+        done();
+      });
+  });
+  it('should require a valid link to property image', (done) => {
+    chai
+      .request(app)
+      .post(`${propertyURL}`)
+      .set('Authorization', agentToken)
+      .send(notCorrectImageLink)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Provide a valid url link');
+        done();
+      });
+  });
+  it('should catch listing error', (done) => {
+    const { listNewProperty } = PropertyController;
+    expect(listNewProperty.bind(newListing)).to.throw('Something went wrong. Try again.');
+
+    done();
+  });
+});
+
+describe('GET /api/v1/property', () => {
+  it('should get all properties for user', (done) => {
+    chai
+      .request(app)
+      .get(`${propertyURL}`)
+      .set('Authorization', agentToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body.message).to.be.equal('Properties retrieved successfully');
+        expect(res.body.data).to.be.an('array').that.contains.something.like(
+          {
+            address: '234, Eleyele, Ikeja',
+            baths: '2',
+            city: 'Ikeja',
+            createdOn: '1906-08-11T23:46:24.000Z',
+            image_url: 'www.wwwww',
+            marketer: 'Etihad Properties',
+            owner: 1,
+            price: '40000',
+            propertyId: 1,
+            rooms: '3',
+            state: 'Lagos',
+            status: 'For Sale',
+            type: 'Flat',
+          },
+        );
+        done();
+      });
+  });
+  it('should get not get properties without authorization', (done) => {
+    chai
+      .request(app)
+      .get(`${propertyURL}`)
+      .end((err, res) => {
+        expect(res).to.have.status(403);
+        expect(res.body.status).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Unathorized. Token not found');
+        done();
+      });
+  });
+  it('should catch get all property error when encountered a problem', (done) => {
+    const { getAllProperty } = PropertyController;
+    expect(getAllProperty.bind('')).to.throw('Something went wrong. Try again.');
+    done();
+  });
+});
+
+describe('GET /api/v1/property', () => {
+  beforeEach(() => {
+    property.forEach((thisProperty) => {
+      if (thisProperty.propertyId !== 1) {
+        thisProperty.deleted = true;
+      }
+    });
+  });
+  afterEach(() => {
+    property.forEach(thisProperty => thisProperty.deleted = false);
+  });
+  it('should get the only property for a user when all but one is deleted', (done) => {
+    chai
+      .request(app)
+      .get(`${propertyURL}`)
+      .set('Authorization', agentToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body.message).to.be.equal('Property retrieved successfully');
+        expect(res.body.data).to.be.an('array').that.contains.something.like(
+          {
+            address: '234, Eleyele, Ikeja',
+            baths: '2',
+            city: 'Ikeja',
+            createdOn: '1906-08-11T23:46:24.000Z',
+            image_url: 'www.wwwww',
+            marketer: 'Etihad Properties',
+            owner: 1,
+            price: '40000',
+            propertyId: 1,
+            rooms: '3',
+            state: 'Lagos',
+            status: 'For Sale',
+            type: 'Flat',
+          },
+        );
+        done();
+      });
+  });
+  it('should get not get property without authorization', (done) => {
+    chai
+      .request(app)
+      .get(`${propertyURL}`)
+      .end((err, res) => {
+        expect(res).to.have.status(403);
+        expect(res.body.status).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Unathorized. Token not found');
+        done();
+      });
+  });
+});
+
+describe('GET /api/v1/property', () => {
+  beforeEach(() => {
+    property.forEach(thisProperty => thisProperty.deleted = true);
+  });
+  afterEach(() => {
+    property.forEach(thisProperty => thisProperty.deleted = false);
+  });
+  it('should get no property for a user when all properties are deleted', (done) => {
+    chai
+      .request(app)
+      .get(`${propertyURL}`)
+      .set('Authorization', agentToken)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.error).to.be.equal('No property found');
+        done();
+      });
+  });
+});
+
+describe('GET /api/v1/property/<:property-id>/', () => {
+  it('should get property with a given id, search by user', (done) => {
+    chai
+      .request(app)
+      .get(`${propertyURL}/3`)
+      .set('Authorization', userToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body.data).to.be.an('array').that.contains.something.like(
+          {
+            propertyId: 3,
+            owner: 2,
+            status: 'For Sale',
+            price: '140000',
+            state: 'Abuja',
+            city: 'Gwarwa',
+            address: '4, Indiana, Gwarwa',
+            type: 'Flat',
+            createdOn: '1906-08-11T23:46:24.000Z',
+            image_url: 'www.wwwww',
+            baths: '2',
+            rooms: '4',
+            marketer: 'Lemlem Properties',
+            deleted: false,
+          },
+        );
+        done();
+      });
+  });
+  it('should get property with a given id, search by agent', (done) => {
+    chai
+      .request(app)
+      .get(`${propertyURL}/3`)
+      .set('Authorization', agentToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body.data).to.be.an('array').that.contains.something.like(
+          {
+            propertyId: 3,
+            owner: 2,
+            status: 'For Sale',
+            price: '140000',
+            state: 'Abuja',
+            city: 'Gwarwa',
+            address: '4, Indiana, Gwarwa',
+            type: 'Flat',
+            createdOn: '1906-08-11T23:46:24.000Z',
+            image_url: 'www.wwwww',
+            baths: '2',
+            rooms: '4',
+            marketer: 'Lemlem Properties',
+            deleted: false,
+          },
+        );
+        done();
+      });
+  });
+  it('should get not get properties without authorization', (done) => {
+    chai
+      .request(app)
+      .get(`${propertyURL}/2`)
+      .end((err, res) => {
+        expect(res).to.have.status(403);
+        expect(res.body.status).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Unathorized. Token not found');
+        done();
+      });
+  });
+  it('should not get property with an unknown id', (done) => {
+    chai
+      .request(app)
+      .get(`${propertyURL}/30000`)
+      .set('Authorization', userToken)
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+        expect(res.body.success).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Property not found');
+        done();
+      });
+  });
+  it('should get property with of a given owner, search by user', (done) => {
+    chai
+      .request(app)
+      .get(`${propertyURL}/3?owner=4`)
+      .set('Authorization', userToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body.data).to.be.an('array').that.contains.something.like(
+          {
+            propertyId: 5,
+            owner: 4,
+            status: 'For Rent',
+            price: '668000',
+            state: 'Lagos',
+            city: 'Gbagada',
+            address: 'Plot 23, Soluyi, Gbagada',
+            type: 'Flat',
+            createdOn: '1906-08-11T23:46:24.000Z',
+            image_url: 'www.wwwww',
+            baths: '2',
+            rooms: '3',
+            marketer: 'Lemlem Properties',
+            deleted: false,
+          },
+        );
+        done();
+      });
+  });
+  it('should get property with of a given owner and number of rooms', (done) => {
+    chai
+      .request(app)
+      .get(`${propertyURL}/3?owner=3&rooms=7`)
+      .set('Authorization', userToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body.data).to.be.an('array').that.contains.something.like(
+          {
+            propertyId: 4,
+            owner: 3,
+            status: 'For Sale',
+            price: '3210000',
+            state: 'Lagos',
+            city: 'Lekki',
+            address: '234, Bimbo Street, Lekki',
+            type: 'Duplex',
+            createdOn: '1906-08-11T23:46:24.000Z',
+            image_url: 'www.wwwww',
+            baths: '4',
+            rooms: '7',
+            marketer: 'Etihad Properties',
+          },
+        );
+        done();
+      });
+  });
+  it('should get property with of a given type and status', (done) => {
+    chai
+      .request(app)
+      .get(`${propertyURL}/3?type=Duplex&status=For Sale`)
+      .set('Authorization', userToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body.data).to.be.an('array').that.contains.something.like(
+          {
+            propertyId: 4,
+            owner: 3,
+            status: 'For Sale',
+            price: '3210000',
+            state: 'Lagos',
+            city: 'Lekki',
+            address: '234, Bimbo Street, Lekki',
+            type: 'Duplex',
+            createdOn: '1906-08-11T23:46:24.000Z',
+            image_url: 'www.wwwww',
+            baths: '4',
+            rooms: '7',
+            marketer: 'Etihad Properties',
+          },
+        );
+        done();
+      });
+  });
+  it('should get property of a given type', (done) => {
+    chai
+      .request(app)
+      .get(`${propertyURL}/3?type=Flat`)
+      .set('Authorization', userToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body.data).to.be.an('array').that.contains.something.like(
+          {
+            propertyId: 1,
+            owner: 1,
+            status: 'For Sale',
+            price: '40000',
+            state: 'Lagos',
+            city: 'Ikeja',
+            address: '234, Eleyele, Ikeja',
+            type: 'Flat',
+            createdOn: '1906-08-11T23:46:24.000Z',
+            image_url: 'www.wwwww',
+            baths: '2',
+            rooms: '3',
+            marketer: 'Etihad Properties',
+            deleted: false,
+          },
+        );
+        done();
+      });
+  });
+  it('should not get property of a type that does not exist', (done) => {
+    chai
+      .request(app)
+      .get(`${propertyURL}/3?type=Flatsu`)
+      .set('Authorization', agentToken)
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+        expect(res.body.status).to.be.equal(404);
+        expect(res.body.error).to.be.equal('Property not found');
+        done();
+      });
+  });
+  it('should catch get property error when encountered a problem', (done) => {
+    const { getProperty } = PropertyController;
+    expect(getProperty.bind('')).to.throw('Something went wrong. Try again.');
+    done();
+  });
+});
+
+describe('PATCH /api/v1/property/<:property-id>/', () => {
+  const newDetails = {
+    status: 'For Sale',
+    address: 'Oshodi nothing',
+    type: 'Flat',
+    rooms: 2,
+    baths: '3',
+    price: 40000,
+    image_url: 'www.google.com',
+  };
+  let agent2Token;
+  const notCorrectStatus = {
+    status: 'Sold',
+    address: 'Oshodi Park',
+    city: 'Lekki',
+    state: 'Lagos',
+    type: 'Flat',
+    rooms: 2,
+    baths: '3',
+    price: 40000,
+    image_url: 'www.google.com',
+  };
+  const notCorrectAddress = {
+    status: 'For Sale',
+    address: 55,
+    city: 'Lekki',
+    state: 'Lagos',
+    type: 'Flat',
+    rooms: 2,
+    baths: '3',
+    price: 40000,
+    image_url: 'www.google.com',
+  };
+  const notCorrectType = {
+    status: 'For Sale',
+    address: 'Oshodi Park',
+    city: 'Lekki',
+    state: 'Lagos',
+    type: 'Bingo',
+    rooms: 2,
+    baths: '3',
+    price: 40000,
+    image_url: 'www.google.com',
+  };
+  const notCorrectRooms = {
+    status: 'For Sale',
+    address: 'Oshodi Park',
+    city: 'Lekki',
+    state: 'Lagos',
+    type: 'Flat',
+    rooms: 'two',
+    baths: '3',
+    price: 40000,
+    image_url: 'www.google.com',
+  };
+  const notCorrectBaths = {
+    status: 'For Sale',
+    address: 'Oshodi Park',
+    city: 'Lekki',
+    state: 'Lagos',
+    type: 'Flat',
+    rooms: 2,
+    baths: 'three',
+    price: 40000,
+    image_url: 'www.google.com',
+  };
+  const notCorrectPirce = {
+    status: 'For Sale',
+    address: 'Oshodi Park',
+    city: 'Lekki',
+    state: 'Lagos',
+    type: 'Flat',
+    rooms: 2,
+    baths: '3',
+    price: 'Twenty-Four thousand',
+    image_url: 'www.google.com',
+  };
+  const notCorrectImageLink = {
+    status: 'For Sale',
+    address: 'Oshodi Park',
+    city: 'Lekki',
+    state: 'Lagos',
+    type: 'Flat',
+    rooms: 2,
+    baths: '3',
+    price: 40000,
+    image_url: 'wwwcom',
+  };
+  before((done) => {
+    const thisAgentCredentials = {
+      email: 'email2@email.com',
+      password: 'password1',
+    };
+    chai
+      .request(app)
+      .post(`${authLoginURL}`)
+      .send(thisAgentCredentials)
+      .end((err, res) => {
+        agent2Token = res.body.data.token;
+        done();
+      });
+  });
+  it('should edit property with a given id by the property owner', (done) => {
+    chai
+      .request(app)
+      .patch(`${propertyURL}/3`)
+      .set('Authorization', agent2Token)
+      .send(
+        newDetails,
+      )
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body.data).to.be.an('Array').contains.something.like(
+          {
+            address: newDetails.address,
+            baths: newDetails.baths,
+            city: 'Gwarwa',
+            createdOn: '1906-08-11T23:46:24.000Z',
+            deleted: false,
+            image_url: newDetails.image_url,
+            lastUpdatedOn: '6/30/2019',
+            marketer: 'Lemlem Properties',
+            owner: 2,
+            price: newDetails.price,
+            propertyId: 3,
+            rooms: newDetails.rooms,
+            state: 'Abuja',
+            status: newDetails.status,
+            type: newDetails.type,
+          },
+        );
+        done();
+      });
+  });
+  it('should not edit property that does not exist', (done) => {
+    chai
+      .request(app)
+      .patch(`${propertyURL}/3000`)
+      .set('Authorization', agent2Token)
+      .send(
+        newDetails,
+      )
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+        expect(res.body.success).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Property not found');
+        done();
+      });
+  });
+  it('should not allow user to edit property', (done) => {
+    chai
+      .request(app)
+      .patch(`${propertyURL}/3`)
+      .set('Authorization', userToken)
+      .send(
+        newDetails,
+      )
+      .end((err, res) => {
+        expect(res).to.have.status(403);
+        expect(res.body.success).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Unauthorized');
+        done();
+      });
+  });
+  it('should not allow agents to edit property of other agents', (done) => {
+    chai
+      .request(app)
+      .patch(`${propertyURL}/2`)
+      .set('Authorization', agent2Token)
+      .send(
+        newDetails,
+      )
+      .end((err, res) => {
+        expect(res).to.have.status(403);
+        expect(res.body.success).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Unauthorized');
+        done();
+      });
+  });
+  it('should not allow agents to edit property of other agents', (done) => {
+    chai
+      .request(app)
+      .patch(`${propertyURL}/3`)
+      .set('Authorization', agentToken)
+      .send(
+        newDetails,
+      )
+      .end((err, res) => {
+        expect(res).to.have.status(403);
+        expect(res.body.success).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Unauthorized');
+        done();
+      });
+  });
+  it('should require appropriate property status', (done) => {
+    chai
+      .request(app)
+      .patch(`${propertyURL}/3`)
+      .set('Authorization', agent2Token)
+      .send(notCorrectStatus)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Select the property status [For Sale or For Rent]');
+        done();
+      });
+  });
+  it('should require appropriate property address', (done) => {
+    chai
+      .request(app)
+      .patch(`${propertyURL}/3`)
+      .set('Authorization', agent2Token)
+      .send(notCorrectAddress)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Address should contain more than 4 characters');
+        done();
+      });
+  });
+  it('should require appropriate property type', (done) => {
+    chai
+      .request(app)
+      .patch(`${propertyURL}/3`)
+      .set('Authorization', agent2Token)
+      .send(notCorrectType)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Select the appropritate property type');
+        done();
+      });
+  });
+  it('should require require number of rooms as a number', (done) => {
+    chai
+      .request(app)
+      .patch(`${propertyURL}/3`)
+      .set('Authorization', agent2Token)
+      .send(notCorrectRooms)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Number of rooms should be numeric');
+        done();
+      });
+  });
+  it('should require require number of baths as a number', (done) => {
+    chai
+      .request(app)
+      .patch(`${propertyURL}/3`)
+      .set('Authorization', agent2Token)
+      .send(notCorrectBaths)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Number of baths should be numeric');
+        done();
+      });
+  });
+  it('should require price of property in decimal', (done) => {
+    chai
+      .request(app)
+      .patch(`${propertyURL}/3`)
+      .set('Authorization', agent2Token)
+      .send(notCorrectPirce)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Price should be in decimal');
+        done();
+      });
+  });
+  it('should require a valid link to property image', (done) => {
+    chai
+      .request(app)
+      .patch(`${propertyURL}/3`)
+      .set('Authorization', agent2Token)
+      .send(notCorrectImageLink)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Provide a valid url link');
+        done();
+      });
+  });
+  it('should catch edit listing error', (done) => {
+    const { editProperty } = PropertyController;
+    expect(editProperty.bind(newDetails)).to.throw('Something went wrong. Try again.');
+
+    done();
+  });
+});
+
+describe('PATCH /api/v1/property/<:property-id>/sold', () => {
+  let agent2Token;
+  before((done) => {
+    const thisAgentCredentials = {
+      email: 'email2@email.com',
+      password: 'password1',
+    };
+    chai
+      .request(app)
+      .post(`${authLoginURL}`)
+      .send(thisAgentCredentials)
+      .end((err, res) => {
+        agent2Token = res.body.data.token;
+        done();
+      });
+  });
+  it('should update property with a given id by the property owner', (done) => {
+    chai
+      .request(app)
+      .patch(`${propertyURL}/3/sold`)
+      .set('Authorization', agent2Token)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body.data).to.be.an('Array').contains.something.like(
+          {
+            propertyId: 3,
+            owner: 2,
+            status: 'Sold',
+            state: 'Abuja',
+            city: 'Gwarwa',
+            type: 'Flat',
+            createdOn: '1906-08-11T23:46:24.000Z',
+            marketer: 'Lemlem Properties',
+            deleted: false,
+          },
+        );
+        done();
+      });
+  });
+  it('should not allow agents to update property of other agents', (done) => {
+    chai
+      .request(app)
+      .patch(`${propertyURL}/2/sold`)
+      .set('Authorization', agent2Token)
+      .end((err, res) => {
+        expect(res).to.have.status(403);
+        expect(res.body.success).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Unauthorized');
+        done();
+      });
+  });
+  it('should not update property that does not exist', (done) => {
+    chai
+      .request(app)
+      .patch(`${propertyURL}/3000/sold`)
+      .set('Authorization', agent2Token)
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+        expect(res.body.status).to.be.equal(404);
+        expect(res.body.error).to.be.equal('Property not found');
+        done();
+      });
+  });
+  it('should not allow user to update property', (done) => {
+    chai
+      .request(app)
+      .patch(`${propertyURL}/3/sold`)
+      .set('Authorization', userToken)
+      .end((err, res) => {
+        expect(res).to.have.status(403);
+        expect(res.body.success).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Unauthorized');
+        done();
+      });
+  });
+  it('should catch update listing error', (done) => {
+    const { updateProperty } = PropertyController;
+    expect(updateProperty.bind('')).to.throw('Something went wrong. Try again.');
+    done();
+  });
+});
+
+describe('DELETE /api/v1/property/<:property-id>', () => {
+  let agent2Token;
+  before((done) => {
+    const thisAgentCredentials = {
+      email: 'email2@email.com',
+      password: 'password1',
+    };
+    chai
+      .request(app)
+      .post(`${authLoginURL}`)
+      .send(thisAgentCredentials)
+      .end((err, res) => {
+        agent2Token = res.body.data.token;
+        done();
+      });
+  });
+  it('should not allow agents to delete property of other agents', (done) => {
+    chai
+      .request(app)
+      .delete(`${propertyURL}/2`)
+      .set('Authorization', agent2Token)
+      .end((err, res) => {
+        expect(res).to.have.status(403);
+        expect(res.body.success).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Unauthorized');
+        done();
+      });
+  });
+  it('should not delete property that does not exist', (done) => {
+    chai
+      .request(app)
+      .delete(`${propertyURL}/3000`)
+      .set('Authorization', agent2Token)
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+        expect(res.body.success).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Property not found');
+        done();
+      });
+  });
+  it('should not allow user to delete property', (done) => {
+    chai
+      .request(app)
+      .delete(`${propertyURL}/3`)
+      .set('Authorization', userToken)
+      .end((err, res) => {
+        expect(res).to.have.status(403);
+        expect(res.body.success).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Unauthorized');
+        done();
+      });
+  });
+  it('should delete property with a given id by the property owner', (done) => {
+    chai
+      .request(app)
+      .delete(`${propertyURL}/3`)
+      .set('Authorization', agent2Token)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.be.equal('success');
+        expect(res.body.data.message).to.be.equal('Property deleted successfully');
+        done();
+      });
+  });
+  it('should not get property that has been deleted', (done) => {
+    chai
+      .request(app)
+      .get(`${propertyURL}/3`)
+      .set('Authorization', userToken)
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+        expect(res.body.success).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Property not found');
+        done();
+      });
+  });
+  it('should catch delete listing error', (done) => {
+    const { deleteProperty } = PropertyController;
+    expect(deleteProperty.bind('')).to.throw('Something went wrong. Try again.');
     done();
   });
 });

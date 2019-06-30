@@ -102,6 +102,7 @@ export const property = [
     baths: '2',
     rooms: '3',
     marketer: 'Etihad Properties',
+    deleted: false,
   },
   {
     propertyId: 2,
@@ -117,6 +118,7 @@ export const property = [
     baths: '1',
     rooms: '3',
     marketer: 'Lebadi Properties',
+    deleted: false,
   },
   {
     propertyId: 3,
@@ -132,6 +134,7 @@ export const property = [
     baths: '2',
     rooms: '4',
     marketer: 'Lemlem Properties',
+    deleted: false,
   },
   {
     propertyId: 4,
@@ -147,6 +150,7 @@ export const property = [
     baths: '4',
     rooms: '7',
     marketer: 'Etihad Properties',
+    deleted: false,
   },
   {
     propertyId: 5,
@@ -162,6 +166,7 @@ export const property = [
     baths: '2',
     rooms: '3',
     marketer: 'Lemlem Properties',
+    deleted: false,
   },
 ];
 

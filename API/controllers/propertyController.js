@@ -1,6 +1,7 @@
 import { property } from '../db/db';
 import UserHelper from '../helpers/userHelper';
 import Property from '../models/property';
+import { threadId } from 'worker_threads';
 
 export default class propertyController {
   static listNewProperty(req, res) {
@@ -36,29 +37,31 @@ export default class propertyController {
         });
       }
     } catch (error) {
-      res.status(500).json({
-        status: 500,
-        success: 'false',
-        error: 'Something went wrong. Try again.',
-      });
+      throw new Error('Something went wrong. Try again.');
     }
   }
 
   static getAllProperty(req, res) {
     try {
       const propertyFound = [];
-      property.map(searchProperty => propertyFound.push(searchProperty));
+      property.map((searchProperty) => {
+        if (searchProperty.deleted === false) {
+          propertyFound.push(searchProperty);
+        }
+        return propertyFound;
+      });
+
       if (propertyFound.length === 1) {
         return res.status(200).json({
           status: 200,
-          message: 'Properties retrieved successfully',
+          message: 'Property retrieved successfully',
           data: propertyFound,
         });
       }
       if (propertyFound.length > 1) {
         return res.status(200).json({
           status: 200,
-          message: 'Property retrieved successfully',
+          message: 'Properties retrieved successfully',
           data: propertyFound,
         });
       }
@@ -69,11 +72,7 @@ export default class propertyController {
         });
       }
     } catch (error) {
-      return res.status(500).json({
-        status: 500,
-        success: 'false',
-        error: 'Something went wrong',
-      });
+      throw new Error('Something went wrong. Try again.');
     }
   }
 
@@ -86,7 +85,7 @@ export default class propertyController {
         const { owner } = req.query;
         const ownerFound = UserHelper.findUserById(parseInt(owner, 10));
         if (ownerFound) {
-          propertyFound = property.filter(searchProperty => (searchProperty.owner === ownerFound.userId));
+          propertyFound = property.filter(searchProperty => (searchProperty.owner === ownerFound.userId) && (searchProperty.deleted === false));
           if (req.query.baths) {
             const { baths } = req.query;
             propertyFound = propertyFound.filter(props => props.baths === baths);
@@ -98,9 +97,8 @@ export default class propertyController {
         }
       }
       if (req.query.type && !(req.query.owner || req.query.status)) {
-        console.log('I ran');
         const { type } = req.query;
-        propertyFound = property.filter(searchProperty => searchProperty.type === type);
+        propertyFound = property.filter(searchProperty => (searchProperty.type === type) && (searchProperty.deleted === false));
         if (Object.keys(propertyFound).length !== 0) {
           if (req.query.baths) {
             const { baths } = req.query;
@@ -114,7 +112,7 @@ export default class propertyController {
       }
       if (req.query.status && !(req.query.owner || req.query.type)) {
         const { status } = req.query;
-        propertyFound = property.filter(props => props.status === status);
+        propertyFound = property.filter(props => (props.status === status) && (props.deleted === false));
         if (Object.keys(propertyFound) !== 0) {
           if (req.query.baths) {
             const { baths } = req.query;
@@ -131,7 +129,7 @@ export default class propertyController {
           const { owner } = req.query;
           const ownerFound = UserHelper.findUserById(parseInt(owner, 10));
           if (ownerFound) {
-            propertyFound = property.filter(searchProperty => (searchProperty.owner === ownerFound.userId));
+            propertyFound = property.filter(searchProperty => (searchProperty.owner === ownerFound.userId) && (searchProperty.deleted === false));
             if (Object.keys(propertyFound) !== 0) {
               if (req.query.type) {
                 const { type } = req.query;
@@ -154,9 +152,8 @@ export default class propertyController {
         }
       }
       if (!req.query.owner && req.query.type) {
-        console.log('I rean');
         const { type } = req.query;
-        propertyFound = property.filter(props => props.type === type);
+        propertyFound = property.filter(props => (props.type === type) && (props.deleted === false));
         if (Object.keys(propertyFound).length !== 0) {
           if (req.query.status) {
             const { status } = req.query;
@@ -175,7 +172,7 @@ export default class propertyController {
       if (!req.query.owner && !req.query.type) {
         if (req.query.status) {
           const { status } = req.query;
-          propertyFound = propertyFound.filter(props => props.status === status);
+          propertyFound = propertyFound.filter(props => (props.status === status) && (props.deleted === false));
         }
         if (req.query.baths) {
           const { baths } = req.query;
@@ -187,7 +184,7 @@ export default class propertyController {
         }
       }
       if (Object.keys(req.query).length === 0) {
-        propertyFound = property.filter((searchProperty => searchProperty.propertyId === thisPropertyId));
+        propertyFound = property.filter(searchProperty => (searchProperty.propertyId === thisPropertyId) && (searchProperty.deleted === false));
       }
       if (propertyFound.length >= 1) {
         return res.status(200).json({
@@ -201,11 +198,7 @@ export default class propertyController {
         error: 'Property not found',
       });
     } catch (error) {
-      return res.status(500).json({
-        status: 500,
-        success: 'false',
-        error: 'Something went wrong',
-      });
+      throw new Error('Something went wrong. Try again.');
     }
   }
 
@@ -213,7 +206,7 @@ export default class propertyController {
     try {
       const thisPropertyId = parseInt(req.params.propertyId, 10);
       let propertyFound = null;
-      propertyFound = property.filter((searchProperty => searchProperty.propertyId === thisPropertyId));
+      propertyFound = property.filter(searchProperty => ((searchProperty.propertyId === thisPropertyId) && (searchProperty.deleted === false)));
       if (Object.keys(propertyFound).length === 0) {
         return res.status(404).json({
           status: 404,
@@ -222,25 +215,20 @@ export default class propertyController {
         });
       }
 
-      if (Object.keys(req.body).length !== 0) {
+      if (Object.keys(req.body).length >= 1) {
         const editFields = Object.entries(req.body);
         // eslint-disable-next-line no-restricted-syntax
         for (const [field, value] of editFields) {
           propertyFound[0][field] = value;
         }
-        // propertyFound.setUpdate();
+        propertyFound[0].lastUpdatedOn = new Date().toLocaleDateString();
       }
-
       return res.status(200).json({
         status: 200,
         data: propertyFound,
       });
     } catch (error) {
-      return res.status(500).json({
-        status: 500,
-        success: 'false',
-        error: 'Something went wrong',
-      });
+      throw new Error('Something went wrong. Try again.');
     }
   }
 
@@ -248,8 +236,8 @@ export default class propertyController {
     try {
       const thisPropertyId = parseInt(req.params.propertyId, 10);
       let propertyFound = null;
-      propertyFound = property.filter((searchProperty => searchProperty.propertyId === thisPropertyId));
-      if (Object.keys(propertyFound) === 0) {
+      propertyFound = property.filter(searchProperty => ((searchProperty.propertyId === thisPropertyId) && (searchProperty.deleted === false)));
+      if (Object.keys(propertyFound).length === 0) {
         return res.status(404).json({
           status: 404,
           error: 'Property not found',
@@ -263,11 +251,7 @@ export default class propertyController {
         data: propertyFound,
       });
     } catch (error) {
-      return res.status(500).json({
-        status: 500,
-        success: 'false',
-        error: 'Something went wrong',
-      });
+      throw new Error('Something went wrong. Try again.');
     }
   }
 
@@ -278,8 +262,10 @@ export default class propertyController {
       let propertyIndex = '';
       property.map((searchProperty, index) => {
         if (searchProperty.propertyId === thisPropertyId) {
-          propertyFound = searchProperty;
-          propertyIndex = index;
+          if (searchProperty.deleted !== true) {
+            propertyFound = searchProperty;
+            propertyIndex = index;
+          }
         }
       });
       if (!propertyFound) {
@@ -298,11 +284,7 @@ export default class propertyController {
         },
       });
     } catch (error) {
-      return res.status(500).json({
-        status: 500,
-        success: 'false',
-        error: 'Something went wrong',
-      });
+      throw new Error('Something went wrong. Try again.');
     }
   }
 }
