@@ -927,6 +927,18 @@ describe('GET /api/v1/property', () => {
     chai
       .request(app)
       .get(`${propertyURL}`)
+      .set('Authorization', 344343)
+      .end((err, res) => {
+        expect(res).to.have.status(403);
+        expect(res.body.status).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Unathorized. Token invalid. Please login');
+        done();
+      });
+  });
+  it('should get not get properties with invalid authorization', (done) => {
+    chai
+      .request(app)
+      .get(`${propertyURL}`)
       .end((err, res) => {
         expect(res).to.have.status(403);
         expect(res.body.status).to.be.equal('false');
@@ -1125,6 +1137,120 @@ describe('GET /api/v1/property/<:property-id>/', () => {
         done();
       });
   });
+  it('should get property with of a given owner and a number of baths and rooms', (done) => {
+    chai
+      .request(app)
+      .get(`${propertyURL}/3?owner=4&rooms=3&baths=2`)
+      .set('Authorization', agentToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body.data).to.be.an('array').that.contains.something.like(
+          {
+            propertyId: 5,
+            owner: 4,
+            status: 'For Rent',
+            price: '668000',
+            state: 'Lagos',
+            city: 'Gbagada',
+            address: 'Plot 23, Soluyi, Gbagada',
+            type: 'Flat',
+            createdOn: '1906-08-11T23:46:24.000Z',
+            image_url: 'www.wwwww',
+            baths: '2',
+            rooms: '3',
+            marketer: 'Lemlem Properties',
+            deleted: false,
+          },
+        );
+        done();
+      });
+  });
+  it('should get property with of a given owner, type and a number of baths ', (done) => {
+    chai
+      .request(app)
+      .get(`${propertyURL}/3?owner=4&type=Flat&baths=2`)
+      .set('Authorization', agentToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body.data).to.be.an('array').that.contains.something.like(
+          {
+            propertyId: 5,
+            owner: 4,
+            status: 'For Rent',
+            price: '668000',
+            state: 'Lagos',
+            city: 'Gbagada',
+            address: 'Plot 23, Soluyi, Gbagada',
+            type: 'Flat',
+            createdOn: '1906-08-11T23:46:24.000Z',
+            image_url: 'www.wwwww',
+            baths: '2',
+            rooms: '3',
+            marketer: 'Lemlem Properties',
+            deleted: false,
+          },
+        );
+        done();
+      });
+  });
+  it('should get property with of a given status', (done) => {
+    chai
+      .request(app)
+      .get(`${propertyURL}/3?status=For Sale`)
+      .set('Authorization', userToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body.data).to.be.an('array').that.contains.something.like(
+          {
+            propertyId: 4,
+            owner: 3,
+            status: 'For Sale',
+            price: '3210000',
+            state: 'Lagos',
+            city: 'Lekki',
+            address: '234, Bimbo Street, Lekki',
+            type: 'Duplex',
+            createdOn: '1906-08-11T23:46:24.000Z',
+            image_url: 'www.wwwww',
+            baths: '4',
+            rooms: '7',
+            marketer: 'Etihad Properties',
+          },
+        );
+        done();
+      });
+  });
+  it('should get property with of a given status and number of rooms and baths', (done) => {
+    chai
+      .request(app)
+      .get(`${propertyURL}/3?status=For Sale&rooms=7&baths=4`)
+      .set('Authorization', userToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body.data).to.be.an('array').that.contains.something.like(
+          {
+            propertyId: 4,
+            owner: 3,
+            status: 'For Sale',
+            price: '3210000',
+            state: 'Lagos',
+            city: 'Lekki',
+            address: '234, Bimbo Street, Lekki',
+            type: 'Duplex',
+            createdOn: '1906-08-11T23:46:24.000Z',
+            image_url: 'www.wwwww',
+            baths: '4',
+            rooms: '7',
+            marketer: 'Etihad Properties',
+          },
+        );
+        done();
+      });
+  });
   it('should get property with of a given owner and number of rooms', (done) => {
     chai
       .request(app)
@@ -1153,10 +1279,150 @@ describe('GET /api/v1/property/<:property-id>/', () => {
         done();
       });
   });
+  it('should get property with of a given owner, type, status and number of rooms', (done) => {
+    chai
+      .request(app)
+      .get(`${propertyURL}/3?owner=3&status=For Sale&type=Duplex&rooms=7`)
+      .set('Authorization', userToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body.data).to.be.an('array').that.contains.something.like(
+          {
+            propertyId: 4,
+            owner: 3,
+            status: 'For Sale',
+            price: '3210000',
+            state: 'Lagos',
+            city: 'Lekki',
+            address: '234, Bimbo Street, Lekki',
+            type: 'Duplex',
+            createdOn: '1906-08-11T23:46:24.000Z',
+            image_url: 'www.wwwww',
+            baths: '4',
+            rooms: '7',
+            marketer: 'Etihad Properties',
+          },
+        );
+        done();
+      });
+  });
+  it('should get property with of a given number of rooms and baths', (done) => {
+    chai
+      .request(app)
+      .get(`${propertyURL}/3?rooms=7&baths=4`)
+      .set('Authorization', userToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body.data).to.be.an('array').that.contains.something.like(
+          {
+            propertyId: 4,
+            owner: 3,
+            status: 'For Sale',
+            price: '3210000',
+            state: 'Lagos',
+            city: 'Lekki',
+            address: '234, Bimbo Street, Lekki',
+            type: 'Duplex',
+            createdOn: '1906-08-11T23:46:24.000Z',
+            image_url: 'www.wwwww',
+            baths: '4',
+            rooms: '7',
+            marketer: 'Etihad Properties',
+          },
+        );
+        done();
+      });
+  });
   it('should get property with of a given type and status', (done) => {
     chai
       .request(app)
       .get(`${propertyURL}/3?type=Duplex&status=For Sale`)
+      .set('Authorization', userToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body.data).to.be.an('array').that.contains.something.like(
+          {
+            propertyId: 4,
+            owner: 3,
+            status: 'For Sale',
+            price: '3210000',
+            state: 'Lagos',
+            city: 'Lekki',
+            address: '234, Bimbo Street, Lekki',
+            type: 'Duplex',
+            createdOn: '1906-08-11T23:46:24.000Z',
+            image_url: 'www.wwwww',
+            baths: '4',
+            rooms: '7',
+            marketer: 'Etihad Properties',
+          },
+        );
+        done();
+      });
+  });
+  it('should get property with of a given type and number of rooms', (done) => {
+    chai
+      .request(app)
+      .get(`${propertyURL}/3?type=Duplex&rooms=7`)
+      .set('Authorization', userToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body.data).to.be.an('array').that.contains.something.like(
+          {
+            propertyId: 4,
+            owner: 3,
+            status: 'For Sale',
+            price: '3210000',
+            state: 'Lagos',
+            city: 'Lekki',
+            address: '234, Bimbo Street, Lekki',
+            type: 'Duplex',
+            createdOn: '1906-08-11T23:46:24.000Z',
+            image_url: 'www.wwwww',
+            baths: '4',
+            rooms: '7',
+            marketer: 'Etihad Properties',
+          },
+        );
+        done();
+      });
+  });
+  it('should get property with of a given type and number of baths', (done) => {
+    chai
+      .request(app)
+      .get(`${propertyURL}/3?type=Duplex&baths=4`)
+      .set('Authorization', userToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body.data).to.be.an('array').that.contains.something.like(
+          {
+            propertyId: 4,
+            owner: 3,
+            status: 'For Sale',
+            price: '3210000',
+            state: 'Lagos',
+            city: 'Lekki',
+            address: '234, Bimbo Street, Lekki',
+            type: 'Duplex',
+            createdOn: '1906-08-11T23:46:24.000Z',
+            image_url: 'www.wwwww',
+            baths: '4',
+            rooms: '7',
+            marketer: 'Etihad Properties',
+          },
+        );
+        done();
+      });
+  });
+  it('should get property with of a given status', (done) => {
+    chai
+      .request(app)
+      .get(`${propertyURL}/3?status=For Sale`)
       .set('Authorization', userToken)
       .end((err, res) => {
         expect(res).to.have.status(200);
@@ -1350,7 +1616,6 @@ describe('PATCH /api/v1/property/<:property-id>/', () => {
             createdOn: '1906-08-11T23:46:24.000Z',
             deleted: false,
             image_url: newDetails.image_url,
-            lastUpdatedOn: '6/30/2019',
             marketer: 'Lemlem Properties',
             owner: 2,
             price: newDetails.price,
