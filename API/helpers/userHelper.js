@@ -1,15 +1,14 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { users } from '../db/db';
+import { users, property } from '../db/db';
 import * as config from '../config';
 
 export default class UserHelper {
   static findUser(field, value) {
-    // eslint-disable-next-line no-restricted-syntax
-    for (const user of users) {
-      if (user[field] === value) {
-        return user;
-      }
+    let userFound = null;
+    userFound = users.filter(thisUser => thisUser[field] === value);
+    if (Object.keys(userFound).length !== 0) {
+      return userFound[0];
     }
     return null;
   }
@@ -20,6 +19,14 @@ export default class UserHelper {
 
   static findUserByEmail(email) {
     return this.findUser('email', email);
+  }
+
+  static findPropertyOwner(propertyId) {
+    const propertyFound = property.filter(match => match.propertyId === propertyId);
+    if (Object.keys(propertyFound).length !== 0) {
+      return this.findUser('userId', propertyFound[0].owner);
+    }
+    return null;
   }
 
   static hashPassword(password) {
@@ -39,6 +46,7 @@ export default class UserHelper {
       firstName: user.firstName,
       lastName: user.lastName,
       address: user.address,
+      type: user.type,
     };
     const token = jwt.sign({ payload }, config.secret, { expiresIn: 86400 });
     return token;
