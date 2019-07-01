@@ -257,9 +257,43 @@ body {
   border-radius: 10px 10px 0px 0px;
   overflow: hidden;
   margin: 0;
+  width: 50%;
+  height: 360px;
+}
+
+.imageMap {
+  display: flex;
+  justify-content: space-between;
+}
+
+.mapouter {
+  display: flex;
+  height: 360px;
+}
+
+.gmap_canvas {
+  display: flex;
+  width: 400px;
+  height: 360px;
+  border-radius: 10px 10px 0px 0px;
+  margin: auto;
+}
+/* #view-property-modal .image-div span{
+  align-items: flex-end;
+  height: 100px;
+  width: 40%;
+}
+
+
+#view-property-modal .image-div img {
+  border-radius: 10px 10px 0px 0px;
+  overflow: hidden;
+  margin: 0;
+  align-items: flex-start;
+  width: 40%;
 }
 
 #view-property-modal .image-div img {
   width: auto;
-  height: 500px;
-}
+  height: 200px;
+} */
