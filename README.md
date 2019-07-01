@@ -30,7 +30,7 @@ Property Pro Lite is a platform where people can create and/or search properties
 ## Installation
 To get the application running follow this steps:
 * Install NodeJs on your local machine
-* Clone the repository $ git clone https://github.com/conquext/conquext.github.io.git
+* Clone the repository $ git clone https://github.com/conquext/PropertyPro-lite.git
 * Install npm dependencies by running npm install
 
 #### Testing
