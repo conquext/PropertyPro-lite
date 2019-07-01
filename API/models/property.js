@@ -32,43 +32,6 @@ class Property {
     this.owner = owner; // userId
     this.deleted = deleted || false;
   }
-
-  setStatus(status) {
-    this.status = status;
-  }
-
-  getStatus() {
-    return this.status;
-  }
-
-  getType() {
-    return this.type;
-  }
-
-  getOwner() {
-    return this.owner;
-  }
-
-  delete() {
-    this.deleted = true;
-  }
-
-  isDeleted() {
-    return this.deleted;
-  }
-
-  getDateCreated() {
-    return this.createdOn;
-  }
-
-  setUpdate() {
-    this.lastUpdatedOn = new Date().toLocaleDateString();
-    return this.lastUpdatedOn;
-  }
-
-  getLastUpdated() {
-    return this.lastUpdatedOn;
-  }
 }
 
 export default Property;

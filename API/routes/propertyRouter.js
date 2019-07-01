@@ -18,16 +18,6 @@ router.use(authenticateUser);
 
 router.post('', authAgent, propertyListingCheck, listNewProperty);
 router.get('/', getAllProperty);
-// router.get('/:owner', getAllProperty);
-// router.get('/:owner/:type', authStaffOrItsAccountOwner, getAllProperty);
-// router.get('/:owner/:status', authStaffOrItsAccountOwner, getAllProperty);
-// router.get('/:owner/:type/:status', authStaffOrItsAccountOwner, getAllProperty);
-// router.get('/:type', authStaffOrItsAccountOwner, getAllProperty);
-// router.get('/:type/:status', authStaffOrItsAccountOwner, getAllProperty);
-// router.get('/:type/:pbaths/:prooms', authStaffOrItsAccountOwner, getAllProperty);
-// router.get('/:prooms', authStaffOrItsAccountOwner, getAllProperty);
-// router.get('/:prooms/:pbaths', authStaffOrItsAccountOwner, getAllProperty);
-
 router.get('/:propertyId', getProperty);
 router.patch('/:propertyId', authPropertyOwner, listingEditCheck, editProperty);
 router.patch('/:propertyId/sold', authPropertyOwner, updateProperty);

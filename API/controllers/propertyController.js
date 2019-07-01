@@ -1,7 +1,6 @@
 import { property } from '../db/db';
 import UserHelper from '../helpers/userHelper';
 import Property from '../models/property';
-import { threadId } from 'worker_threads';
 
 export default class propertyController {
   static listNewProperty(req, res) {

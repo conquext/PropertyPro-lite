@@ -9,13 +9,6 @@ export default class AuthMiddleware {
     });
   }
 
-  static successResponse(res, statusCode, success) {
-    return res.status(statusCode).json({
-      status: 'success',
-      data: success,
-    });
-  }
-
   static validationError(errors) {
     const err = errors.map(error => error.msg);
     return err;
