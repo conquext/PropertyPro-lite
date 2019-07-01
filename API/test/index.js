@@ -908,7 +908,6 @@ describe('GET /api/v1/property', () => {
             address: '234, Eleyele, Ikeja',
             baths: '2',
             city: 'Ikeja',
-            createdOn: '1906-08-11T23:46:24.000Z',
             image_url: 'www.wwwww',
             marketer: 'Etihad Properties',
             owner: 1,
@@ -978,7 +977,7 @@ describe('GET /api/v1/property', () => {
             address: '234, Eleyele, Ikeja',
             baths: '2',
             city: 'Ikeja',
-            createdOn: '1906-08-11T23:46:24.000Z',
+
             image_url: 'www.wwwww',
             marketer: 'Etihad Properties',
             owner: 1,
@@ -1027,6 +1026,29 @@ describe('GET /api/v1/property', () => {
 });
 
 describe('GET /api/v1/property/<:property-id>/', () => {
+  it('should get not get properties without authorization', (done) => {
+    chai
+      .request(app)
+      .get(`${propertyURL}/2`)
+      .end((err, res) => {
+        expect(res).to.have.status(403);
+        expect(res.body.status).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Unathorized. Token not found');
+        done();
+      });
+  });
+  it('should not get property with an unknown id', (done) => {
+    chai
+      .request(app)
+      .get(`${propertyURL}/30000`)
+      .set('Authorization', userToken)
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+        expect(res.body.success).to.be.equal('false');
+        expect(res.body.error).to.be.equal('Property not found');
+        done();
+      });
+  });
   it('should get property with a given id, search by user', (done) => {
     chai
       .request(app)
@@ -1045,7 +1067,7 @@ describe('GET /api/v1/property/<:property-id>/', () => {
             city: 'Gwarwa',
             address: '4, Indiana, Gwarwa',
             type: 'Flat',
-            createdOn: '1906-08-11T23:46:24.000Z',
+
             image_url: 'www.wwwww',
             baths: '2',
             rooms: '4',
@@ -1074,7 +1096,7 @@ describe('GET /api/v1/property/<:property-id>/', () => {
             city: 'Gwarwa',
             address: '4, Indiana, Gwarwa',
             type: 'Flat',
-            createdOn: '1906-08-11T23:46:24.000Z',
+
             image_url: 'www.wwwww',
             baths: '2',
             rooms: '4',
@@ -1082,29 +1104,6 @@ describe('GET /api/v1/property/<:property-id>/', () => {
             deleted: false,
           },
         );
-        done();
-      });
-  });
-  it('should get not get properties without authorization', (done) => {
-    chai
-      .request(app)
-      .get(`${propertyURL}/2`)
-      .end((err, res) => {
-        expect(res).to.have.status(403);
-        expect(res.body.status).to.be.equal('false');
-        expect(res.body.error).to.be.equal('Unathorized. Token not found');
-        done();
-      });
-  });
-  it('should not get property with an unknown id', (done) => {
-    chai
-      .request(app)
-      .get(`${propertyURL}/30000`)
-      .set('Authorization', userToken)
-      .end((err, res) => {
-        expect(res).to.have.status(404);
-        expect(res.body.success).to.be.equal('false');
-        expect(res.body.error).to.be.equal('Property not found');
         done();
       });
   });
@@ -1126,7 +1125,7 @@ describe('GET /api/v1/property/<:property-id>/', () => {
             city: 'Gbagada',
             address: 'Plot 23, Soluyi, Gbagada',
             type: 'Flat',
-            createdOn: '1906-08-11T23:46:24.000Z',
+
             image_url: 'www.wwwww',
             baths: '2',
             rooms: '3',
@@ -1155,7 +1154,7 @@ describe('GET /api/v1/property/<:property-id>/', () => {
             city: 'Gbagada',
             address: 'Plot 23, Soluyi, Gbagada',
             type: 'Flat',
-            createdOn: '1906-08-11T23:46:24.000Z',
+
             image_url: 'www.wwwww',
             baths: '2',
             rooms: '3',
@@ -1184,7 +1183,7 @@ describe('GET /api/v1/property/<:property-id>/', () => {
             city: 'Gbagada',
             address: 'Plot 23, Soluyi, Gbagada',
             type: 'Flat',
-            createdOn: '1906-08-11T23:46:24.000Z',
+
             image_url: 'www.wwwww',
             baths: '2',
             rooms: '3',
@@ -1213,7 +1212,6 @@ describe('GET /api/v1/property/<:property-id>/', () => {
             city: 'Lekki',
             address: '234, Bimbo Street, Lekki',
             type: 'Duplex',
-            createdOn: '1906-08-11T23:46:24.000Z',
             image_url: 'www.wwwww',
             baths: '4',
             rooms: '7',
@@ -1241,7 +1239,7 @@ describe('GET /api/v1/property/<:property-id>/', () => {
             city: 'Lekki',
             address: '234, Bimbo Street, Lekki',
             type: 'Duplex',
-            createdOn: '1906-08-11T23:46:24.000Z',
+
             image_url: 'www.wwwww',
             baths: '4',
             rooms: '7',
@@ -1269,7 +1267,7 @@ describe('GET /api/v1/property/<:property-id>/', () => {
             city: 'Lekki',
             address: '234, Bimbo Street, Lekki',
             type: 'Duplex',
-            createdOn: '1906-08-11T23:46:24.000Z',
+
             image_url: 'www.wwwww',
             baths: '4',
             rooms: '7',
@@ -1297,7 +1295,7 @@ describe('GET /api/v1/property/<:property-id>/', () => {
             city: 'Lekki',
             address: '234, Bimbo Street, Lekki',
             type: 'Duplex',
-            createdOn: '1906-08-11T23:46:24.000Z',
+
             image_url: 'www.wwwww',
             baths: '4',
             rooms: '7',
@@ -1325,7 +1323,7 @@ describe('GET /api/v1/property/<:property-id>/', () => {
             city: 'Lekki',
             address: '234, Bimbo Street, Lekki',
             type: 'Duplex',
-            createdOn: '1906-08-11T23:46:24.000Z',
+
             image_url: 'www.wwwww',
             baths: '4',
             rooms: '7',
@@ -1353,7 +1351,7 @@ describe('GET /api/v1/property/<:property-id>/', () => {
             city: 'Lekki',
             address: '234, Bimbo Street, Lekki',
             type: 'Duplex',
-            createdOn: '1906-08-11T23:46:24.000Z',
+
             image_url: 'www.wwwww',
             baths: '4',
             rooms: '7',
@@ -1381,7 +1379,7 @@ describe('GET /api/v1/property/<:property-id>/', () => {
             city: 'Lekki',
             address: '234, Bimbo Street, Lekki',
             type: 'Duplex',
-            createdOn: '1906-08-11T23:46:24.000Z',
+
             image_url: 'www.wwwww',
             baths: '4',
             rooms: '7',
@@ -1409,7 +1407,7 @@ describe('GET /api/v1/property/<:property-id>/', () => {
             city: 'Lekki',
             address: '234, Bimbo Street, Lekki',
             type: 'Duplex',
-            createdOn: '1906-08-11T23:46:24.000Z',
+
             image_url: 'www.wwwww',
             baths: '4',
             rooms: '7',
@@ -1437,7 +1435,7 @@ describe('GET /api/v1/property/<:property-id>/', () => {
             city: 'Lekki',
             address: '234, Bimbo Street, Lekki',
             type: 'Duplex',
-            createdOn: '1906-08-11T23:46:24.000Z',
+
             image_url: 'www.wwwww',
             baths: '4',
             rooms: '7',
@@ -1465,7 +1463,7 @@ describe('GET /api/v1/property/<:property-id>/', () => {
             city: 'Ikeja',
             address: '234, Eleyele, Ikeja',
             type: 'Flat',
-            createdOn: '1906-08-11T23:46:24.000Z',
+
             image_url: 'www.wwwww',
             baths: '2',
             rooms: '3',
@@ -1583,7 +1581,7 @@ describe('PATCH /api/v1/property/<:property-id>/', () => {
     price: 40000,
     image_url: 'wwwcom',
   };
-  before((done) => {
+  beforeEach((done) => {
     const thisAgentCredentials = {
       email: 'email2@email.com',
       password: 'password1',
@@ -1613,7 +1611,7 @@ describe('PATCH /api/v1/property/<:property-id>/', () => {
             address: newDetails.address,
             baths: newDetails.baths,
             city: 'Gwarwa',
-            createdOn: '1906-08-11T23:46:24.000Z',
+
             deleted: false,
             image_url: newDetails.image_url,
             marketer: 'Lemlem Properties',
@@ -1820,7 +1818,7 @@ describe('PATCH /api/v1/property/<:property-id>/sold', () => {
             state: 'Abuja',
             city: 'Gwarwa',
             type: 'Flat',
-            createdOn: '1906-08-11T23:46:24.000Z',
+
             marketer: 'Lemlem Properties',
             deleted: false,
           },
