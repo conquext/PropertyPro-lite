@@ -1,0 +1,12 @@
+{
+    "extends": "airbnb-base",
+    "rules": {
+        "linebreak-style": ["error", "unix"],
+        "consistent-return": 0
+    },
+    "env": {
+        "mocha": true,
+        "node": true,
+    	"es6": true
+    }
+}
