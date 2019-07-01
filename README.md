@@ -2,7 +2,7 @@
 # PropertyPro-lite
 Property Pro Lite is a platform where people can create and/or search properties for sale or rent.
 
-[![Build Status](https://travis-ci.org/conquext/PropertyPro-lite.svg?branch=develop)](https://travis-ci.org/conquext/PropertyPro-lite) [![Coverage Status](https://coveralls.io/repos/github/conquext/PropertyPro-lite/badge.svg)](https://coveralls.io/github/conquext/PropertyPro-lite)
+[![Build Status](https://travis-ci.org/conquext/PropertyPro-lite.svg?branch=develop)](https://travis-ci.org/conquext/PropertyPro-lite) [![Coverage Status](https://coveralls.io/repos/github/conquext/PropertyPro-lite/badge.svg?branch=develop)](https://coveralls.io/github/conquext/PropertyPro-lite?branch=develop)
 
 #### Views/Templates
 > * [Landing Page/Sign Up/ Sign In](https://conquext.github.io/PropertyPro-lite/UI/)
