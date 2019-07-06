@@ -29,6 +29,12 @@
   "homepage": "https://github.com/conquext/PropertyPro-lite#readme",
   "dependencies": {
     "@types/express": "^4.17.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-cli": "^6.26.0",
+    "babel-loader": "^8.0.6",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-register": "^6.26.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "chai": "^4.2.0",
@@ -59,13 +65,7 @@
     "@babel/register": "^7.4.4",
     "@types/dotenv": "^6.1.1",
     "@types/node": "^12.0.10",
-    "babel-cli": "^6.26.0",
-    "babel-core": "^7.0.0-bridge.0",
-    "babel-loader": "^8.0.6",
     "babel-plugin-transform-es2015-modules-umd": "^6.24.1",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-register": "^6.26.0",
     "coveralls": "^3.0.4",
     "cross-env": "^5.2.0",
     "eslint": "^5.3.0",
@@ -76,7 +76,6 @@
     "nodemon": "^1.18.11",
     "nyc": "^14.1.1",
     "pg": "^7.11.0",
-    "rimraf": "^2.6.3",
     "swagger-test": "^0.7.3"
   }
 }
