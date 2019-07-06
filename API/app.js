@@ -19,9 +19,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator());
 
 const API_VERSION = '/api/v1';
-const swaggerOptions = {  
-    customSiteTitle: 'My Service',  
-    customCss: '.swagger-ui .topbar { display: none }', 
+const swaggerOptions = {
+  customSiteTitle: 'My Service',
+  customCss: '.swagger-ui .topbar { display: none }',
 };
 
 
@@ -31,14 +31,14 @@ app.use(`${API_VERSION}/property`, propertyRouter);
 app.use('/', express.static(path.resolve(__dirname, '')));
 app.use('/static', express.static('public'));
 
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs, { explorer: false, swaggerOptions}));
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs, { explorer: false, swaggerOptions }));
 
 app.get('/', (req, res) => res.send(`The app is running at port:${PORT}`));
 
-app.get('/docs.json', (req, res) => {  
-    res.setHeader('Content-Type', 'application/json; charset=utf-8');  
-    res.status(200).json(specs);  
-}); 
+app.get('/docs.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.status(200).json(specs);
+});
 
 app.get(`${API_VERSION}/auth`, (req, res) => {
   res.status(200).json({

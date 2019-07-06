@@ -4,9 +4,8 @@
   "description": "Property Pro Lite is a platform where people can create and/or search properties for sale or rent.",
   "main": "app.js",
   "scripts": {
-    "start": "npm run build && DEBUG=dev node dist/API/app.js",
+    "start": "DEBUG=dev node --require babel-register API/app.js",
     "start-dev": "DEBUG=dev node_modules/.bin/nodemon API/app.js --exec babel-node --",
-    "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./UI,./.babelrc,./package.json,./npm-debug.log --copy-files",
     "serve": "node dist/app.js",
     "docs": "node_modules/.bin/jsdoc -r  . -d docs -c API/jsdoc.json README.md",
     "swagger-docs": "node_modules/.bin/swagger-jsdoc -d swaggerDoc.js -o swagger.json",
