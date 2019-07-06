@@ -80,6 +80,6 @@
     "pg": "^7.11.0",
     "rimraf": "^2.6.3",
     "swagger": "^0.7.5",
-    "swagger-test": "^0.7.3",
+    "swagger-test": "^0.7.3"
   }
 }
