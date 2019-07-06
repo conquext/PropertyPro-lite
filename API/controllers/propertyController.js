@@ -3,6 +3,14 @@ import UserHelper from '../helpers/userHelper';
 import Property from '../models/property';
 
 export default class propertyController {
+  /**
+   * @description List a new property
+   * @static
+   * @param {*} req
+   * @param {*} res
+   * @returns {propertyController} A new property listing
+   * @memberof propertyController
+   */
   static listNewProperty(req, res) {
     try {
       const newPropertyId = property[property.length - 1].propertyId + 1;
@@ -40,6 +48,14 @@ export default class propertyController {
     }
   }
 
+  /**
+   * @description Returns all property listings
+   * @static
+   * @param {*} req
+   * @param {*} res
+   * @returns {propertyController} Property listings
+   * @memberof propertyController
+   */
   static getAllProperty(req, res) {
     try {
       const propertyFound = [];
@@ -75,6 +91,14 @@ export default class propertyController {
     }
   }
 
+  /**
+   * @description Returns a particular property listing
+   * @static
+   * @param {*} req
+   * @param {*} res
+   * @returns {propertyController} property listing
+   * @memberof propertyController
+   */
   static getProperty(req, res) {
     try {
       const thisPropertyId = parseInt(req.params.propertyId, 10);
@@ -112,7 +136,7 @@ export default class propertyController {
       if (req.query.status && !(req.query.owner || req.query.type)) {
         const { status } = req.query;
         propertyFound = property.filter(props => (props.status === status) && (props.deleted === false));
-        if (Object.keys(propertyFound) !== 0) {
+        if (Object.keys(propertyFound).length !== 0) {
           if (req.query.baths) {
             const { baths } = req.query;
             propertyFound = propertyFound.filter(props => props.baths === baths);
@@ -129,7 +153,7 @@ export default class propertyController {
           const ownerFound = UserHelper.findUserById(parseInt(owner, 10));
           if (ownerFound) {
             propertyFound = property.filter(searchProperty => (searchProperty.owner === ownerFound.userId) && (searchProperty.deleted === false));
-            if (Object.keys(propertyFound) !== 0) {
+            if (Object.keys(propertyFound).length !== 0) {
               if (req.query.type) {
                 const { type } = req.query;
                 propertyFound = propertyFound.filter(props => props.type === type);
@@ -201,6 +225,14 @@ export default class propertyController {
     }
   }
 
+  /**
+   * @description Edit a property listing
+   * @static
+   * @param {*} req
+   * @param {*} res
+   * @returns {propertyController} Edited property listing
+   * @memberof propertyController
+   */
   static editProperty(req, res) {
     try {
       const thisPropertyId = parseInt(req.params.propertyId, 10);
@@ -231,6 +263,14 @@ export default class propertyController {
     }
   }
 
+  /** Update a property listing
+   * @description
+   * @static
+   * @param {*} req
+   * @param {*} res
+   * @returns {propertyController} Updated property listing
+   * @memberof propertyController
+   */
   static updateProperty(req, res) {
     try {
       const thisPropertyId = parseInt(req.params.propertyId, 10);
@@ -254,11 +294,19 @@ export default class propertyController {
     }
   }
 
+  /**
+   * @description Delete a property listing
+   * @static
+   * @param {*} req
+   * @param {*} res
+   * @returns {propertyController} Deleted property listing
+   * @memberof propertyController
+   */
   static deleteProperty(req, res) {
     try {
       const thisPropertyId = parseInt(req.params.propertyId, 10);
       let propertyFound = null;
-      let propertyIndex = '';
+      let propertyIndex = null;
       property.map((searchProperty, index) => {
         if (searchProperty.propertyId === thisPropertyId) {
           if (searchProperty.deleted !== true) {

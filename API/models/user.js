@@ -1,3 +1,58 @@
+/**
+* @swagger
+* definitions:
+*   error:
+*     properties:
+*       statusCode:
+*         type: integer
+*         format: int32
+*         default: 400
+*       message:
+*         type: string
+*       error:
+*         type: string
+*   success:
+*     properties:
+*       statusCode:
+*         type: integer
+*         format: int32
+*         default: 200
+*       message:
+*         type: string
+*       data:
+*         type: object
+*   User:
+*     type: object
+*     properties:
+*       id:
+*         type: number
+*         format: integer
+*       first_name:
+*         type: string
+*       last_name:
+*         type: string
+*       email:
+*         type: string
+*         format: email
+*       password:
+*         type: string
+*         format: password
+*       phone_number:
+*         type: number
+*         format: tel
+*       address:
+*         type: string
+*       is_admin:
+*         type: boolean
+*       dob:
+*         type: string
+*         format: date
+*       state:
+*         type: string
+*       country:
+*         type: string
+*/
+
 /* eslint-disable no-unused-vars */
 export default class User {
   constructor({
