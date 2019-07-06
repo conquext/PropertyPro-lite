@@ -9,6 +9,13 @@ Property Pro Lite is a platform where people can create and/or search properties
 > * [User Page/Search/Views](https://conquext.github.io/PropertyPro-lite/UI/users)
 > * [Agent Page/Edit/Delete/Update listing](https://conquext.github.io/PropertyPro-lite/UI/agents)
 
+## Heroku Build
+#### Endpoints
+> * [Heroku](https://property-pro-lite1.herokuapp.com)
+#### Documentation
+> * [Test Docs UI](https://property-pro-lite1.herokuapp.com/docs)
+> * [Generate Docs JSON](https://property-pro-lite1.herokuapp.com/docs.json)
+
 #### Project Management
 > * Pivotal Tracker https://www.pivotaltracker.com/n/projects/2354400
 
