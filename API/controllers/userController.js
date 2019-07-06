@@ -3,6 +3,14 @@ import UserHelper from '../helpers/userHelper';
 import { users } from '../db/db';
 
 export default class UserController {
+  /**
+   * @description Logins a registered user
+   * @static
+   * @param {*} req
+   * @param {*} res
+   * @returns {UserController} A logged-in user
+   * @memberof UserController
+   */
   static login(req, res) {
     try {
       const { email, password } = req.body;
@@ -41,6 +49,14 @@ export default class UserController {
     }
   }
 
+  /**
+   * @description Register a new user
+   * @static
+   * @param {*} req
+   * @param {*} res
+   * @returns {UserController} A new user
+   * @memberof UserController
+   */
   static signup(req, res) {
     try {
       const {

@@ -1,26 +1,46 @@
 import bodyParser from 'body-parser';
+import Debug from 'debug';
 import express from 'express';
 import expressValidator from 'express-validator';
 import path from 'path';
+import { config } from 'dotenv';
+import swaggerUi from 'swagger-ui-express';
+import specs from '../swaggerDoc';
 import authRouter from './routes/authRouter';
 import propertyRouter from './routes/propertyRouter';
 
-
+config();
 const app = express();
-const PORT = process.env.PORT || 4000;
+const logger = new Debug('dev');
+const { PORT = 4000 } = process.env;
 
 app.use(bodyParser.json({ type: 'application/json' }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator());
 
-app.use('/api/v1/auth', authRouter);
-app.use('/api/v1/property', propertyRouter);
+const API_VERSION = '/api/v1';
+const swaggerOptions = {  
+    customSiteTitle: 'My Service',  
+    customCss: '.swagger-ui .topbar { display: none }', 
+};
+
+
+app.use(`${API_VERSION}/auth`, authRouter);
+app.use(`${API_VERSION}/property`, propertyRouter);
 
 app.use('/', express.static(path.resolve(__dirname, '')));
+app.use('/static', express.static('public'));
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs, { explorer: false, swaggerOptions}));
 
 app.get('/', (req, res) => res.send(`The app is running at port:${PORT}`));
 
-app.get('/api/v1/auth', (req, res) => {
+app.get('/docs.json', (req, res) => {  
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');  
+    res.status(200).json(specs);  
+}); 
+
+app.get(`${API_VERSION}/auth`, (req, res) => {
   res.status(200).json({
     status: 200,
     success: 'true',
@@ -29,6 +49,7 @@ app.get('/api/v1/auth', (req, res) => {
 });
 
 app.listen(PORT, () => {
+  logger(`Server is running on PORT ${PORT}`);
 });
 
 export default app;

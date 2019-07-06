@@ -1,3 +1,46 @@
+/**
+* @swagger
+* definitions:
+*   Property:
+*     type: object
+*     properties:
+*       propertyId:
+*         type: string
+*       owner:
+*         type: string
+*       status:
+*         type: string
+*         enum:
+*           - "For Rent"
+*           - "For Sale"
+*       type:
+*         type: string
+*       address:
+*         type: string
+*       state:
+*         type: string
+*       city:
+*         type: string
+*       country:
+*         type: string
+*       baths:
+*         type: integer
+*       rooms:
+*         type: integer
+*       price:
+*         type: integer
+*       marketer:
+*         type: string
+*       created_on:
+*         type: boolean
+*         format: date-time
+*       deleted:
+*         type: boolean
+*       last_updatedOn:
+*         type: string
+*         format: date-time
+*/
+
 class Property {
   constructor({
     propertyId,

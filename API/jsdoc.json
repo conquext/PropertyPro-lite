@@ -1,0 +1,17 @@
+{
+    "tags": {
+        "allowUnknownTags": ["category", "@swagger"]
+    },
+    "source": {
+        "include": ["./API/routes"],
+        "includePattern": ".js$",
+        "excludePattern": "(node_modules/|docs)"
+    },
+    "opts": {
+        "encoding": "utf8",
+        "readme": "readme.md",
+        "destination": "docs/",
+        "recurse": true,
+        "verbose": true
+    }
+}

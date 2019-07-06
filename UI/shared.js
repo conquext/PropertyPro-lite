@@ -88,7 +88,6 @@ for (var i = 0; i < cancelButton.length; i++) {
   cancelButton[i].addEventListener("click", function() {
     modal.classList.remove("open");
     editingModal.classList.remove("open");
-    viewModal.classList.remove("open");
   });
 }
 
@@ -96,7 +95,6 @@ for (var i = 0; i < closeIcon.length; i++) {
   closeIcon[i].addEventListener("click", function() {
     modal.classList.remove("open");
     editingModal.classList.remove("open");
-    viewModal.classList.remove("open");
   });
 }
 
@@ -126,8 +124,6 @@ const updatePropertyItem = (event) => {
     theNode.textContent = "Taken";
     theNode.classList.add("sold");
   }
-  // currentNode.querySelector(".property-status a").textContent = "Sold";
-  // currentNode.querySelector(".property-status a").classList.add("sold"); 
 }
 
 for (var i = 0; i < soldProperty.length; i++) {
@@ -179,6 +175,10 @@ const populateModal = (theModal) => {
   formNode.querySelector('[name="prooms"]').value = currentNode.querySelector('.prooms').textContent.trim().charAt(0);
   formNode.querySelector('[name="pbaths"]').value = currentNode.querySelector('.pbaths').textContent.trim().charAt(0);
   formNode.querySelector('[name="pprice"]').value = currentNode.querySelector('.property-price').textContent.trim().match(/\d/g).join("");
+  if (formNode.querySelector('#img_preview').querySelector("img")) {
+    let formerImage = formNode.querySelector('#img_preview').querySelectorAll("img");
+    formerImage.forEach(imageElement => imageElement.parentNode.removeChild(imageElement));
+  }
   previewImage(formNode.querySelector('#img_preview'), currentNode.querySelectorAll('div.image-div img'));
 
   // updateListing.addEventListener('click', (event) => updateProperty(event, currentNode, formNode), false);

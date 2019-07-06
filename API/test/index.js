@@ -2,7 +2,10 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import chaiLike from 'chai-like';
 import chaiThings from 'chai-things';
+import swaggerTest from 'swagger-test'
+import preq from 'preq';
 import app from '../app';
+import specs from '../../swaggerDoc';
 import UserController from '../controllers/userController';
 import PropertyController from '../controllers/propertyController';
 import { property } from '../db/db';
@@ -102,6 +105,82 @@ describe('Test default route', () => {
       .send({ random: 'random' })
       .end((err, res) => {
         expect(res).to.have.status(404);
+        done();
+      });
+  });
+});
+
+//Test API Doc
+describe('Specification-driven tests', function () {
+  swaggerTest.parse(specs, { inferXamples: true });
+  it('Should return 200 for the docs route', (done) => {
+    chai
+      .request(app)
+      .get('/docs.json')
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        done();
+      });
+  });
+  it('Should follow documentation specifications', (done) => {
+    chai
+      .request(app)
+      .get('/docs.json')
+      .end((err, res) => {
+        expect(res.header['content-type']).to.equal('application/json; charset=utf-8');
+        expect(res.body.paths).to.deep.include(
+          { '/auth/login':
+            { post:
+                { tags: ['Users'],
+                  name: 'Login',
+                  summary: 'Logs in a user',
+                  consumes: ['application/json'],
+                  produces: ['application/json'],
+                  parameters: [{
+                            "description": "User",
+                            "in": "body",
+                            "name": "body",
+                            "required": true,
+                            "schema": {
+                              "properties": {
+                                "email": {
+                                  "format": "email",
+                                  "type": "string",
+                                },
+                                "password": {
+                                  "format": "password",
+                                  "type": "string",
+                                },
+                                "required": "email password",
+                              },
+                              "type": "object",
+                            }
+                          }],
+                  responses: {
+                          "200": {
+                            "description": "User found and logged in successfully",
+                            "schema": {
+                              "$ref": "#/definitions/User",
+                              "type": "object",
+                            }
+                          },
+                          "400": {
+                            "description": "Bad request",
+                          },
+                          "401": {
+                            "description": "User not found",
+                          },
+                          "403": {
+                            "description": "Username and password don't match",
+                          },
+                          "500": {
+                            "description": "Something went wrong. Try again",
+                          }
+                        } 
+                } 
+            },
+          },
+        );
         done();
       });
   });

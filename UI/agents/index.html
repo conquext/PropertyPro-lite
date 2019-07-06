@@ -669,21 +669,17 @@
         , img;
 
         imgUpload.addEventListener('change', previewImgs, false);
-        // imgUploadForm.addEventListener('submit', function (e) {
-        // e.preventDefault();
-        // alert('Images Uploaded!');
-        // }, false);
 
         function previewImgs(event) {
             totalFiles = imgUpload.files.length;
             
             if(totalFiles) {
                 imgPreview.classList.remove('quote-imgs-thumbs--hidden');
-                previewTitle = document.createElement('p');
-                previewTitle.style.fontWeight = 'bold';
-                previewTitleText = document.createTextNode(totalFiles + ' Total Images Selected');
-                previewTitle.appendChild(previewTitleText);
-                imgPreview.appendChild(previewTitle);
+                // previewTitle = document.createElement('p');
+                // previewTitle.style.fontWeight = 'bold';
+                // previewTitleText = document.createTextNode(totalFiles + ' Total Images Selected');
+                // previewTitle.appendChild(previewTitleText);
+                // imgPreview.appendChild(previewTitle);
             }
             
             for(var i = 0; i < totalFiles; i++) {
@@ -723,11 +719,11 @@
 
             if(imageDiv) {
                 container.classList.remove('quote-imgs-thumbs--hidden');
-                previewTitle = document.createElement('p');
-                previewTitle.style.fontWeight = 'bold';
-                previewTitleText = document.createTextNode(totalFiles + ' Total Images');
-                previewTitle.appendChild(previewTitleText);
-                container.appendChild(previewTitle);
+                // previewTitle = document.createElement('p');
+                // previewTitle.style.fontWeight = 'bold';
+                // previewTitleText = document.createTextNode(totalFiles + ' Total Images');
+                // previewTitle.appendChild(previewTitleText);
+                // container.appendChild(previewTitle);
             }
 
             for(var i = 0; i < totalFiles; i++) {
@@ -737,7 +733,7 @@
                 container.appendChild(img);
             }
             let imgUpload = container.parentNode.querySelector('#upload_imgs');
-            imgUpload.addEventListener('change', addImages, false);
+            imgUpload.addEventListener('click', addImages, false);
         }
     </script>
     <script src="../shared.js"></script>
