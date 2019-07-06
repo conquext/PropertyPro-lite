@@ -7,7 +7,7 @@ const swaggerDefinition = {
       version: '1.0.0',
       description: 'Property Pro Lite is a platform where people can create and/or search properties for sale or rent.',
     },
-    host: 'https://property-pro-lite1.herokuapp.com',
+    host: 'property-pro-lite1.herokuapp.com',
     basePath: '/api/v1/',
     securityDefinitions: {
       bearerAuth: {
