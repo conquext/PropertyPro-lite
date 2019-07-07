@@ -1,10 +1,11 @@
+/* eslint-disable camelcase */
 /**
 * @swagger
 * definitions:
 *   Property:
 *     type: object
 *     properties:
-*       propertyId:
+*       id:
 *         type: string
 *       owner:
 *         type: string
@@ -31,6 +32,10 @@
 *         type: integer
 *       marketer:
 *         type: string
+*       ownerEmail:
+*         type: string
+*       ownerPhoneNumber:
+*         type: string
 *       created_on:
 *         type: boolean
 *         format: date-time
@@ -43,7 +48,7 @@
 
 class Property {
   constructor({
-    propertyId,
+    id,
     owner,
     status,
     price,
@@ -51,25 +56,29 @@ class Property {
     city,
     address,
     type,
-    createdOn,
-    imageUrl,
+    created_on,
+    image_url,
     baths,
     rooms,
+    ownerEmail,
+    ownerPhoneNumber,
     marketer,
     deleted,
     lastUpdatedOn,
   }) {
-    this.propertyId = propertyId;
+    this.id = id;
     this.status = status || 'For Rent';
     this.type = type;
     this.state = state;
     this.city = city;
     this.address = address;
     this.price = price;
-    this.createdOn = createdOn || new Date().toLocaleString();
-    this.imageUrl = imageUrl;
+    this.created_on = created_on || new Date().toLocaleString();
+    this.image_url = image_url;
     this.baths = baths;
     this.rooms = rooms;
+    this.ownerEmail = ownerEmail;
+    this.ownerPhoneNumber = ownerPhoneNumber;
     this.marketer = marketer || owner;
     this.lastUpdatedOn = lastUpdatedOn || new Date().toLocaleString();
     this.owner = owner; // userId

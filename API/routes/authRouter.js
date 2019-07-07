@@ -74,9 +74,9 @@ router.post('/login', loginCheck, login);
 *         schema:
 *          type: object
 *          properties:
-*            first_Name:
+*            first_name:
 *             type: string
-*            last_Name:
+*            last_name:
 *             type: string
 *            email:
 *              type: string
@@ -86,7 +86,7 @@ router.post('/login', loginCheck, login);
 *              format: password
 *            confirm_password:
 *              type: string
-*              format: password   
+*              format: password
 *            phone_number:
 *              type: string
 *              format: tel

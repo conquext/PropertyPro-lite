@@ -42,7 +42,7 @@ app.get('/docs.json', (req, res) => {
 
 app.get(`${API_VERSION}/auth`, (req, res) => {
   res.status(200).json({
-    status: 200,
+    status: 'success',
     success: 'true',
     message: 'Welcome to PropertyPro-lite',
   });

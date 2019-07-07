@@ -13,40 +13,49 @@ export default class UserHelper {
     return null;
   }
 
-  static findUserById(userId) {
-    return this.findUser('userId', userId);
+  static findUserById(id) {
+    return this.findUser('id', id);
   }
 
   static findUserByEmail(email) {
     return this.findUser('email', email);
   }
 
-  static findPropertyOwner(propertyId) {
-    const propertyFound = property.filter(match => match.propertyId === propertyId);
+  static findPropertyOwner(id) {
+    const propertyFound = property.filter(match => match.id === id);
     if (Object.keys(propertyFound).length !== 0) {
-      return this.findUser('userId', propertyFound[0].owner);
+      return this.findUser('id', propertyFound[0].owner);
     }
     return null;
   }
 
   static hashPassword(password) {
+    // @ts-ignore
     const salt = bcrypt.genSaltSync(10);
+    // @ts-ignore
     const hash = bcrypt.hashSync(password, salt);
     return hash;
   }
 
   static comparePassword(password, hash) {
+    // @ts-ignore
     return bcrypt.compareSync(password, hash);
   }
 
   static generateToken(user) {
     const payload = {
-      userId: user.userId,
+      id: user.id,
       email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
+      first_name: user.firstName,
+      last_name: user.lastName,
       address: user.address,
       type: user.type,
+      phoneNumber: user.phoneNumber,
+      is_admin: user.isAdmin,
+      dob: user.dob,
+      state: user.state,
+      country: user.country,
+      createdAt: user.createdAt,
     };
     const token = jwt.sign({ payload }, config.secret, { expiresIn: 86400 });
     return token;

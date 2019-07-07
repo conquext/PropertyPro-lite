@@ -2,7 +2,8 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import chaiLike from 'chai-like';
 import chaiThings from 'chai-things';
-import swaggerTest from 'swagger-test'
+import swaggerTest from 'swagger-test';
+// @ts-ignore
 import preq from 'preq';
 import app from '../app';
 import specs from '../../swaggerDoc';
@@ -25,13 +26,14 @@ const propertyURL = `${apiVersion}/property`;
 let userToken = '';
 let agentToken = '';
 
+// @ts-ignore
 before((done) => {
   const userCredentials = {
-    firstName: 'Shegs',
-    lastName: 'Jolly',
+    first_name: 'Shegs',
+    last_name: 'Jolly',
     email: 'email129@email.com',
     password: 'password1',
-    confirmPassword: 'password1',
+    confirm_password: 'password1',
     type: 'user',
     address: 'iyabo busstop',
   };
@@ -45,13 +47,15 @@ before((done) => {
     });
 });
 
+// @ts-ignore
+
 before((done) => {
   const agentCredentials = {
-    firstName: 'Jega',
-    lastName: 'Luve',
+    first_name: 'Jega',
+    last_name: 'Luve',
     email: 'email13@email.com',
     password: 'password1',
-    confirmPassword: 'password1',
+    confirm_password: 'password1',
     type: 'agent',
   };
   chai
@@ -82,7 +86,7 @@ describe('Test default route', () => {
       .get('/api/v1/auth')
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body.success).to.be.equal('true');
+        expect(res.body.status).to.be.equal('success');
         expect(res.body.message).to.be.equal('Welcome to PropertyPro-lite');
         done();
       });
@@ -98,6 +102,7 @@ describe('Test default route', () => {
       });
   });
   // Test for posting to undefined routes
+  // @ts-ignore
   it('Should return 404 for undefined routes', (done) => {
     chai
       .request(app)
@@ -110,8 +115,8 @@ describe('Test default route', () => {
   });
 });
 
-//Test API Doc
-describe('Specification-driven tests', function () {
+// Test API Doc
+describe('Specification-driven tests', () => {
   swaggerTest.parse(specs, { inferXamples: true });
   it('Should return 200 for the docs route', (done) => {
     chai
@@ -193,15 +198,15 @@ describe('POST /api/v1/auth/signup', () => {
       .request(app)
       .post(`${authSignupURL}`)
       .send({
-        firstName: 'Ajala',
-        lastName: 'Adekunle',
+        first_name: 'Ajala',
+        last_name: 'Adekunle',
         email: '',
         password: 'password1',
-        confirmPassword: 'password1',
+        confirm_password: 'password1',
       })
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Email is required');
         done();
       });
@@ -211,16 +216,16 @@ describe('POST /api/v1/auth/signup', () => {
       .request(app)
       .post(`${authSignupURL}`)
       .send({
-        firstName: '',
-        lastName: 'Name',
+        first_name: '',
+        last_name: 'Name',
         type: 'user',
         email: 'Ajala@banka.com',
         password: 'password1',
-        confirmPassword: 'password1',
+        confirm_password: 'password1',
       })
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('First name is required');
         done();
       });
@@ -230,16 +235,16 @@ describe('POST /api/v1/auth/signup', () => {
       .request(app)
       .post(`${authSignupURL}`)
       .send({
-        firstName: 'Nam3',
-        lastName: 'Name',
+        first_name: 'Nam3',
+        last_name: 'Name',
         type: 'user',
         email: 'Ajala@banka.com',
         password: 'password1',
-        confirmPassword: 'password1',
+        confirm_password: 'password1',
       })
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('First name should only contain alphabets');
         done();
       });
@@ -249,16 +254,16 @@ describe('POST /api/v1/auth/signup', () => {
       .request(app)
       .post(`${authSignupURL}`)
       .send({
-        firstName: 'Name1',
-        lastName: '',
+        first_name: 'Name1',
+        last_name: '',
         type: 'user',
         email: 'Ajala@banka.com',
         password: 'password1',
-        confirmPassword: 'password1',
+        confirm_password: 'password1',
       })
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Last name is required');
         done();
       });
@@ -268,16 +273,16 @@ describe('POST /api/v1/auth/signup', () => {
       .request(app)
       .post(`${authSignupURL}`)
       .send({
-        firstName: 'Er',
-        lastName: 'Name',
+        first_name: 'Er',
+        last_name: 'Name',
         type: 'user',
         email: 'Ajala@banka.com',
         password: 'password1',
-        confirmPassword: 'password1',
+        confirm_password: 'password1',
       })
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('First name should contain more than 2 characters');
         done();
       });
@@ -287,16 +292,16 @@ describe('POST /api/v1/auth/signup', () => {
       .request(app)
       .post(`${authSignupURL}`)
       .send({
-        firstName: 'E r',
-        lastName: 'Name',
+        first_name: 'E r',
+        last_name: 'Name',
         type: 'user',
         email: 'Ajala@banka.com',
         password: 'password1',
-        confirmPassword: 'password1',
+        confirm_password: 'password1',
       })
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('First name should only contain alphabets');
         done();
       });
@@ -306,16 +311,16 @@ describe('POST /api/v1/auth/signup', () => {
       .request(app)
       .post(`${authSignupURL}`)
       .send({
-        firstName: 'Name',
-        lastName: 'Name',
+        first_name: 'Name',
+        last_name: 'Name',
         type: 'user',
         email: 'swall@gmail.com',
         password: '',
-        confirmPassword: '',
+        confirm_password: '',
       })
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Password is required');
         done();
       });
@@ -325,16 +330,16 @@ describe('POST /api/v1/auth/signup', () => {
       .request(app)
       .post(`${authSignupURL}`)
       .send({
-        firstName: 'Name',
-        lastName: 'Name',
+        first_name: 'Name',
+        last_name: 'Name',
         type: 'user',
         email: 'swall@gmail.com',
         password: 'p23',
-        confirmPassword: '',
+        confirm_password: '',
       })
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Password should be atleast 6 characters');
         done();
       });
@@ -344,16 +349,16 @@ describe('POST /api/v1/auth/signup', () => {
       .request(app)
       .post(`${authSignupURL}`)
       .send({
-        firstName: 'Name',
-        lastName: 'Name',
+        first_name: 'Name',
+        last_name: 'Name',
         type: 'user',
         email: 'swall@gmail.com',
         password: 'password1',
-        confirmPassword: 'password2',
+        confirm_password: 'password2',
       })
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Passwords must match');
         done();
       });
@@ -363,15 +368,15 @@ describe('POST /api/v1/auth/signup', () => {
       .request(app)
       .post(`${authSignupURL}`)
       .send({
-        firstName: 'Name',
-        lastName: 'Name',
+        first_name: 'Name',
+        last_name: 'Name',
         type: 'user',
         password: 'password1',
-        confirmPassword: 'password2',
+        confirm_password: 'password2',
       })
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Email is required');
         done();
       });
@@ -381,16 +386,16 @@ describe('POST /api/v1/auth/signup', () => {
       .request(app)
       .post(`${authSignupURL}`)
       .send({
-        firstName: 'Name',
-        lastName: 'Name',
+        first_name: 'Name',
+        last_name: 'Name',
         type: 'user',
         email: 'swall.gmail.com',
         password: 'password1',
-        confirmPassword: 'password1',
+        confirm_password: 'password1',
       })
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Email is invalid');
         done();
       });
@@ -400,16 +405,16 @@ describe('POST /api/v1/auth/signup', () => {
       .request(app)
       .post(`${authSignupURL}`)
       .send({
-        firstName: 'Name',
-        lastName: 'Name',
+        first_name: 'Name',
+        last_name: 'Name',
         type: 'user',
         email: 'email1@email.com',
         password: 'password1',
-        confirmPassword: 'password1',
+        confirm_password: 'password1',
       })
       .end((err, res) => {
         expect(res).to.have.status(409);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('User already exists');
         done();
       });
@@ -419,15 +424,15 @@ describe('POST /api/v1/auth/signup', () => {
       .request(app)
       .post(`${authSignupURL}`)
       .send({
-        firstName: 'Name',
-        lastName: 'Name',
+        first_name: 'Name',
+        last_name: 'Name',
         email: 'swall@gmail.com',
         password: 'password1',
-        confirmPassword: 'password1',
+        confirm_password: 'password1',
       })
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Specify user type');
         done();
       });
@@ -437,16 +442,16 @@ describe('POST /api/v1/auth/signup', () => {
       .request(app)
       .post(`${authSignupURL}`)
       .send({
-        firstName: 'Name',
-        lastName: 'Name',
+        first_name: 'Name',
+        last_name: 'Name',
         type: '',
         email: 'swall@gmail.com',
         password: 'password1',
-        confirmPassword: 'password1',
+        confirm_password: 'password1',
       })
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Choose a valid user type');
         done();
       });
@@ -456,28 +461,29 @@ describe('POST /api/v1/auth/signup', () => {
       .request(app)
       .post(`${authSignupURL}`)
       .send({
-        firstName: 'Name',
-        lastName: 'Name',
+        first_name: 'Name',
+        last_name: 'Name',
         type: 'user',
         email: 'swall@gmail.com',
         password: 'password1',
-        confirmPassword: 'password1',
+        confirm_password: 'password1',
       })
       .end((err, res) => {
         expect(res).to.have.status(201);
-        expect(res.body.success).to.be.equal('true');
-        expect(res.body.data).to.have.key('token', 'id', 'firstName', 'lastName', 'email', 'type', 'isAdmin');
-        // expect(res.body.user).to.have.key('userId', 'name', 'email', 'type');
+        expect(res.body.status).to.be.equal('success');
+        expect(res.body.message).to.be.equal('User is registered successfully');
+        expect(res.body.data).to.have.key('token', 'id', 'first_name', 'last_name', 'email', 'type', 'is_admin');
+        // expect(res.body.user).to.have.key('id', 'name', 'email', 'type');
         done();
       });
   });
   it('should catch signup error', (done) => {
     const signupParams = {
-      firstName: 'Jega',
-      lastName: 'Luve',
+      first_name: 'Jega',
+      last_name: 'Luve',
       email: 'email13@email.com',
       password: 'password1',
-      confirmPassword: 'password1',
+      confirm_password: 'password1',
       type: 'agent',
     };
     const { signup } = UserController;
@@ -499,7 +505,7 @@ describe('POST /api/v1/auth/login', () => {
       })
       .end((err, res) => {
         expect(res).to.have.status(401);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Incorrect email');
         done();
       });
@@ -514,7 +520,7 @@ describe('POST /api/v1/auth/login', () => {
       })
       .end((err, res) => {
         expect(res).to.have.status(401);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Incorrect email or Wrong password');
         done();
       });
@@ -529,7 +535,7 @@ describe('POST /api/v1/auth/login', () => {
       })
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Email is required');
         done();
       });
@@ -544,7 +550,7 @@ describe('POST /api/v1/auth/login', () => {
       })
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Email is invalid');
         done();
       });
@@ -559,7 +565,7 @@ describe('POST /api/v1/auth/login', () => {
       })
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Password is required');
         done();
       });
@@ -575,7 +581,7 @@ describe('POST /api/v1/auth/login', () => {
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect(res.body.status).to.be.equal('success');
-        expect(res.body.data).to.have.key('id', 'firstName', 'lastName', 'email', 'type', 'token');
+        expect(res.body.data).to.have.key('id', 'first_name', 'last_name', 'email', 'type', 'token');
         done();
       });
   });
@@ -761,9 +767,9 @@ describe('POST /api/v1/property', () => {
       )
       .end((err, res) => {
         expect(res).to.have.status(201);
-        expect(res.body.success).to.be.equal('true');
+        expect(res.body.status).to.be.equal('success');
         expect(res.body.message).to.be.equal('New property listed successfully');
-        expect(res.body.data).to.include.key('propertyId', 'owner', 'status', 'price', 'state', 'city', 'address', 'type', 'baths', 'rooms');
+        expect(res.body.data).to.include.key('id', 'status', 'price', 'state', 'city', 'address', 'type', 'baths', 'rooms', 'ownerEmail', 'ownerPhoneNumber');
         done();
       });
   });
@@ -777,7 +783,7 @@ describe('POST /api/v1/property', () => {
       )
       .end((err, res) => {
         expect(res).to.have.status(403);
-        expect(res.body.success).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Unauthorized');
         done();
       });
@@ -790,7 +796,7 @@ describe('POST /api/v1/property', () => {
       .send(noStatus)
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Specify property status');
         done();
       });
@@ -803,7 +809,7 @@ describe('POST /api/v1/property', () => {
       .send(notCorrectStatus)
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Select the property status [For Sale or For Rent]');
         done();
       });
@@ -816,7 +822,7 @@ describe('POST /api/v1/property', () => {
       .send(noAddress)
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Provide address of your property');
         done();
       });
@@ -829,7 +835,7 @@ describe('POST /api/v1/property', () => {
       .send(notCorrectAddress)
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Address should contain more than 4 characters');
         done();
       });
@@ -842,7 +848,7 @@ describe('POST /api/v1/property', () => {
       .send(noType)
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Select type of property');
         done();
       });
@@ -855,7 +861,7 @@ describe('POST /api/v1/property', () => {
       .send(notCorrectType)
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Select the appropritate property type');
         done();
       });
@@ -868,7 +874,7 @@ describe('POST /api/v1/property', () => {
       .send(noRooms)
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Select number of rooms');
         done();
       });
@@ -881,7 +887,7 @@ describe('POST /api/v1/property', () => {
       .send(notCorrectRooms)
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Number of rooms should be numeric');
         done();
       });
@@ -894,7 +900,7 @@ describe('POST /api/v1/property', () => {
       .send(noBaths)
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Select number of baths');
         done();
       });
@@ -907,7 +913,7 @@ describe('POST /api/v1/property', () => {
       .send(notCorrectBaths)
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Number of baths should be numeric');
         done();
       });
@@ -920,7 +926,7 @@ describe('POST /api/v1/property', () => {
       .send(noPrice)
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Provide price information');
         done();
       });
@@ -933,7 +939,7 @@ describe('POST /api/v1/property', () => {
       .send(notCorrectPirce)
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Price should be in decimal');
         done();
       });
@@ -946,7 +952,7 @@ describe('POST /api/v1/property', () => {
       .send(noImageLink)
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Provide image link');
         done();
       });
@@ -959,7 +965,7 @@ describe('POST /api/v1/property', () => {
       .send(notCorrectImageLink)
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Provide a valid url link');
         done();
       });
@@ -980,7 +986,7 @@ describe('GET /api/v1/property', () => {
       .set('Authorization', agentToken)
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.status).to.be.equal(200);
+        expect(res.body.status).to.be.equal('success');
         expect(res.body.message).to.be.equal('Properties retrieved successfully');
         expect(res.body.data).to.be.an('array').that.contains.something.like(
           {
@@ -991,7 +997,7 @@ describe('GET /api/v1/property', () => {
             marketer: 'Etihad Properties',
             owner: 1,
             price: '40000',
-            propertyId: 1,
+            id: 1,
             rooms: '3',
             state: 'Lagos',
             status: 'For Sale',
@@ -1008,7 +1014,7 @@ describe('GET /api/v1/property', () => {
       .set('Authorization', 344343)
       .end((err, res) => {
         expect(res).to.have.status(403);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Unathorized. Token invalid. Please login');
         done();
       });
@@ -1019,7 +1025,7 @@ describe('GET /api/v1/property', () => {
       .get(`${propertyURL}`)
       .end((err, res) => {
         expect(res).to.have.status(403);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Unathorized. Token not found');
         done();
       });
@@ -1034,7 +1040,7 @@ describe('GET /api/v1/property', () => {
 describe('GET /api/v1/property', () => {
   beforeEach(() => {
     property.forEach((thisProperty) => {
-      if (thisProperty.propertyId !== 1) {
+      if (thisProperty.id !== 1) {
         thisProperty.deleted = true;
       }
     });
@@ -1049,7 +1055,7 @@ describe('GET /api/v1/property', () => {
       .set('Authorization', agentToken)
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.status).to.be.equal(200);
+        expect(res.body.status).to.be.equal('success');
         expect(res.body.message).to.be.equal('Property retrieved successfully');
         expect(res.body.data).to.be.an('array').that.contains.something.like(
           {
@@ -1061,7 +1067,7 @@ describe('GET /api/v1/property', () => {
             marketer: 'Etihad Properties',
             owner: 1,
             price: '40000',
-            propertyId: 1,
+            id: 1,
             rooms: '3',
             state: 'Lagos',
             status: 'For Sale',
@@ -1077,7 +1083,7 @@ describe('GET /api/v1/property', () => {
       .get(`${propertyURL}`)
       .end((err, res) => {
         expect(res).to.have.status(403);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Unathorized. Token not found');
         done();
       });
@@ -1111,7 +1117,7 @@ describe('GET /api/v1/property/<:property-id>/', () => {
       .get(`${propertyURL}/2`)
       .end((err, res) => {
         expect(res).to.have.status(403);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Unathorized. Token not found');
         done();
       });
@@ -1123,7 +1129,7 @@ describe('GET /api/v1/property/<:property-id>/', () => {
       .set('Authorization', userToken)
       .end((err, res) => {
         expect(res).to.have.status(404);
-        expect(res.body.success).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Property not found');
         done();
       });
@@ -1135,10 +1141,10 @@ describe('GET /api/v1/property/<:property-id>/', () => {
       .set('Authorization', userToken)
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.status).to.be.equal(200);
+        expect(res.body.status).to.be.equal('success');
         expect(res.body.data).to.be.an('array').that.contains.something.like(
           {
-            propertyId: 3,
+            id: 3,
             owner: 2,
             status: 'For Sale',
             price: '140000',
@@ -1164,10 +1170,10 @@ describe('GET /api/v1/property/<:property-id>/', () => {
       .set('Authorization', agentToken)
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.status).to.be.equal(200);
+        expect(res.body.status).to.be.equal('success');
         expect(res.body.data).to.be.an('array').that.contains.something.like(
           {
-            propertyId: 3,
+            id: 3,
             owner: 2,
             status: 'For Sale',
             price: '140000',
@@ -1193,10 +1199,10 @@ describe('GET /api/v1/property/<:property-id>/', () => {
       .set('Authorization', userToken)
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.status).to.be.equal(200);
+        expect(res.body.status).to.be.equal('success');
         expect(res.body.data).to.be.an('array').that.contains.something.like(
           {
-            propertyId: 5,
+            id: 5,
             owner: 4,
             status: 'For Rent',
             price: '668000',
@@ -1222,10 +1228,10 @@ describe('GET /api/v1/property/<:property-id>/', () => {
       .set('Authorization', agentToken)
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.status).to.be.equal(200);
+        expect(res.body.status).to.be.equal('success');
         expect(res.body.data).to.be.an('array').that.contains.something.like(
           {
-            propertyId: 5,
+            id: 5,
             owner: 4,
             status: 'For Rent',
             price: '668000',
@@ -1251,10 +1257,10 @@ describe('GET /api/v1/property/<:property-id>/', () => {
       .set('Authorization', agentToken)
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.status).to.be.equal(200);
+        expect(res.body.status).to.be.equal('success');
         expect(res.body.data).to.be.an('array').that.contains.something.like(
           {
-            propertyId: 5,
+            id: 5,
             owner: 4,
             status: 'For Rent',
             price: '668000',
@@ -1280,10 +1286,10 @@ describe('GET /api/v1/property/<:property-id>/', () => {
       .set('Authorization', userToken)
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.status).to.be.equal(200);
+        expect(res.body.status).to.be.equal('success');
         expect(res.body.data).to.be.an('array').that.contains.something.like(
           {
-            propertyId: 4,
+            id: 4,
             owner: 3,
             status: 'For Sale',
             price: '3210000',
@@ -1307,10 +1313,10 @@ describe('GET /api/v1/property/<:property-id>/', () => {
       .set('Authorization', userToken)
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.status).to.be.equal(200);
+        expect(res.body.status).to.be.equal('success');
         expect(res.body.data).to.be.an('array').that.contains.something.like(
           {
-            propertyId: 4,
+            id: 4,
             owner: 3,
             status: 'For Sale',
             price: '3210000',
@@ -1335,10 +1341,10 @@ describe('GET /api/v1/property/<:property-id>/', () => {
       .set('Authorization', userToken)
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.status).to.be.equal(200);
+        expect(res.body.status).to.be.equal('success');
         expect(res.body.data).to.be.an('array').that.contains.something.like(
           {
-            propertyId: 4,
+            id: 4,
             owner: 3,
             status: 'For Sale',
             price: '3210000',
@@ -1363,10 +1369,10 @@ describe('GET /api/v1/property/<:property-id>/', () => {
       .set('Authorization', userToken)
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.status).to.be.equal(200);
+        expect(res.body.status).to.be.equal('success');
         expect(res.body.data).to.be.an('array').that.contains.something.like(
           {
-            propertyId: 4,
+            id: 4,
             owner: 3,
             status: 'For Sale',
             price: '3210000',
@@ -1391,10 +1397,10 @@ describe('GET /api/v1/property/<:property-id>/', () => {
       .set('Authorization', userToken)
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.status).to.be.equal(200);
+        expect(res.body.status).to.be.equal('success');
         expect(res.body.data).to.be.an('array').that.contains.something.like(
           {
-            propertyId: 4,
+            id: 4,
             owner: 3,
             status: 'For Sale',
             price: '3210000',
@@ -1419,10 +1425,10 @@ describe('GET /api/v1/property/<:property-id>/', () => {
       .set('Authorization', userToken)
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.status).to.be.equal(200);
+        expect(res.body.status).to.be.equal('success');
         expect(res.body.data).to.be.an('array').that.contains.something.like(
           {
-            propertyId: 4,
+            id: 4,
             owner: 3,
             status: 'For Sale',
             price: '3210000',
@@ -1447,10 +1453,10 @@ describe('GET /api/v1/property/<:property-id>/', () => {
       .set('Authorization', userToken)
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.status).to.be.equal(200);
+        expect(res.body.status).to.be.equal('success');
         expect(res.body.data).to.be.an('array').that.contains.something.like(
           {
-            propertyId: 4,
+            id: 4,
             owner: 3,
             status: 'For Sale',
             price: '3210000',
@@ -1475,10 +1481,10 @@ describe('GET /api/v1/property/<:property-id>/', () => {
       .set('Authorization', userToken)
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.status).to.be.equal(200);
+        expect(res.body.status).to.be.equal('success');
         expect(res.body.data).to.be.an('array').that.contains.something.like(
           {
-            propertyId: 4,
+            id: 4,
             owner: 3,
             status: 'For Sale',
             price: '3210000',
@@ -1503,10 +1509,10 @@ describe('GET /api/v1/property/<:property-id>/', () => {
       .set('Authorization', userToken)
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.status).to.be.equal(200);
+        expect(res.body.status).to.be.equal('success');
         expect(res.body.data).to.be.an('array').that.contains.something.like(
           {
-            propertyId: 4,
+            id: 4,
             owner: 3,
             status: 'For Sale',
             price: '3210000',
@@ -1531,10 +1537,10 @@ describe('GET /api/v1/property/<:property-id>/', () => {
       .set('Authorization', userToken)
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.status).to.be.equal(200);
+        expect(res.body.status).to.be.equal('success');
         expect(res.body.data).to.be.an('array').that.contains.something.like(
           {
-            propertyId: 1,
+            id: 1,
             owner: 1,
             status: 'For Sale',
             price: '40000',
@@ -1560,7 +1566,7 @@ describe('GET /api/v1/property/<:property-id>/', () => {
       .set('Authorization', agentToken)
       .end((err, res) => {
         expect(res).to.have.status(404);
-        expect(res.body.status).to.be.equal(404);
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Property not found');
         done();
       });
@@ -1684,7 +1690,7 @@ describe('PATCH /api/v1/property/<:property-id>/', () => {
       )
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.status).to.be.equal(200);
+        expect(res.body.status).to.be.equal('success');
         expect(res.body.data).to.be.an('Array').contains.something.like(
           {
             address: newDetails.address,
@@ -1696,7 +1702,7 @@ describe('PATCH /api/v1/property/<:property-id>/', () => {
             marketer: 'Lemlem Properties',
             owner: 2,
             price: newDetails.price,
-            propertyId: 3,
+            id: 3,
             rooms: newDetails.rooms,
             state: 'Abuja',
             status: newDetails.status,
@@ -1716,7 +1722,7 @@ describe('PATCH /api/v1/property/<:property-id>/', () => {
       )
       .end((err, res) => {
         expect(res).to.have.status(404);
-        expect(res.body.success).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Property not found');
         done();
       });
@@ -1731,7 +1737,7 @@ describe('PATCH /api/v1/property/<:property-id>/', () => {
       )
       .end((err, res) => {
         expect(res).to.have.status(403);
-        expect(res.body.success).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Unauthorized');
         done();
       });
@@ -1746,7 +1752,7 @@ describe('PATCH /api/v1/property/<:property-id>/', () => {
       )
       .end((err, res) => {
         expect(res).to.have.status(403);
-        expect(res.body.success).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Unauthorized');
         done();
       });
@@ -1761,7 +1767,7 @@ describe('PATCH /api/v1/property/<:property-id>/', () => {
       )
       .end((err, res) => {
         expect(res).to.have.status(403);
-        expect(res.body.success).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Unauthorized');
         done();
       });
@@ -1774,7 +1780,7 @@ describe('PATCH /api/v1/property/<:property-id>/', () => {
       .send(notCorrectStatus)
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Select the property status [For Sale or For Rent]');
         done();
       });
@@ -1787,7 +1793,7 @@ describe('PATCH /api/v1/property/<:property-id>/', () => {
       .send(notCorrectAddress)
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Address should contain more than 4 characters');
         done();
       });
@@ -1800,7 +1806,7 @@ describe('PATCH /api/v1/property/<:property-id>/', () => {
       .send(notCorrectType)
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Select the appropritate property type');
         done();
       });
@@ -1813,7 +1819,7 @@ describe('PATCH /api/v1/property/<:property-id>/', () => {
       .send(notCorrectRooms)
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Number of rooms should be numeric');
         done();
       });
@@ -1826,7 +1832,7 @@ describe('PATCH /api/v1/property/<:property-id>/', () => {
       .send(notCorrectBaths)
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Number of baths should be numeric');
         done();
       });
@@ -1839,7 +1845,7 @@ describe('PATCH /api/v1/property/<:property-id>/', () => {
       .send(notCorrectPirce)
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Price should be in decimal');
         done();
       });
@@ -1852,7 +1858,7 @@ describe('PATCH /api/v1/property/<:property-id>/', () => {
       .send(notCorrectImageLink)
       .end((err, res) => {
         expect(res).to.have.status(400);
-        expect(res.body.status).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Provide a valid url link');
         done();
       });
@@ -1888,10 +1894,10 @@ describe('PATCH /api/v1/property/<:property-id>/sold', () => {
       .set('Authorization', agent2Token)
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body.status).to.be.equal(200);
+        expect(res.body.status).to.be.equal('success');
         expect(res.body.data).to.be.an('Array').contains.something.like(
           {
-            propertyId: 3,
+            id: 3,
             owner: 2,
             status: 'Sold',
             state: 'Abuja',
@@ -1912,7 +1918,7 @@ describe('PATCH /api/v1/property/<:property-id>/sold', () => {
       .set('Authorization', agent2Token)
       .end((err, res) => {
         expect(res).to.have.status(403);
-        expect(res.body.success).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Unauthorized');
         done();
       });
@@ -1924,7 +1930,7 @@ describe('PATCH /api/v1/property/<:property-id>/sold', () => {
       .set('Authorization', agent2Token)
       .end((err, res) => {
         expect(res).to.have.status(404);
-        expect(res.body.status).to.be.equal(404);
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Property not found');
         done();
       });
@@ -1936,7 +1942,7 @@ describe('PATCH /api/v1/property/<:property-id>/sold', () => {
       .set('Authorization', userToken)
       .end((err, res) => {
         expect(res).to.have.status(403);
-        expect(res.body.success).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Unauthorized');
         done();
       });
@@ -1971,7 +1977,7 @@ describe('DELETE /api/v1/property/<:property-id>', () => {
       .set('Authorization', agent2Token)
       .end((err, res) => {
         expect(res).to.have.status(403);
-        expect(res.body.success).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Unauthorized');
         done();
       });
@@ -1983,7 +1989,7 @@ describe('DELETE /api/v1/property/<:property-id>', () => {
       .set('Authorization', agent2Token)
       .end((err, res) => {
         expect(res).to.have.status(404);
-        expect(res.body.success).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Property not found');
         done();
       });
@@ -1995,7 +2001,7 @@ describe('DELETE /api/v1/property/<:property-id>', () => {
       .set('Authorization', userToken)
       .end((err, res) => {
         expect(res).to.have.status(403);
-        expect(res.body.success).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Unauthorized');
         done();
       });
@@ -2019,7 +2025,7 @@ describe('DELETE /api/v1/property/<:property-id>', () => {
       .set('Authorization', userToken)
       .end((err, res) => {
         expect(res).to.have.status(404);
-        expect(res.body.success).to.be.equal('false');
+        expect(res.body.status).to.be.equal('error');
         expect(res.body.error).to.be.equal('Property not found');
         done();
       });

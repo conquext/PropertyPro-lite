@@ -1,3 +1,6 @@
+/* eslint-disable array-callback-return */
+/* eslint-disable max-len */
+/* eslint-disable camelcase */
 import { property } from '../db/db';
 import UserHelper from '../helpers/userHelper';
 import Property from '../models/property';
@@ -13,32 +16,36 @@ export default class propertyController {
    */
   static listNewProperty(req, res) {
     try {
-      const newPropertyId = property[property.length - 1].propertyId + 1;
+      const newId = property[property.length - 1].id + 1;
       const {
-        status, price, state, city, address, type, baths, rooms,
+        status, price, state, city, address, type, baths, rooms, image_url,
       } = req.body;
 
-      const ownerFound = UserHelper.findUserById(parseInt(req.data.userId, 10));
+      const ownerFound = UserHelper.findUserById(parseInt(req.data.id, 10));
+      const { created_on } = ownerFound;
       if (ownerFound) {
         const newProperty = new Property(
+          // @ts-ignore
           {
-            propertyId: newPropertyId,
-            owner: ownerFound.userId,
+            id: newId,
             status,
-            price,
+            type,
             state,
             city,
             address,
-            type,
+            price,
+            created_on,
+            image_url,
             baths,
             rooms,
+            ownerEmail: ownerFound.email,
+            ownerPhoneNumber: ownerFound.phoneNumber,
           },
         );
         property.push(newProperty);
 
         return res.status(201).json({
-          status: 201,
-          success: 'true',
+          status: 'success',
           message: 'New property listed successfully',
           data: newProperty,
         });
@@ -68,21 +75,21 @@ export default class propertyController {
 
       if (propertyFound.length === 1) {
         return res.status(200).json({
-          status: 200,
+          status: 'success',
           message: 'Property retrieved successfully',
           data: propertyFound,
         });
       }
       if (propertyFound.length > 1) {
         return res.status(200).json({
-          status: 200,
+          status: 'success',
           message: 'Properties retrieved successfully',
           data: propertyFound,
         });
       }
       if (propertyFound.length < 1) {
         return res.status(400).json({
-          status: 400,
+          status: 'error',
           error: 'No property found',
         });
       }
@@ -101,14 +108,14 @@ export default class propertyController {
    */
   static getProperty(req, res) {
     try {
-      const thisPropertyId = parseInt(req.params.propertyId, 10);
+      const thisid = parseInt(req.params.id, 10);
       let propertyFound = null;
 
       if (req.query.owner && !(req.query.type || req.query.status)) {
         const { owner } = req.query;
         const ownerFound = UserHelper.findUserById(parseInt(owner, 10));
         if (ownerFound) {
-          propertyFound = property.filter(searchProperty => (searchProperty.owner === ownerFound.userId) && (searchProperty.deleted === false));
+          propertyFound = property.filter(searchProperty => (searchProperty.owner === ownerFound.id) && (searchProperty.deleted === false));
           if (req.query.baths) {
             const { baths } = req.query;
             propertyFound = propertyFound.filter(props => props.baths === baths);
@@ -152,7 +159,7 @@ export default class propertyController {
           const { owner } = req.query;
           const ownerFound = UserHelper.findUserById(parseInt(owner, 10));
           if (ownerFound) {
-            propertyFound = property.filter(searchProperty => (searchProperty.owner === ownerFound.userId) && (searchProperty.deleted === false));
+            propertyFound = property.filter(searchProperty => (searchProperty.owner === ownerFound.id) && (searchProperty.deleted === false));
             if (Object.keys(propertyFound).length !== 0) {
               if (req.query.type) {
                 const { type } = req.query;
@@ -207,17 +214,16 @@ export default class propertyController {
         }
       }
       if (Object.keys(req.query).length === 0) {
-        propertyFound = property.filter(searchProperty => (searchProperty.propertyId === thisPropertyId) && (searchProperty.deleted === false));
+        propertyFound = property.filter(searchProperty => (searchProperty.id === thisid) && (searchProperty.deleted === false));
       }
       if (propertyFound.length >= 1) {
         return res.status(200).json({
-          status: 200,
+          status: 'success',
           data: propertyFound,
         });
       }
       return res.status(404).json({
-        status: 404,
-        success: 'false',
+        status: 'error',
         error: 'Property not found',
       });
     } catch (error) {
@@ -235,13 +241,12 @@ export default class propertyController {
    */
   static editProperty(req, res) {
     try {
-      const thisPropertyId = parseInt(req.params.propertyId, 10);
+      const thisid = parseInt(req.params.id, 10);
       let propertyFound = null;
-      propertyFound = property.filter(searchProperty => ((searchProperty.propertyId === thisPropertyId) && (searchProperty.deleted === false)));
+      propertyFound = property.filter(searchProperty => ((searchProperty.id === thisid) && (searchProperty.deleted === false)));
       if (Object.keys(propertyFound).length === 0) {
         return res.status(404).json({
-          status: 404,
-          success: 'false',
+          status: 'error',
           error: 'Property not found',
         });
       }
@@ -255,7 +260,7 @@ export default class propertyController {
         propertyFound[0].lastUpdatedOn = new Date().toLocaleDateString();
       }
       return res.status(200).json({
-        status: 200,
+        status: 'success',
         data: propertyFound,
       });
     } catch (error) {
@@ -264,7 +269,7 @@ export default class propertyController {
   }
 
   /** Update a property listing
-   * @description
+   * @description Update a property listing
    * @static
    * @param {*} req
    * @param {*} res
@@ -273,12 +278,12 @@ export default class propertyController {
    */
   static updateProperty(req, res) {
     try {
-      const thisPropertyId = parseInt(req.params.propertyId, 10);
+      const thisid = parseInt(req.params.id, 10);
       let propertyFound = null;
-      propertyFound = property.filter(searchProperty => ((searchProperty.propertyId === thisPropertyId) && (searchProperty.deleted === false)));
+      propertyFound = property.filter(searchProperty => ((searchProperty.id === thisid) && (searchProperty.deleted === false)));
       if (Object.keys(propertyFound).length === 0) {
         return res.status(404).json({
-          status: 404,
+          status: 'error',
           error: 'Property not found',
         });
       }
@@ -286,7 +291,7 @@ export default class propertyController {
       propertyFound[0].status = 'Sold';
 
       return res.status(200).json({
-        status: 200,
+        status: 'success',
         data: propertyFound,
       });
     } catch (error) {
@@ -304,11 +309,11 @@ export default class propertyController {
    */
   static deleteProperty(req, res) {
     try {
-      const thisPropertyId = parseInt(req.params.propertyId, 10);
+      const thisid = parseInt(req.params.id, 10);
       let propertyFound = null;
       let propertyIndex = null;
       property.map((searchProperty, index) => {
-        if (searchProperty.propertyId === thisPropertyId) {
+        if (searchProperty.id === thisid) {
           if (searchProperty.deleted !== true) {
             propertyFound = searchProperty;
             propertyIndex = index;
@@ -317,11 +322,11 @@ export default class propertyController {
       });
       if (!propertyFound) {
         return res.status(404).json({
-          status: 404,
-          success: 'false',
+          status: 'error',
           error: 'Property not found',
         });
       }
+      // @ts-ignore
       propertyFound.deleted = true;
       property.splice(propertyIndex, 1);
       return res.status(200).json({
