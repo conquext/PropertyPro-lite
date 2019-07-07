@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import User from '../models/user';
 import UserHelper from '../helpers/userHelper';
 import { users } from '../db/db';
@@ -17,13 +18,13 @@ export default class UserController {
       const userFound = UserHelper.findUserByEmail(email);
       if (!userFound) {
         return res.status(401).json({
-          status: 'false',
+          status: 'error',
           error: 'Incorrect email',
         });
       }
       if (!UserHelper.comparePassword(password, userFound.password)) {
         return res.status(401).json({
-          status: 'false',
+          status: 'error',
           error: 'Incorrect email or Wrong password',
         });
       }
@@ -33,9 +34,9 @@ export default class UserController {
       userFound.loggedIn = true;
       const loginData = {
         token: userFound.token,
-        id: userFound.userId,
-        firstName: userFound.firstName,
-        lastName: userFound.lastName,
+        id: userFound.id,
+        first_name: userFound.first_name,
+        last_name: userFound.last_name,
         email: userFound.email,
         type: userFound.type,
       };
@@ -60,24 +61,25 @@ export default class UserController {
   static signup(req, res) {
     try {
       const {
-        firstName, lastName, email, phoneNumber, address, type, password, confirmPassword,
+        first_name, last_name, email, phoneNumber, address, type, password, confirm_password,
       } = req.body;
       const registeredUser = UserHelper.findUserByEmail(email);
       if (registeredUser) {
         return res.status(409).json({
-          status: 'false',
+          status: 'error',
           error: 'User already exists',
         });
       }
-      if (password !== confirmPassword) {
+      if (password !== confirm_password) {
         return res.status(400).json({
-          status: 'false',
+          status: 'error',
           error: 'Passwords must match',
         });
       }
-      const newUserId = users[users.length - 1].userId + 1;
+      const newId = users[users.length - 1].id + 1;
+      // @ts-ignore
       const newUser = new User({
-        userId: newUserId, firstName, lastName, email, phoneNumber, address, type,
+        id: newId, first_name, last_name, email, phoneNumber, address, type,
       });
 
       newUser.password = UserHelper.hashPassword(req.body.password);
@@ -88,16 +90,16 @@ export default class UserController {
 
       const signupData = {
         token: newUser.token,
-        id: newUserId,
-        firstName: newUser.firstName,
-        lastName: newUser.lastName,
+        id: newId,
+        first_name: newUser.first_name,
+        last_name: newUser.last_name,
         email: newUser.email,
         type: newUser.type,
-        isAdmin: newUser.isAdmin,
+        is_admin: newUser.is_admin,
       };
 
       return res.status(201).json({
-        success: 'true',
+        status: 'success',
         message: 'User is registered successfully',
         data: signupData,
       });

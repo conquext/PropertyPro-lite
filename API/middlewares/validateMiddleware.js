@@ -15,10 +15,10 @@ export default class ValidateMiddleware {
   }
 
   static signupCheck(req, res, next) {
-    req.checkBody('firstName').isLength({ min: 1 }).withMessage('First name is required');
-    req.checkBody('lastName').isLength({ min: 1 }).withMessage('Last name is required');
-    req.checkBody('firstName').isLength({ min: 3 }).withMessage('First name should contain more than 2 characters');
-    req.checkBody('firstName').isAlpha().withMessage('First name should only contain alphabets');
+    req.checkBody('first_name').isLength({ min: 1 }).withMessage('First name is required');
+    req.checkBody('last_name').isLength({ min: 1 }).withMessage('Last name is required');
+    req.checkBody('first_name').isLength({ min: 3 }).withMessage('First name should contain more than 2 characters');
+    req.checkBody('first_name').isAlpha().withMessage('First name should only contain alphabets');
     req.checkBody('email').isLength({ min: 1 }).withMessage('Email is required');
     req.checkBody('password').isLength({ min: 1 }).withMessage('Password is required');
     req.checkBody('email').isEmail().withMessage('Email is invalid');
@@ -63,19 +63,6 @@ export default class ValidateMiddleware {
     }
     next();
   }
-
-  // static listingUpdateCheck(req, res, next) {
-  //   req.checkBody('status').isIn(['For Rent ', 'For Sale', 'Sold']).withMessage('Select the property status [For Sale or For Rent]')
-  //     .exists()
-  //     .withMessage('Specify property status');
-
-  //   const errors = req.validationErrors();
-  //   if (errors) {
-  //     const err = authMiddleware.validationError(errors);
-  //     return authMiddleware.errorResponse(res, 400, err);
-  //   }
-  //   next();
-  // }
 
   static listingEditCheck(req, res, next) {
     req.checkBody('status').optional().withMessage('Specify property status')

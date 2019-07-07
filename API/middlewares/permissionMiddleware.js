@@ -4,8 +4,7 @@ export default class PermissionsMiddleware {
   static authAgent(req, res, next) {
     if (req.data.type !== 'agent') {
       return res.status(403).json({
-        status: 403,
-        success: 'false',
+        status: 'error',
         error: 'Unauthorized',
       });
     }
@@ -13,16 +12,15 @@ export default class PermissionsMiddleware {
   }
 
   static authPropertyOwner(req, res, next) {
-    const { userId } = req.data;
-    const { propertyId } = req.params || req.query;
+    const userId = req.data.id;
+    const { id } = req.params || req.query;
 
-    const propertyOwner = UserHelper.findPropertyOwner(parseInt(propertyId, 10));
+    const propertyOwner = UserHelper.findPropertyOwner(parseInt(id, 10));
 
     if (propertyOwner) {
-      if (parseInt(userId, 10) !== parseInt(propertyOwner.userId, 10)) {
+      if (parseInt(userId, 10) !== parseInt(propertyOwner.id, 10)) {
         return res.status(403).json({
-          status: 403,
-          success: 'false',
+          status: 'error',
           error: 'Unauthorized',
         });
       }

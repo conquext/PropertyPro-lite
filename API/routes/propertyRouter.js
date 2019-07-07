@@ -51,6 +51,12 @@ router.use(authenticateUser);
  *         image_url:
  *          type: string
  *          format: url
+ *         ownerEmail:
+ *          type: string
+ *          format: email
+ *         ownerPhoneNumber:
+ *          type: string
+ *          format: string
  *      security:
  *        - bearerAuth: []
  *          type: apikey
@@ -100,7 +106,7 @@ router.get('', getAllProperty);
 
 /**
  * @swagger
- * /property/{propertyId}:
+ * /property/{id}:
  *    get:
  *      description: Return a specific property listing
  *      summary: Find a property
@@ -110,7 +116,7 @@ router.get('', getAllProperty);
  *        - Property
  *      parameters:
  *        - in: path
- *          name: propertyId
+ *          name: id
  *          required: true
  *          type: string
  *        - in: query
@@ -157,11 +163,11 @@ router.get('', getAllProperty);
  *          description: Something went wrong try again
  */
 
-router.get('/:propertyId', getProperty);
+router.get('/:id', getProperty);
 
 /**
  * @swagger
- * /property/{propertyId}:
+ * /property/{id}:
  *    patch:
  *      description: Edit a property listing
  *      summary: Edit property listing
@@ -171,7 +177,7 @@ router.get('/:propertyId', getProperty);
  *        - Property
  *      parameters:
  *        - in: path
- *          name: propertyId
+ *          name: id
  *          required: true
  *          type: string
  *        - in: body
@@ -199,11 +205,11 @@ router.get('/:propertyId', getProperty);
  *          description: Something went wrong try again
  *
  */
-router.patch('/:propertyId', authPropertyOwner, listingEditCheck, editProperty);
+router.patch('/:id', authPropertyOwner, listingEditCheck, editProperty);
 
 /**
  * @swagger
- * /property/{propertyId}/sold:
+ * /property/{id}/sold:
  *    patch:
  *      description: Update a property listing
  *      summary: Update listing
@@ -213,7 +219,7 @@ router.patch('/:propertyId', authPropertyOwner, listingEditCheck, editProperty);
  *        - Property
  *      parameters:
 *        - in: path
- *          name: propertyId
+ *          name: id
  *          required: true
  *          type: string
  *      security:
@@ -234,11 +240,11 @@ router.patch('/:propertyId', authPropertyOwner, listingEditCheck, editProperty);
  *          description: Something went wrong try again
  *
  */
-router.patch('/:propertyId/sold', authPropertyOwner, updateProperty);
+router.patch('/:id/sold', authPropertyOwner, updateProperty);
 
 /**
  * @swagger
- * /property/{propertyId}:
+ * /property/{id}:
  *    delete:
  *      description: Delete a property listing
  *      summary: Delete listing
@@ -248,7 +254,7 @@ router.patch('/:propertyId/sold', authPropertyOwner, updateProperty);
  *        - Property
  *      parameters:
  *        - in: path
- *          name: propertyId
+ *          name: id
  *          required: true
  *          type: string        
  *      security:
@@ -269,6 +275,6 @@ router.patch('/:propertyId/sold', authPropertyOwner, updateProperty);
  *          description: Something went wrong try again
  *
  */
-router.delete('/:propertyId', authPropertyOwner, deleteProperty);
+router.delete('/:id', authPropertyOwner, deleteProperty);
 
 export default router;

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /**
 * @swagger
 * definitions:
@@ -56,39 +57,38 @@
 /* eslint-disable no-unused-vars */
 export default class User {
   constructor({
-    userId,
+    id,
     email,
-    firstName,
-    lastName,
+    first_name,
+    last_name,
     password,
     phoneNumber,
     address,
-    isAdmin,
+    is_admin,
     dob,
     state,
     country,
     loggedIn,
     type,
-    createdAt,
+    created_on,
     lastLoggedInAt,
   }) {
-    this.userId = userId || '';
+    this.id = id || '';
     this.email = email;
-    this.firstName = firstName;
-    this.lastName = lastName;
+    this.first_name = first_name;
+    this.last_name = last_name;
     this.password = password;
     this.phoneNumber = phoneNumber || '';
     this.address = address || '';
-    this.isAdmin = isAdmin || false;
+    this.is_admin = is_admin || false;
     this.dob = dob || '';
     this.state = state || '';
     this.country = country || '';
-    this.accountNumber = '';
     this.loggedIn = false;
     this.type = type || 'user';
-    this.balance = null;
+    this.is_admin = is_admin || false;
     this.token = '';
-    this.createdAt = new Date();
+    this.created_on = new Date();
     this.lastLoggedInAt = null;
   }
 
