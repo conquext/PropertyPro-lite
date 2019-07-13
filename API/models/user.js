@@ -38,7 +38,7 @@
 *       password:
 *         type: string
 *         format: password
-*       phone_number:
+*       phoneNumber:
 *         type: number
 *         format: tel
 *       address:

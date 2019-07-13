@@ -14,7 +14,7 @@ export const users = [
     country: 'Nigeria',
     loggedIn: false,
     type: 'user',
-    createdAt: new Date(1, 1, 2019),
+    created_on: new Date(1, 1, 2019),
     lastLoggedInAt: new Date(1, 1, 2019),
   },
   {
@@ -31,7 +31,7 @@ export const users = [
     country: 'Nigeria',
     loggedIn: false,
     type: 'user',
-    createdAt: new Date(1, 2, 2019),
+    created_on: new Date(1, 2, 2019),
     lastLoggedInAt: new Date(1, 2, 2019),
   },
   {
@@ -48,7 +48,7 @@ export const users = [
     country: 'Nigeria',
     loggedIn: false,
     type: 'agent',
-    createdAt: new Date(1, 3, 2019),
+    created_on: new Date(1, 3, 2019),
     lastLoggedInAt: new Date(1, 3, 2019),
   },
   {
@@ -65,7 +65,7 @@ export const users = [
     country: 'Nigeria',
     loggedIn: false,
     type: 'admin',
-    createdAt: new Date(1, 3, 2019),
+    created_on: new Date(1, 3, 2019),
     lastLoggedInAt: new Date(1, 3, 2019),
   },
   {
@@ -82,7 +82,7 @@ export const users = [
     country: 'Nigeria',
     loggedIn: false,
     type: 'user',
-    createdAt: new Date(1, 3, 2019),
+    created_on: new Date(1, 3, 2019),
     lastLoggedInAt: new Date(1, 3, 2019),
   },
 ];
@@ -103,6 +103,8 @@ export const property = [
     rooms: '3',
     marketer: 'Etihad Properties',
     deleted: false,
+    ownerEmail: '',
+    ownerPhoneNumber: '',
   },
   {
     id: 2,
@@ -119,6 +121,8 @@ export const property = [
     rooms: '3',
     marketer: 'Lebadi Properties',
     deleted: false,
+    ownerEmail: '',
+    ownerPhoneNumber: '',
   },
   {
     id: 3,
@@ -135,6 +139,8 @@ export const property = [
     rooms: '4',
     marketer: 'Lemlem Properties',
     deleted: false,
+    ownerEmail: '',
+    ownerPhoneNumber: '',
   },
   {
     id: 4,
@@ -151,6 +157,8 @@ export const property = [
     rooms: '7',
     marketer: 'Etihad Properties',
     deleted: false,
+    ownerEmail: '',
+    ownerPhoneNumber: '',
   },
   {
     id: 5,
@@ -167,6 +175,8 @@ export const property = [
     rooms: '3',
     marketer: 'Lemlem Properties',
     deleted: false,
+    ownerEmail: '',
+    ownerPhoneNumber: '',
   },
 ];
 
