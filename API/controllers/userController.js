@@ -12,7 +12,7 @@ export default class UserController {
    * @returns {UserController} A logged-in user
    * @memberof UserController
    */
-  static login(req, res) {
+  static signin(req, res) {
     try {
       const { email, password } = req.body;
       const userFound = UserHelper.findUserByEmail(email);

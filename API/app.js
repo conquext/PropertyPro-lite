@@ -14,6 +14,7 @@ const app = express();
 const logger = new Debug('dev');
 const { PORT = 4000 } = process.env;
 
+
 app.use(bodyParser.json({ type: 'application/json' }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator());
@@ -29,11 +30,11 @@ app.use(`${API_VERSION}/auth`, authRouter);
 app.use(`${API_VERSION}/property`, propertyRouter);
 
 app.use('/', express.static(path.resolve(__dirname, '')));
-app.use('/static', express.static('public'));
+app.use(express.static(path.resolve(__dirname, '../UI')));
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs, { explorer: false, swaggerOptions }));
 
-app.get('/', (req, res) => res.send(`The app is running at port:${PORT}`));
+app.get('/', (req, res) => res.sendFile('../UI/index.html'));
 
 app.get('/docs.json', (req, res) => {
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
@@ -45,6 +46,13 @@ app.get(`${API_VERSION}/auth`, (req, res) => {
     status: 'success',
     success: 'true',
     message: 'Welcome to PropertyPro-lite',
+  });
+});
+
+app.all('*', (req, res) => {
+  res.status(404).json({
+    status: 'error',
+    message: 'Page Not Found',
   });
 });
 

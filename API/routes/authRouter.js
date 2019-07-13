@@ -4,17 +4,17 @@ import validateMiddleware from '../middlewares/validateMiddleware';
 
 const router = Router();
 
-const { login, signup } = userController;
+const { signin, signup } = userController;
 const { loginCheck, signupCheck } = validateMiddleware;
 
 
 /**
 * @swagger
-* /auth/login:
+* /auth/signin:
 *   post:
 *    tags:
 *     - Users
-*    name: Login
+*    name: Signin
 *    summary: Logs in a user
 *    consumes:
 *     - application/json
@@ -52,7 +52,7 @@ const { loginCheck, signupCheck } = validateMiddleware;
 *      500:
 *       description: Something went wrong. Try again
 */
-router.post('/login', loginCheck, login);
+router.post('/signin', loginCheck, signin);
 
 /**
 * @swagger
@@ -87,7 +87,7 @@ router.post('/login', loginCheck, login);
 *            confirm_password:
 *              type: string
 *              format: password
-*            phone_number:
+*            phoneNumber:
 *              type: string
 *              format: tel
 *            address:
@@ -108,7 +108,7 @@ router.post('/login', loginCheck, login);
 *              email
 *              password
 *              confirm_password
-*              phone_number
+*              phoneNumber
 *     responses:
 *       201:
 *         description: User signed up successfully
