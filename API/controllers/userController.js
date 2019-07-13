@@ -70,12 +70,12 @@ export default class UserController {
           error: 'User already exists',
         });
       }
-      if (password !== confirm_password) {
-        return res.status(400).json({
-          status: 'error',
-          error: 'Passwords must match',
-        });
-      }
+      // if (password !== confirm_password) {
+      //   return res.status(400).json({
+      //     status: 'error',
+      //     error: 'Passwords must match',
+      //   });
+      // }
       const newId = users[users.length - 1].id + 1;
       // @ts-ignore
       const newUser = new User({
