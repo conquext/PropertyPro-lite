@@ -62,7 +62,7 @@ export default class UserController {
   static signup(req, res) {
     try {
       const {
-        first_name, last_name, email, phoneNumber, address, type, password, confirm_password,
+        first_name, last_name, email, phoneNumber, address, type, password,
       } = req.body;
       const registeredUser = UserHelper.findUserByEmail(email);
       if (registeredUser) {
@@ -83,7 +83,7 @@ export default class UserController {
         id: newId, first_name, last_name, email, phoneNumber, address, type,
       });
 
-      newUser.password = UserHelper.hashPassword(req.body.password);
+      newUser.password = UserHelper.hashPassword(password);
       const jwtToken = UserHelper.generateToken(newUser);
       newUser.token = jwtToken;
       newUser.logIn();

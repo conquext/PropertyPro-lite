@@ -18,9 +18,8 @@ export default class propertyController {
     try {
       const newId = property[property.length - 1].id + 1;
       const {
-        status, price, state, city, address, type, baths, rooms, image_url,
+        status = 'For Rent', price, state, city, address, type, baths = 0, rooms = 0, image_url,
       } = req.body;
-
       const ownerFound = UserHelper.findUserById(parseInt(req.data.id, 10));
       const { created_on } = ownerFound;
       if (ownerFound) {
