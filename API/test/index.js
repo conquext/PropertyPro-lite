@@ -4,7 +4,7 @@ import chaiLike from 'chai-like';
 import chaiThings from 'chai-things';
 import swaggerTest from 'swagger-test';
 // @ts-ignore
-import preq from 'preq';
+// import preq from 'preq';
 import app from '../app';
 import specs from '../../swaggerDoc';
 import UserController from '../controllers/userController';
@@ -472,7 +472,7 @@ describe('POST /api/v1/auth/signup', () => {
         expect(res).to.have.status(201);
         expect(res.body.status).to.be.equal('success');
         expect(res.body.message).to.be.equal('User is registered successfully');
-        expect(res.body.data).to.have.key('token', 'id', 'first_name', 'last_name', 'email', 'type', 'is_admin');
+        expect(res.body.data).to.have.key('token', 'id', 'first_name', 'last_name', 'email','phoneNumber', 'type', 'is_admin');
         // expect(res.body.user).to.have.key('id', 'name', 'email', 'type');
         done();
       });
