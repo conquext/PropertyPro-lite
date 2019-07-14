@@ -33,18 +33,18 @@ export default class AuthMiddleware {
       });
     }
 
-    console.log(`At authorization checkpoint, ${Object.keys(decoded)}`);
-    console.log(`At authorization checkpoint, ${decoded}`);
+    console.log(`At authorization checkpoint, ${Object.keys(decoded.payload)}`);
+    console.log(`At authorization checkpoint, ${decoded.payload}`);
     req.data = {
-      id: decoded.payload.id,
-      first_name: decoded.payload.first_name,
-      last_name: decoded.payload.last_name,
-      address: decoded.payload.address,
-      type: decoded.payload.type,
-      email: decoded.payload.email,
-      phoneNumber: decoded.payload.phoneNumber,
-      dob: decoded.payload.dob,
-      country: decoded.payload.country,
+      id: decoded.payload.id || '',
+      first_name: decoded.payload.first_name || '',
+      last_name: decoded.payload.last_name || '',
+      address: decoded.payload.address || '',
+      type: decoded.payload.type || '',
+      email: decoded.payload.email || '',
+      phoneNumber: decoded.payload.phoneNumber || '',
+      dob: decoded.payload.dob || '',
+      country: decoded.payload.country || '',
     };
 
     next();
