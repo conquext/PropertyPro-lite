@@ -97,6 +97,7 @@ export default class UserController {
         email: newUser.email,
         type: newUser.type,
         is_admin: newUser.is_admin,
+        phoneNumber: newUser.phoneNumber,
       };
 
       return res.status(201).json({
