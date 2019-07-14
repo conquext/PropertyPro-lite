@@ -16,6 +16,8 @@ export default class AuthMiddleware {
   }
 
   static authenticateUser(req, res, next) {
+    console.log(req);
+    console.log(Object.entries(req));
     let currentToken = req.headers.authorization || req.headers['x-access-token'] || req.headers.token || req.body.token;
     if (!currentToken) {
       return res.status(403).json({
@@ -34,6 +36,7 @@ export default class AuthMiddleware {
     }
 
     console.log(`At authorization checkpoint, ${Object.keys(decoded.payload)}`);
+    console.log(`At authorization checkpoint, ${Object.entries(decoded.payload)}`);
     console.log(`At authorization checkpoint, ${decoded.payload}`);
     req.data = {
       id: decoded.payload.id || '',
