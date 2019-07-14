@@ -16,6 +16,7 @@ export default class propertyController {
    */
   static listNewProperty(req, res) {
     try {
+      console.log(`First request ${req.body}`);
       const newId = property[property.length - 1].id + 1;
       const {
         status = 'For Rent', price, state, city, address, type, baths = 0, rooms = 0, image_url,
