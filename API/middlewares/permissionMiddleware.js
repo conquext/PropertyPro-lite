@@ -2,7 +2,6 @@ import UserHelper from '../helpers/userHelper';
 
 export default class PermissionsMiddleware {
   static authAgent(req, res, next) {
-    console.log('I am an ', req.data.type);
     if (req.data.type !== 'admin') {
       if (req.data.type !== 'agent') {
         return res.status(403).json({
