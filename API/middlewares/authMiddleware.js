@@ -16,9 +16,9 @@ export default class AuthMiddleware {
   }
 
   static authenticateUser(req, res, next) {
-    console.log(req);
-    console.log(Object.entries(req));
-    let currentToken = req.headers.authorization || req.headers['x-access-token'] || req.headers.token || req.body.token;
+    console.log(req.body);
+    console.log(Object.entries(req.body));
+    let currentToken = req.headers.authorization || req.headers.token || req.body.token;
     if (!currentToken) {
       return res.status(403).json({
         status: 'error',
@@ -35,9 +35,13 @@ export default class AuthMiddleware {
       });
     }
 
+<<<<<<< HEAD
     console.log(`At authorization checkpoint, ${Object.keys(decoded.payload)}`);
     console.log(`At authorization checkpoint, ${Object.entries(decoded.payload)}`);
     console.log(`At authorization checkpoint, ${decoded.payload}`);
+=======
+    console.log(`At authorization checkpoint, ${Object.entries(decoded.payload)}`);
+>>>>>>> ch/#167277050/refactor-for-autograder
     req.data = {
       id: decoded.payload.id || '',
       first_name: decoded.payload.first_name || '',
