@@ -43,6 +43,7 @@ export default class UserController {
 
       return res.status(200).json({
         status: 'success',
+        token: loginData.token,
         data: loginData,
       });
     } catch (error) {
@@ -101,6 +102,7 @@ export default class UserController {
       return res.status(201).json({
         status: 'success',
         message: 'User is registered successfully',
+        token: signupData.token,
         data: signupData,
       });
     } catch (error) {

@@ -34,6 +34,8 @@ export default class AuthMiddleware {
     }
     req.data = {
       id: decoded.payload.id,
+      first_name: decoded.payload.first_name,
+      last_name: decoded.payload.last_name,
       address: decoded.payload.address,
       type: decoded.payload.type,
       email: decoded.payload.email,
