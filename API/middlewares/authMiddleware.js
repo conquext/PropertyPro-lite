@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
-import * as config from '../config';
 import { debug } from 'util';
+import * as config from '../config';
 
 export default class AuthMiddleware {
   static errorResponse(res, statusCode, error) {
@@ -16,9 +16,7 @@ export default class AuthMiddleware {
   }
 
   static authenticateUser(req, res, next) {
-    const currentToken = req.headers.authorization || req.headers['x-access-token'] || req.headers.token || req.body.token;
-    console.log(currentToken);
-    debug(currentToken);
+    let currentToken = req.headers.authorization || req.headers['x-access-token'] || req.headers.token || req.body.token;
     if (!currentToken) {
       return res.status(403).json({
         status: 'error',
@@ -26,6 +24,8 @@ export default class AuthMiddleware {
       });
     }
 
+    currentToken = currentToken.replace('Bearer ', '');
+    debug(currentToken);
     const decoded = jwt.decode(currentToken, { secret: config.secret });
     if (!decoded) {
       return res.status(403).json({
