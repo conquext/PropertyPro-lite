@@ -25,7 +25,6 @@ export default class AuthMiddleware {
     }
 
     currentToken = currentToken.replace('Bearer ', '');
-    debug(currentToken);
     const decoded = jwt.decode(currentToken, { secret: config.secret });
     if (!decoded) {
       return res.status(403).json({

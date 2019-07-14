@@ -62,7 +62,7 @@ export default class UserController {
   static signup(req, res) {
     try {
       const {
-        first_name, last_name, email, phoneNumber, address, type, password,
+        first_name, last_name, email, phoneNumber, address, type = 'agent', password,
       } = req.body;
       const registeredUser = UserHelper.findUserByEmail(email);
       if (registeredUser) {
