@@ -15,7 +15,8 @@ export default class AuthMiddleware {
   }
 
   static authenticateUser(req, res, next) {
-    const currentToken = req.headers.authorization || req.body.token;
+    const currentToken = req.body.token || req.headers.authorization;
+    console.log(req.body.token);
     if (!currentToken) {
       return res.status(403).json({
         status: 'error',
@@ -24,6 +25,7 @@ export default class AuthMiddleware {
     }
 
     const decoded = jwt.decode(currentToken, { secret: config.secret });
+    console.log(decoded);
     if (!decoded) {
       return res.status(403).json({
         status: 'error',
