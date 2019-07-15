@@ -74,6 +74,7 @@ router.use(authenticateUser);
  *        description: Something went wrong try again
  *
  */
+// router.post('', authAgent, propertyListingCheck, listNewProperty);
 router.post('', authAgent, listNewProperty);
 
 /**
@@ -124,28 +125,28 @@ router.get('', getAllProperty);
  *          description: search by property status
  *          required: false
  *          type: string
- *          items: 
+ *          items:
  *           type: string
  *        - in: query
  *          name: type
  *          description: search query
  *          required: false
  *          type: string
- *          items: 
+ *          items:
  *           type: string
  *        - in: query
  *          name: baths
  *          description: search by baths
  *          required: false
  *          type: string
- *          items: 
+ *          items:
  *           type: string
  *        - in: query
  *          name: rooms
  *          description: search by rooms
  *          required: false
  *          type: array
- *          items: 
+ *          items:
  *           type: string
  *      security:
  *       - bearerAuth: []
@@ -256,7 +257,7 @@ router.patch('/:id/sold', authPropertyOwner, updateProperty);
  *        - in: path
  *          name: id
  *          required: true
- *          type: string        
+ *          type: string
  *      security:
  *        - bearerAuth: []
  *          type: apikey
