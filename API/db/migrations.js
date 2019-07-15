@@ -70,23 +70,6 @@ export default class Migration {
     * Create A Table
     */
 
-  //   static async dbQuery(theQuery) {
-  //     console.log('i got here 1');
-  //     await pool.connect().then((client) => {
-  //       console.log('i got here 2');
-  //       console.log(`this query right here ${theQuery}`);
-  //       client.query(`${theQuery}`)
-  //         .then((res) => {
-  //           debug(res);
-  //         console.log('i got here 3');
-  //         })
-  //         .catch((err) => {
-  //           debug(`this error right here: ${err}`);
-  //         })
-  //         .finally(() => client.release());
-  //     });
-  //   }
-
   static async dbQuery(theQuery) {
     try {
       const client = await pool.connect();
@@ -193,6 +176,9 @@ export default class Migration {
 
   static async createSchema(schemaType) {
     await this.dbQuery(`CREATE SCHEMA IF NOT EXISTS ${schemaType};`);
+    await this.dbQuery(`GRANT ALL ON SCHEMA ${schemaType} TO postgres`);
+    await this.dbQuery(`GRANT ALL ON SCHEMA ${schemaType} To ${schemaType}`);
+    await this.dbQuery(`COMMENT ON SCHEMA ${schemaType} IS 'standard public schema'`);
     debug(`${schemaType} schema was created`);
   }
 

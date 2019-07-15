@@ -16,7 +16,6 @@ export default class AuthMiddleware {
   }
 
   static authenticateUser(req, res, next) {
-    console.log(Object.entries(req.body));
     let currentToken = req.headers.authorization || req.headers.token || req.body.token;
     if (!currentToken) {
       return res.status(403).json({
@@ -27,7 +26,6 @@ export default class AuthMiddleware {
 
     currentToken = currentToken.replace('Bearer ', '');
     const decoded = jwt.decode(currentToken, { secret: config.secret });
-    console.log(decoded);
     if (!decoded) {
       return res.status(403).json({
         status: 'error',
@@ -35,7 +33,6 @@ export default class AuthMiddleware {
       });
     }
 
-    console.log(`At authorization checkpoint, ${Object.entries(decoded.payload)}`);
     req.data = {
       id: decoded.payload.id || '',
       first_name: decoded.payload.first_name || '',

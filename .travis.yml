@@ -6,9 +6,6 @@ services:
   - postgresql
 addons:
   postgresql: "9.4"
-before_script:
-  - psql -c 'drop database if exists propertypro;' -U farce
-  - psql -c 'create database propertypro;' -U farce
 cache:
   directories:
     - "node_modules"

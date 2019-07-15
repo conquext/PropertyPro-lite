@@ -145,7 +145,7 @@ class Seeder {
 
   static async deleteData() {
     try {
-      await usersTable.delete({ id: 2 }, { clause: { type: 'agent' } });
+      await usersTable.delete({ id: 2 });
     } catch (error) {
       debug(error);
     }
