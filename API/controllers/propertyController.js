@@ -73,26 +73,22 @@ export default class propertyController {
         }
       });
 
-      if (propertyFound.length === 1) {
+      if (Object.keys(propertyFound).length === 1) {
         return res.status(200).json({
           status: 'success',
           message: 'Property retrieved successfully',
           data: propertyFound[0],
         });
       }
-      if (propertyFound.length > 1) {
-        let dataResult = {};
-        propertyFound.filter((o, index) => {
-          if (o.id === 1) { dataResult = propertyFound[index]; }
-        });
+      if (Object.keys(propertyFound).length > 1) {
         // const dataResult = propertyFound.find(o => o.id === 1);
         return res.status(200).json({
           status: 'success',
           message: 'Properties retrieved successfully',
-          data: dataResult,
+          data: propertyFound,
         });
       }
-      if (propertyFound.length < 1) {
+      if (Object.keys(propertyFound).length < 1) {
         return res.status(400).json({
           status: 'error',
           error: 'No property found',
