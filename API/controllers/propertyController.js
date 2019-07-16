@@ -38,6 +38,7 @@ export default class propertyController {
             baths,
             rooms,
             ownerEmail: ownerFound.email,
+            owner_email: ownerFound.email,
             ownerPhoneNumber: ownerFound.phoneNumber,
           },
         );
@@ -215,7 +216,14 @@ export default class propertyController {
       if (Object.keys(req.query).length === 0) {
         propertyFound = property.filter(searchProperty => (searchProperty.id === thisid) && (searchProperty.deleted === false));
       }
-      if (propertyFound.length >= 1) {
+
+      if (propertyFound.length === 1) {
+        return res.status(200).json({
+          status: 'success',
+          data: propertyFound[0],
+        });
+      }
+      if (propertyFound.length > 1) {
         return res.status(200).json({
           status: 'success',
           data: propertyFound,
