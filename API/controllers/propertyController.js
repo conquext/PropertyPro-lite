@@ -226,7 +226,7 @@ export default class propertyController {
       if (propertyFound.length > 1) {
         return res.status(200).json({
           status: 'success',
-          data: propertyFound,
+          data: propertyFound[0],
         });
       }
       return res.status(404).json({
