@@ -16,29 +16,29 @@ export default class propertyController {
    */
   static listNewProperty(req, res) {
     try {
-      console.log(`First request ${req.body}`);
       const newId = property[property.length - 1].id + 1;
       const {
-        status = 'For Rent', price, state, city, address, type, baths = 0, rooms = 0, image_url,
+        status = 'For Rent', price = 0, state, city, address, type, baths = 0, rooms = 0, image_url,
       } = req.body;
       const ownerFound = UserHelper.findUserById(parseInt(req.data.id, 10));
-      const { created_on } = ownerFound;
       if (ownerFound) {
         const newProperty = new Property(
           // @ts-ignore
           {
             id: newId,
+            owner: ownerFound.id,
             status,
             type,
             state,
             city,
             address,
             price,
-            created_on,
+            created_on: new Date().toLocaleString(),
             image_url,
             baths,
             rooms,
             ownerEmail: ownerFound.email,
+            owner_email: ownerFound.email,
             ownerPhoneNumber: ownerFound.phoneNumber,
           },
         );
@@ -216,7 +216,14 @@ export default class propertyController {
       if (Object.keys(req.query).length === 0) {
         propertyFound = property.filter(searchProperty => (searchProperty.id === thisid) && (searchProperty.deleted === false));
       }
-      if (propertyFound.length >= 1) {
+
+      if (propertyFound.length === 1) {
+        return res.status(200).json({
+          status: 'success',
+          data: propertyFound[0],
+        });
+      }
+      if (propertyFound.length > 1) {
         return res.status(200).json({
           status: 'success',
           data: propertyFound,

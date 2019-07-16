@@ -60,6 +60,7 @@ class Property {
     image_url,
     baths,
     rooms,
+    owner_email,
     ownerEmail,
     ownerPhoneNumber,
     marketer,
@@ -77,6 +78,7 @@ class Property {
     this.image_url = image_url;
     this.baths = baths;
     this.rooms = rooms;
+    this.owner_email = owner_email;
     this.ownerEmail = ownerEmail;
     this.ownerPhoneNumber = ownerPhoneNumber;
     this.marketer = marketer || owner;
