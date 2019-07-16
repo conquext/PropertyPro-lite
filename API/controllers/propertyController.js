@@ -84,7 +84,7 @@ export default class propertyController {
         return res.status(200).json({
           status: 'success',
           message: 'Properties retrieved successfully',
-          data: propertyFound,
+          data: propertyFound[0],
         });
       }
       if (propertyFound.length < 1) {
