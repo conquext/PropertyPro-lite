@@ -39,6 +39,7 @@ export default class propertyController {
             rooms,
             ownerEmail: ownerFound.email,
             owner_email: ownerFound.email,
+            owner_phone_number: ownerFound.phoneNumber,
             ownerPhoneNumber: ownerFound.phoneNumber,
           },
         );

@@ -62,6 +62,7 @@ class Property {
     rooms,
     owner_email,
     ownerEmail,
+    owner_phone_number,
     ownerPhoneNumber,
     marketer,
     deleted,
@@ -80,6 +81,7 @@ class Property {
     this.rooms = rooms;
     this.owner_email = owner_email;
     this.ownerEmail = ownerEmail;
+    this.owner_phone_number = owner_phone_number;
     this.ownerPhoneNumber = ownerPhoneNumber;
     this.marketer = marketer || owner;
     this.lastUpdatedOn = lastUpdatedOn || new Date().toLocaleString();
