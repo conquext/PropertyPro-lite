@@ -82,6 +82,7 @@ export default class propertyController {
       }
       if (Object.keys(propertyFound).length > 1) {
         // const dataResult = propertyFound.find(o => o.id === 1);
+        // propertyFound.reduce((a, b) => Object.assign(a, b), {}),
         return res.status(200).json({
           status: 'success',
           message: 'Properties retrieved successfully',
