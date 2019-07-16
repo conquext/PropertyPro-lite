@@ -260,7 +260,7 @@ export default class propertyController {
       }
       return res.status(200).json({
         status: 'success',
-        data: propertyFound,
+        data: propertyFound[0],
       });
     } catch (error) {
       throw new Error('Something went wrong. Try again.');
@@ -291,7 +291,7 @@ export default class propertyController {
 
       return res.status(200).json({
         status: 'success',
-        data: propertyFound,
+        data: propertyFound[0],
       });
     } catch (error) {
       throw new Error('Something went wrong. Try again.');

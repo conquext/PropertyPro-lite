@@ -63,6 +63,25 @@ const tableSchema = {
           description VARCHAR(128) NOT NULL,
           created_on TIMESTAMP
       )`,
+
+  deletedPropertyKey: `(
+        id SERIAL PRIMARY KEY,
+        owner INTEGER NOT NULL REFERENCES users(id),
+        status VARCHAR(128) DEFAULT 'For Rent',
+        price INTEGER NOT NULL,
+        city VARCHAR(128) NOT NULL,
+        state VARCHAR(128) NOT NULL,
+        address VARCHAR(128) NOT NULL,
+        type VARCHAR(128) NOT NULL,
+        created_on TIMESTAMP NOT NULL DEFAULT now(),
+        image_url VARCHAR(128) NOT NULL,
+        baths INTEGER,
+        rooms INTEGER,
+        deletedOn BOOLEAN DEFAULT false,
+        ownerEmail VARCHAR(128) NOT NULL REFERENCES users(email),
+        ownerPhoneNumber VARCHAR(128) NOT NULL REFERENCES users(phoneNumber),
+        lastUpdated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )`,
 };
 
 export default class Migration {
@@ -148,6 +167,18 @@ export default class Migration {
     }
   }
 
+  /**
+    * Create deleted property Table
+    */
+  static async createDeletedTable() {
+    try {
+      await this.create(tableSchema.deletedPropertyKey, `${tableName.DELETED}`);
+      await debug('Deleted Properties table created');
+    } catch (err) {
+      debug(err);
+    }
+  }
+
 
   /**
     * Create All Table
@@ -160,6 +191,7 @@ export default class Migration {
       await this.createLoginTable();
       await this.createListingTable();
       await this.createFlagTable();
+      await this.createDeletedTable();
       debug('Tables successfully created');
     } catch (err) {
       debug(`Error while creating tables: ${err}`);
@@ -190,7 +222,9 @@ export default class Migration {
   static async dropAllTables() {
     try {
       debug('all tables to be removed');
-      await this.dbQuery('DROP TABLE IF EXISTS users, property, flags, login, listing;');
+      //   await this.dbQuery(`DROP TABLE IF EXISTS ${tableName.USERS}, ${tableName.PROPERTIES}, ${tableName.LISTINGS}, ${tableName.LOGIN}, ${tableName.FLAGS}, ${tableName.DELETED};`);
+      await this.dropSchema('public');
+      await this.createSchema('public');
     } catch (error) {
       debug(`Error while dropping tables ${error}`);
     }
