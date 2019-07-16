@@ -77,7 +77,7 @@ export default class propertyController {
         return res.status(200).json({
           status: 'success',
           message: 'Property retrieved successfully',
-          data: propertyFound,
+          data: propertyFound[0],
         });
       }
       if (propertyFound.length > 1) {
@@ -217,13 +217,13 @@ export default class propertyController {
         propertyFound = property.filter(searchProperty => (searchProperty.id === thisid) && (searchProperty.deleted === false));
       }
 
-      if (propertyFound.length === 1) {
-        return res.status(200).json({
-          status: 'success',
-          data: propertyFound[0],
-        });
-      }
-      if (propertyFound.length > 1) {
+      // if (propertyFound.length === 1) {
+      //   return res.status(200).json({
+      //     status: 'success',
+      //     data: propertyFound[0],
+      //   });
+      // }
+      if (propertyFound.length >= 1) {
         return res.status(200).json({
           status: 'success',
           data: propertyFound[0],
