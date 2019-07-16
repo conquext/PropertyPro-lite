@@ -71,7 +71,6 @@ export default class propertyController {
         if (searchProperty.deleted === false) {
           propertyFound.push(searchProperty);
         }
-        return propertyFound;
       });
 
       if (propertyFound.length === 1) {
