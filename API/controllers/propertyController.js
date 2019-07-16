@@ -81,10 +81,15 @@ export default class propertyController {
         });
       }
       if (propertyFound.length > 1) {
+        let dataResult = {};
+        propertyFound.filter((o, index) => {
+          if (o.id === 1) { dataResult = propertyFound[index]; }
+        });
+        // const dataResult = propertyFound.find(o => o.id === 1);
         return res.status(200).json({
           status: 'success',
           message: 'Properties retrieved successfully',
-          data: propertyFound,
+          data: dataResult,
         });
       }
       if (propertyFound.length < 1) {
