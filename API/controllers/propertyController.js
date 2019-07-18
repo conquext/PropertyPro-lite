@@ -1,7 +1,6 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable max-len */
 /* eslint-disable camelcase */
-import { property } from '../db/db';
 import UserHelper from '../helpers/userHelper';
 import Property from '../models/property';
 
@@ -11,21 +10,19 @@ export default class propertyController {
    * @static
    * @param {*} req
    * @param {*} res
-   * @returns {propertyController} A new property listing
+   * @returns Promise {propertyController} A new property listing
    * @memberof propertyController
    */
-  static listNewProperty(req, res) {
+  static async listNewProperty(req, res) {
     try {
-      const newId = property[property.length - 1].id + 1;
       const {
         status = 'For Rent', price = 0, state, city, address, type, baths = 0, rooms = 0, image_url,
       } = req.body;
-      const ownerFound = UserHelper.findUserById(parseInt(req.data.id, 10));
-      if (ownerFound) {
+      const ownerFound = await UserHelper.findDbUserById(parseInt(req.data.id, 10));
+      if (Object.keys(ownerFound).length !== 0) {
         const newProperty = new Property(
           // @ts-ignore
           {
-            id: newId,
             owner: ownerFound.id,
             status,
             type,
@@ -43,13 +40,33 @@ export default class propertyController {
             ownerPhoneNumber: ownerFound.phoneNumber,
           },
         );
-        property.push(newProperty);
 
-        return res.status(201).json({
-          status: 'success',
-          message: 'New property listed successfully',
-          data: newProperty,
-        });
+        const listingDbData = {
+          owner: ownerFound.id,
+          status: newProperty.status,
+          price: newProperty.price,
+          state: newProperty.state,
+          city: newProperty.city,
+          address: newProperty.address,
+          type: newProperty.type,
+          created_on: newProperty.created_on,
+          image_url: newProperty.image_url,
+          baths: newProperty.baths,
+          rooms: newProperty.rooms,
+          deleted: false,
+          ownerEmail: ownerFound.email,
+          ownerPhoneNumber: ownerFound.phonenumber,
+        };
+        try {
+          const newListing = await UserHelper.insertDb('property', listingDbData);
+          return res.status(201).json({
+            status: 'success',
+            message: 'New property listed successfully',
+            data: newListing,
+          });
+        } catch (error) {
+          throw new Error('Something went wrong. Try again.');
+        }
       }
     } catch (error) {
       throw new Error('Something went wrong. Try again.');
@@ -61,17 +78,17 @@ export default class propertyController {
    * @static
    * @param {*} req
    * @param {*} res
-   * @returns {propertyController} Property listings
+   * @returns Promise {propertyController} Property listings
    * @memberof propertyController
    */
-  static getAllProperty(req, res) {
+  static async getAllProperty(req, res) {
     try {
-      const propertyFound = [];
-      property.map((searchProperty) => {
-        if (searchProperty.deleted === false) {
-          propertyFound.push(searchProperty);
-        }
-      });
+      const propertyFound = await UserHelper.findDbProperties();
+      // property.map((searchProperty) => {
+      //   if (searchProperty.deleted === false) {
+      //     propertyFound.push(searchProperty);
+      //   }
+      // });
 
       if (Object.keys(propertyFound).length === 1) {
         return res.status(200).json({
@@ -81,8 +98,6 @@ export default class propertyController {
         });
       }
       if (Object.keys(propertyFound).length > 1) {
-        // const dataResult = propertyFound.find(o => o.id === 1);
-        // propertyFound.reduce((a, b) => Object.assign(a, b), {}),
         return res.status(200).json({
           status: 'success',
           message: 'Properties retrieved successfully',
@@ -105,19 +120,20 @@ export default class propertyController {
    * @static
    * @param {*} req
    * @param {*} res
-   * @returns {propertyController} property listing
+   * @returns Promise {propertyController} property listing
    * @memberof propertyController
    */
-  static getProperty(req, res) {
+  static async getProperty(req, res) {
     try {
-      const thisid = parseInt(req.params.id, 10);
+      const thisId = parseInt(req.params.id, 10);
       let propertyFound = null;
 
       if (req.query.owner && !(req.query.type || req.query.status)) {
         const { owner } = req.query;
-        const ownerFound = UserHelper.findUserById(parseInt(owner, 10));
+        const ownerFound = await UserHelper.findDbUserById(parseInt(owner, 10));
         if (ownerFound) {
-          propertyFound = property.filter(searchProperty => (searchProperty.owner === ownerFound.id) && (searchProperty.deleted === false));
+          // propertyFound = property.filter(searchProperty => (searchProperty.owner === ownerFound.id) && (searchProperty.deleted === false));
+          propertyFound = await UserHelper.findDbProperty('owner', ownerFound.id);
           if (req.query.baths) {
             const { baths } = req.query;
             propertyFound = propertyFound.filter(props => props.baths === baths);
@@ -130,7 +146,8 @@ export default class propertyController {
       }
       if (req.query.type && !(req.query.owner || req.query.status)) {
         const { type } = req.query;
-        propertyFound = property.filter(searchProperty => (searchProperty.type === type) && (searchProperty.deleted === false));
+        // propertyFound = property.filter(searchProperty => (searchProperty.type === type) && (searchProperty.deleted === false));
+        propertyFound = await UserHelper.findDbProperty('type', type);
         if (Object.keys(propertyFound).length !== 0) {
           if (req.query.baths) {
             const { baths } = req.query;
@@ -144,7 +161,8 @@ export default class propertyController {
       }
       if (req.query.status && !(req.query.owner || req.query.type)) {
         const { status } = req.query;
-        propertyFound = property.filter(props => (props.status === status) && (props.deleted === false));
+        // propertyFound = property.filter(props => (props.status === status) && (props.deleted === false));
+        propertyFound = await UserHelper.findDbProperty('status', status);
         if (Object.keys(propertyFound).length !== 0) {
           if (req.query.baths) {
             const { baths } = req.query;
@@ -159,9 +177,10 @@ export default class propertyController {
       if (req.query.owner && (req.query.type || req.query.status)) {
         if (req.query.owner) {
           const { owner } = req.query;
-          const ownerFound = UserHelper.findUserById(parseInt(owner, 10));
+          const ownerFound = UserHelper.findDbUserById(parseInt(owner, 10));
           if (ownerFound) {
-            propertyFound = property.filter(searchProperty => (searchProperty.owner === ownerFound.id) && (searchProperty.deleted === false));
+            // propertyFound = property.filter(searchProperty => (searchProperty.owner === ownerFound.id) && (searchProperty.deleted === false));
+            propertyFound = await UserHelper.findDbProperty('owner', ownerFound.id);
             if (Object.keys(propertyFound).length !== 0) {
               if (req.query.type) {
                 const { type } = req.query;
@@ -185,7 +204,8 @@ export default class propertyController {
       }
       if (!req.query.owner && req.query.type) {
         const { type } = req.query;
-        propertyFound = property.filter(props => (props.type === type) && (props.deleted === false));
+        // propertyFound = property.filter(props => (props.type === type) && (props.deleted === false));
+        propertyFound = await UserHelper.findDbProperty('type', type);
         if (Object.keys(propertyFound).length !== 0) {
           if (req.query.status) {
             const { status } = req.query;
@@ -205,10 +225,11 @@ export default class propertyController {
         if (req.query.status) {
           const { status } = req.query;
           propertyFound = propertyFound.filter(props => (props.status === status) && (props.deleted === false));
+          // propertyFound = await UserHelper.findDbProperty('status', status);
         }
         if (req.query.baths) {
           const { baths } = req.query;
-          propertyFound = property.filter(props => props.baths === baths);
+          propertyFound = propertyFound.filter(props => props.baths === baths);
         }
         if (req.query.rooms) {
           const { rooms } = req.query;
@@ -216,19 +237,20 @@ export default class propertyController {
         }
       }
       if (Object.keys(req.query).length === 0) {
-        propertyFound = property.filter(searchProperty => (searchProperty.id === thisid) && (searchProperty.deleted === false));
+        // propertyFound = property.filter(searchProperty => (searchProperty.id === thisId) && (searchProperty.deleted === false));
+        propertyFound = await UserHelper.findDbProperty('property_id', thisId);
       }
 
-      // if (propertyFound.length === 1) {
-      //   return res.status(200).json({
-      //     status: 'success',
-      //     data: propertyFound[0],
-      //   });
-      // }
-      if (propertyFound.length >= 1) {
+      if (propertyFound.length === 1) {
         return res.status(200).json({
           status: 'success',
           data: propertyFound[0],
+        });
+      }
+      if (propertyFound.length >= 1) {
+        return res.status(200).json({
+          status: 'success',
+          data: propertyFound,
         });
       }
       return res.status(404).json({
@@ -245,14 +267,15 @@ export default class propertyController {
    * @static
    * @param {*} req
    * @param {*} res
-   * @returns {propertyController} Edited property listing
+   * @returns Promise {propertyController} Edited property listing
    * @memberof propertyController
    */
-  static editProperty(req, res) {
+  static async editProperty(req, res) {
     try {
-      const thisid = parseInt(req.params.id, 10);
+      const thisId = parseInt(req.params.id, 10);
       let propertyFound = null;
-      propertyFound = property.filter(searchProperty => ((searchProperty.id === thisid) && (searchProperty.deleted === false)));
+      // propertyFound = property.filter(searchProperty => ((searchProperty.id === thisId) && (searchProperty.deleted === false)));
+      propertyFound = await UserHelper.findDbProperty('property_id', thisId);
       if (Object.keys(propertyFound).length === 0) {
         return res.status(404).json({
           status: 'error',
@@ -266,12 +289,35 @@ export default class propertyController {
         for (const [field, value] of editFields) {
           propertyFound[0][field] = value;
         }
-        propertyFound[0].lastUpdatedOn = new Date().toLocaleDateString();
       }
-      return res.status(200).json({
-        status: 'success',
-        data: propertyFound[0],
-      });
+
+      const editDbProperty = {
+        status: propertyFound[0].status,
+        price: propertyFound[0].price,
+        state: propertyFound[0].state,
+        city: propertyFound[0].city,
+        address: propertyFound[0].address,
+        type: propertyFound[0].type,
+        image_url: propertyFound[0].image_url,
+        baths: propertyFound[0].baths,
+        rooms: propertyFound[0].rooms,
+      };
+
+      try {
+        await UserHelper.updateDb('property', editDbProperty, 'property_id', thisId);
+      } catch (error) {
+        throw new Error('Something went wrong. Try again.');
+      }
+
+      try {
+        const theEditedProperty = await UserHelper.findDbProperty('property_id', thisId);
+        return res.status(200).json({
+          status: 'success',
+          data: theEditedProperty[0],
+        });
+      } catch (error) {
+        throw new Error('Something went wrong. Try again.');
+      }
     } catch (error) {
       throw new Error('Something went wrong. Try again.');
     }
@@ -282,14 +328,15 @@ export default class propertyController {
    * @static
    * @param {*} req
    * @param {*} res
-   * @returns {propertyController} Updated property listing
+   * @returns Promise {propertyController} Updated property listing
    * @memberof propertyController
    */
-  static updateProperty(req, res) {
+  static async updateProperty(req, res) {
     try {
-      const thisid = parseInt(req.params.id, 10);
+      const thisId = parseInt(req.params.id, 10);
       let propertyFound = null;
-      propertyFound = property.filter(searchProperty => ((searchProperty.id === thisid) && (searchProperty.deleted === false)));
+      // propertyFound = property.filter(searchProperty => ((searchProperty.id === thisId) && (searchProperty.deleted === false)));
+      propertyFound = await UserHelper.findDbProperty('property_id', thisId);
       if (Object.keys(propertyFound).length === 0) {
         return res.status(404).json({
           status: 'error',
@@ -299,10 +346,25 @@ export default class propertyController {
 
       propertyFound[0].status = 'Sold';
 
-      return res.status(200).json({
-        status: 'success',
-        data: propertyFound[0],
-      });
+      const updateDbProperty = {
+        status: propertyFound[0].status,
+      };
+
+      try {
+        await UserHelper.updateDb('property', updateDbProperty, 'property_id', thisId);
+      } catch (error) {
+        throw new Error('Something went wrong. Try again.');
+      }
+
+      try {
+        const theUpdatedProperty = await UserHelper.findDbProperty('property_id', thisId);
+        return res.status(200).json({
+          status: 'success',
+          data: theUpdatedProperty[0],
+        });
+      } catch (error) {
+        throw new Error('Something went wrong. Try again.');
+      }
     } catch (error) {
       throw new Error('Something went wrong. Try again.');
     }
@@ -313,31 +375,31 @@ export default class propertyController {
    * @static
    * @param {*} req
    * @param {*} res
-   * @returns {propertyController} Deleted property listing
+   * @returns Promise {propertyController} Deleted property listing
    * @memberof propertyController
    */
-  static deleteProperty(req, res) {
+  static async deleteProperty(req, res) {
     try {
-      const thisid = parseInt(req.params.id, 10);
+      const thisId = parseInt(req.params.id, 10);
       let propertyFound = null;
-      let propertyIndex = null;
-      property.map((searchProperty, index) => {
-        if (searchProperty.id === thisid) {
-          if (searchProperty.deleted !== true) {
-            propertyFound = searchProperty;
-            propertyIndex = index;
-          }
-        }
-      });
-      if (!propertyFound) {
+      propertyFound = await UserHelper.findDbProperty('property_id', thisId);
+      if (Object.keys(propertyFound).length === 0) {
         return res.status(404).json({
           status: 'error',
           error: 'Property not found',
         });
       }
       // @ts-ignore
-      propertyFound.deleted = true;
-      property.splice(propertyIndex, 1);
+      try {
+        const updatedDbDeleted = propertyFound[0];
+        delete updatedDbDeleted.property_id;
+        delete updatedDbDeleted.deleted;
+        await UserHelper.insertDb('deleted', updatedDbDeleted);
+        await UserHelper.deleteDb('property', 'property_id', thisId);
+      } catch (error) {
+        throw new Error('Something went wrong. Try again.');
+      }
+
       return res.status(200).json({
         status: 'success',
         data: {

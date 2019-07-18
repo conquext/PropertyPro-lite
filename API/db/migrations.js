@@ -11,7 +11,6 @@ const tableSchema = {
           first_name VARCHAR(128) NOT NULL,
           last_name VARCHAR(128) NOT NULL,
           email VARCHAR(128) UNIQUE NOT NULL,
-          password VARCHAR(128) NOT NULL,
           phoneNumber VARCHAR(128) UNIQUE NOT NULL,
           address VARCHAR(128) NOT NULL,
           is_admin BOOLEAN DEFAULT FALSE,
@@ -24,7 +23,7 @@ const tableSchema = {
         )`,
 
   propertyKey: `(
-          id SERIAL PRIMARY KEY,
+          property_id SERIAL PRIMARY KEY,
           owner INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
           status VARCHAR(128) DEFAULT 'For Rent',
           price INTEGER NOT NULL,
@@ -43,29 +42,33 @@ const tableSchema = {
         )`,
 
   loginKey: `(
-          id SERIAL PRIMARY KEY,
-          email VARCHAR(128) NOT NULL REFERENCES users(email) ON DELETE CASCADE,
+          login_id SERIAL PRIMARY KEY,
+          email VARCHAR(128) UNIQUE NOT NULL REFERENCES users(email) ON DELETE CASCADE,
           password VARCHAR(128) NOT NULL,
+          token VARCHAR(528),
+          logged_in BOOLEAN DEFAULT false,
           last_login TIMESTAMP
       )`,
 
   listingKey: `(
-          id SERIAL PRIMARY KEY,
-          property_id INTEGER NOT NULL REFERENCES property(id),
+          listing_id SERIAL PRIMARY KEY,
+          property_id INTEGER NOT NULL REFERENCES property(property_id),
           password VARCHAR(128) NOT NULL,
-          last_modified TIMESTAMP
+          last_modified TIMESTAMP,
+          lastUpdated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
       )`,
 
   flagKey: `(
-          id SERIAL PRIMARY KEY,
-          property_id INTEGER NOT NULL REFERENCES property(id),
+          flag_id SERIAL PRIMARY KEY,
+          property_id INTEGER NOT NULL REFERENCES property(property_id),
           reason VARCHAR(128) NOT NULL,
           description VARCHAR(128) NOT NULL,
-          created_on TIMESTAMP
+          created_on TIMESTAMP,
+          lastUpdated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
       )`,
 
   deletedPropertyKey: `(
-        id SERIAL PRIMARY KEY,
+        deleted_id SERIAL PRIMARY KEY,
         owner INTEGER NOT NULL REFERENCES users(id),
         status VARCHAR(128) DEFAULT 'For Rent',
         price INTEGER NOT NULL,
@@ -208,7 +211,8 @@ export default class Migration {
 
   static async createSchema(schemaType) {
     await this.dbQuery(`CREATE SCHEMA IF NOT EXISTS ${schemaType};`);
-    await this.dbQuery(`GRANT ALL ON SCHEMA ${schemaType} TO postgres`);
+    await this.dbQuery(`GRANT ALL ON SCHEMA ${schemaType} TO farce`);
+    await this.dbQuery(`GRANT USAGE ON SCHEMA ${schemaType} TO farce`);
     await this.dbQuery(`GRANT ALL ON SCHEMA ${schemaType} To ${schemaType}`);
     await this.dbQuery(`COMMENT ON SCHEMA ${schemaType} IS 'standard public schema'`);
     debug(`${schemaType} schema was created`);

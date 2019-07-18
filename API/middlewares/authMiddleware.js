@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { debug } from 'util';
 import * as config from '../config';
+import UserHelper from '../helpers/userHelper';
 
 export default class AuthMiddleware {
   static errorResponse(res, statusCode, error) {
@@ -15,8 +16,10 @@ export default class AuthMiddleware {
     return err;
   }
 
-  static authenticateUser(req, res, next) {
+  static async authenticateUser(req, res, next) {
     let currentToken = req.headers.authorization || req.headers.token || req.body.token;
+    let tokenFound = null;
+
     if (!currentToken) {
       return res.status(403).json({
         status: 'error',
@@ -25,6 +28,14 @@ export default class AuthMiddleware {
     }
 
     currentToken = currentToken.replace('Bearer ', '');
+    tokenFound = await UserHelper.findDbLogin('token', currentToken);
+
+    if (Object.keys(tokenFound).length === 0) {
+      return res.status(403).json({
+        status: 'error',
+        error: 'Unathorized. Token invalid. Please login',
+      });
+    }
     const decoded = jwt.decode(currentToken, { secret: config.secret });
     if (!decoded) {
       return res.status(403).json({
@@ -32,7 +43,6 @@ export default class AuthMiddleware {
         error: 'Unathorized. Token invalid. Please login',
       });
     }
-
     req.data = {
       id: decoded.payload.id || '',
       first_name: decoded.payload.first_name || '',

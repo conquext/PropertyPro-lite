@@ -4,7 +4,7 @@ import 'babel-polyfill';
 import cassandraMap from 'cassandra-map';
 import Debug from 'debug';
 import { debug } from 'util';
-import { pool } from './config';
+import { pool, tableName } from './config';
 
 export default class Model {
   constructor({ table }) {
@@ -17,49 +17,69 @@ export default class Model {
   }
 
   static async dbQuery(theQuery) {
+    const client = await pool.connect();
     try {
-      const client = await pool.connect();
-      await client.query(theQuery)
-        .then(res => console.log(res.rows));
-      client.release();
+      return await client.query(theQuery);
     } catch (error) {
       debug(`this error right here ${theQuery}: ${error}`);
+    } finally {
+      client.release();
     }
   }
 
-  async insert(data) {
-    const columns = Object.keys(data);
-    const values = Object.values(data);
-    const query = `INSERT INTO ${this.table} (${columns}) VALUES (${values.map(value => value = cassandraMap.stringify(value))}) RETURNING *;`;
-
-    const returnData = Model.dbQuery(query);
-
-    return returnData;
+  async insert({ data }) {
+    try {
+      const columns = Object.keys(data);
+      const values = Object.values(data);
+      const query = `INSERT INTO ${this.table} (${columns}) VALUES (${values.map(value => value = cassandraMap.stringify(value))}) RETURNING *;`;
+      const returnData = await Model.dbQuery(query);
+      return returnData;
+    } catch (error) {
+      Model.logger('Cannot execute insert query');
+    }
   }
 
-  async select({ fields }, { clause }) {
-    const columns = Object.values(fields) || '*';
-    const theClause = `WHERE (${this.table}.${Object.keys(clause)}) = (${Object.values(clause).map(eachClause => eachClause = cassandraMap.stringify(eachClause))})`;
-    const query = `SELECT ${columns} FROM ${this.table} ${theClause};`;
-    const returnData = Model.dbQuery(query);
-    return returnData;
+  async select({ returnFields }, { clause }, { join } = null) {
+    try {
+      let query;
+      const columns = Object.values(returnFields) || '*';
+      const theClause = Object.keys(clause).length === 0 ? '' : `WHERE (${this.table}.${Object.keys(clause)}) = (${Object.values(clause).map(eachClause => eachClause = cassandraMap.stringify(eachClause))})`;
+
+      if (Object.keys(join).length === 0) {
+        query = `SELECT ${columns} FROM ${this.table} ${theClause};`;
+      } else {
+        const joinTable = Object.keys(join)[0] || '';
+        const joinId = Object.values(join)[0] || '';
+        const theJoin = `${joinTable} ON ${joinTable}.${joinId} = ${this.table}.${joinId}`;
+        query = `SELECT ${columns} FROM ${this.table} INNER JOIN ${theJoin} ${theClause};`;
+      }
+      const returnData = await Model.dbQuery(query);
+      return returnData.rows;
+    } catch (error) {
+      Model.logger('Cannot execute select query');
+    }
   }
 
-  async update(prop, data, clause) {
+  async update({ data }, { clause }) {
+    let query;
     const columns = Object.keys(data) || '*';
     const values = Object.values(data);
-    const theClause = clause ? '' : `WHERE ${this.table}.${Object.keys(prop)} = ${Object.values(prop)}`;
-    const query = `UPDATE ${this.table} SET (${columns}, lastUpdated) = (${values.map(value => value = cassandraMap.stringify(value))}, ${cassandraMap.stringify(new Date())}) ${theClause}`;
+    const theClause = Object.keys(clause).length === 0 ? '' : `WHERE (${this.table}.${Object.keys(clause)}) = (${Object.values(clause).map(eachClause => eachClause = cassandraMap.stringify(eachClause))})`;
+    if (this.table === tableName.LOGIN) {
+      query = `UPDATE ${this.table} SET (${columns}) = (${values.map(value => value = cassandraMap.stringify(value))}) ${theClause};`;
+    } else query = `UPDATE ${this.table} SET (${columns}, lastUpdated) = (${values.map(value => value = cassandraMap.stringify(value))}, ${cassandraMap.stringify(new Date())}) ${theClause};`;
     const returnData = Model.dbQuery(query);
     return returnData;
   }
 
-  async delete(prop) {
-    // const columns = Object.keys(prop) || '*';
-    // const values = Object.values(prop);
-    const theClause = `WHERE ${this.table}.${Object.keys(prop)} = ${Object.values(prop)}`;
-    const query = `DELETE FROM ${this.table} ${theClause} RETURNING *`;
-    const returnData = Model.dbQuery(query);
-    return returnData;
+  async delete({ clause }) {
+    try {
+      const theClause = `WHERE ${this.table}.${Object.keys(clause)} = (${Object.values(clause).map(eachClause => eachClause = cassandraMap.stringify(eachClause))})`;
+      const query = `DELETE FROM ${this.table} ${theClause} RETURNING *`;
+      const returnData = Model.dbQuery(query);
+      return returnData;
+    } catch (error) {
+      Model.logger('Cannot execute delete query');
+    }
   }
 }

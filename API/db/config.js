@@ -19,6 +19,7 @@ const tableName = {
   FLAGS: 'flags',
   LOGIN: 'login',
   LISTINGS: 'listing',
+  DELETED: 'deleted',
 };
 
 const pool = new Pool(dbConfig);

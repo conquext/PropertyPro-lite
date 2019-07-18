@@ -68,7 +68,7 @@ export default class ValidateMiddleware {
 
   static listingEditCheck(req, res, next) {
     req.checkBody('status').optional().withMessage('Specify property status')
-      .isIn(['For Rent ', 'For Sale'])
+      .isIn(['For Rent', 'For Sale'])
       .withMessage('Select the property status [For Sale or For Rent]');
     req.checkBody('address').optional().withMessage('Provide address of your property')
       .isLength({ min: 5 })

@@ -1,7 +1,6 @@
 /* eslint-disable camelcase */
 import User from '../models/user';
 import UserHelper from '../helpers/userHelper';
-import { users } from '../db/db';
 
 export default class UserController {
   /**
@@ -9,17 +8,17 @@ export default class UserController {
    * @static
    * @param {*} req
    * @param {*} res
-   * @returns {UserController} A logged-in user
+   * @returns Promise {UserController} A logged-in user
    * @memberof UserController
    */
-  static signin(req, res) {
+  static async signin(req, res) {
     try {
       const { email, password } = req.body;
-      const userFound = UserHelper.findUserByEmail(email);
-      if (!userFound) {
+      const userFound = await UserHelper.findDbUserByEmailLogin(email);
+      if (Object.keys(userFound).length < 1) {
         return res.status(401).json({
           status: 'error',
-          error: 'Incorrect email',
+          error: 'Incorrect email or Wrong Password',
         });
       }
       if (!UserHelper.comparePassword(password, userFound.password)) {
@@ -30,8 +29,9 @@ export default class UserController {
       }
       const jwtToken = UserHelper.generateToken(userFound);
       userFound.token = jwtToken;
-      userFound.lastLoggedInAt = new Date();
-      userFound.loggedIn = true;
+      userFound.last_login = new Date();
+      userFound.logged_in = true;
+
       const loginData = {
         token: userFound.token,
         id: userFound.id,
@@ -40,6 +40,18 @@ export default class UserController {
         email: userFound.email,
         type: userFound.type,
       };
+
+      const loginDbData = {
+        token: userFound.token,
+        logged_in: userFound.logged_in,
+        last_login: new Date(),
+      };
+
+      try {
+        await UserHelper.updateDb('login', loginDbData, 'email', userFound.email);
+      } catch (error) {
+        throw new Error('Something went wrong. Try again.');
+      }
 
       return res.status(200).json({
         status: 'success',
@@ -56,15 +68,15 @@ export default class UserController {
    * @static
    * @param {*} req
    * @param {*} res
-   * @returns {UserController} A new user
+   * @returns Promise {UserController} A new user
    * @memberof UserController
    */
-  static signup(req, res) {
+  static async signup(req, res) {
     try {
       const {
-        first_name, last_name, email, phoneNumber, address, type = 'agent', password,
+        first_name, last_name, email, phoneNumber, dob, address = 'Not Available', type = 'agent', password,
       } = req.body;
-      const registeredUser = UserHelper.findUserByEmail(email);
+      const registeredUser = await UserHelper.findDbUserByEmail(email);
       if (registeredUser) {
         return res.status(409).json({
           status: 'error',
@@ -77,27 +89,61 @@ export default class UserController {
       //     error: 'Passwords must match',
       //   });
       // }
-      const newId = users[users.length - 1].id + 1;
       // @ts-ignore
       const newUser = new User({
-        id: newId, first_name, last_name, email, phoneNumber, address, type,
+        first_name, last_name, email, phoneNumber, address, type, dob,
       });
 
       newUser.password = UserHelper.hashPassword(password);
-      const jwtToken = UserHelper.generateToken(newUser);
-      newUser.token = jwtToken;
-      newUser.logIn();
-      users.push(newUser);
 
-      const signupData = {
-        token: newUser.token,
-        id: newId,
+      // users.push(newUser);
+
+      const signupDbData = {
         first_name: newUser.first_name,
         last_name: newUser.last_name,
         email: newUser.email,
         type: newUser.type,
         is_admin: newUser.is_admin,
+        address: newUser.address,
         phoneNumber: newUser.phoneNumber,
+        dob: newUser.dob || new Date(),
+        state: newUser.state,
+        country: newUser.country,
+      };
+
+      try {
+        await UserHelper.insertDb('users', signupDbData);
+      } catch (error) {
+        throw new Error('Something went wrong. Try again.');
+      }
+
+      const newlyRegUser = await UserHelper.findDbUser('email', email);
+      newUser.token = UserHelper.generateToken(newlyRegUser);
+      newUser.logged_in = true;
+
+      const loginDbData = {
+        token: newUser.token,
+        email: newUser.email,
+        password: newUser.password,
+        logged_in: newUser.logged_in || false,
+        last_login: new Date(),
+      };
+
+      try {
+        await UserHelper.insertDb('login', loginDbData);
+      } catch (error) {
+        throw new Error('Something went wrong. Try again.');
+      }
+
+      const signupData = {
+        token: newUser.token,
+        id: newlyRegUser.id,
+        first_name: newlyRegUser.first_name,
+        last_name: newlyRegUser.last_name,
+        email: newlyRegUser.email,
+        type: newlyRegUser.type,
+        is_admin: newlyRegUser.is_admin,
+        phoneNumber: newlyRegUser.phoneNumber,
       };
 
       return res.status(201).json({
