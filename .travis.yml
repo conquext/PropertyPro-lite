@@ -14,7 +14,6 @@ install:
 before_script:
   - psql -c 'drop database if exists propertypro_test;' -U postgres
   - psql -c 'create database propertypro_test;' -U postgres
-  - npm run seeder
 after_success:
   - npm run coverage
 notifications:
