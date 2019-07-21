@@ -22,7 +22,8 @@ const tableName = {
   DELETED: 'deleted',
 };
 
-const connectionstring = process.env.DATABASE_URL;
+const connectionstring = process.env.DATABASE_URL || 'propertypro';
+
 const pool = new Pool({ connectionString: connectionstring });
 
 pool.on('error', (err) => {
