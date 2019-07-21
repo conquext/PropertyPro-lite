@@ -16,7 +16,7 @@
     "seeder": "DEBUG=dev babel-node ./API/db/seeder",
     "coveralls": "cross-env NODE_ENV=test nyc --reporter=lcov --reporter=text-lcov npm test",
     "coverage": "nyc npm run test",
-    "heroku-postbuild": "DEBUG=prod NODE_ENV=prod npm run seeder"
+    "heroku-postbuild": "DATABASE_URL=postgres://xbacfhvmoeoakg:187eacb9c7b7425b0f774b5ab15bd85ac71722c4e0e35047328346d81d7521be@ec2-174-129-41-127.compute-1.amazonaws.com:5432/d1pt3kqnpcm1k1 npm run seeder"
   },
   "repository": {
     "type": "git",
