@@ -197,7 +197,7 @@ export default class Migration {
       await this.createDeletedTable();
       debug('Tables successfully created');
     } catch (err) {
-    //   debug(`Error while creating tables: ${err}`);
+      debug(`Error while creating tables: ${err}`);
     }
   }
 
