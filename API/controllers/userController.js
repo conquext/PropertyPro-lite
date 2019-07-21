@@ -18,7 +18,7 @@ export default class UserController {
       if (Object.keys(userFound).length < 1) {
         return res.status(401).json({
           status: 'error',
-          error: 'Incorrect email or Wrong Password',
+          error: 'Incorrect email or Wrong password',
         });
       }
       if (!UserHelper.comparePassword(password, userFound.password)) {
@@ -50,7 +50,7 @@ export default class UserController {
       try {
         await UserHelper.updateDb('login', loginDbData, 'email', userFound.email);
       } catch (error) {
-        throw new Error('Something went wrong. Try again.');
+        // throw new Error('Something went wrong. Try again.');
       }
 
       return res.status(200).json({
@@ -74,7 +74,7 @@ export default class UserController {
   static async signup(req, res) {
     try {
       const {
-        first_name, last_name, email, phoneNumber, dob, address = 'Not Available', type = 'agent', password,
+        first_name, last_name, email, phoneNumber, dob, address, type = 'agent', password,
       } = req.body;
       const registeredUser = await UserHelper.findDbUserByEmail(email);
       if (registeredUser) {
@@ -104,56 +104,51 @@ export default class UserController {
         email: newUser.email,
         type: newUser.type,
         is_admin: newUser.is_admin,
-        address: newUser.address,
+        address: newUser.address || 'Not Available',
         phoneNumber: newUser.phoneNumber,
         dob: newUser.dob || new Date(),
-        state: newUser.state,
-        country: newUser.country,
+        state: newUser.state || 'Not Available',
+        country: newUser.country || 'Not Available',
       };
 
       try {
         await UserHelper.insertDb('users', signupDbData);
-      } catch (error) {
-        throw new Error('Something went wrong. Try again.');
-      }
+        const newlyRegUser = await UserHelper.findDbUser('email', email);
+        newUser.token = UserHelper.generateToken(newlyRegUser);
+        newUser.logged_in = true;
 
-      const newlyRegUser = await UserHelper.findDbUser('email', email);
-      newUser.token = UserHelper.generateToken(newlyRegUser);
-      newUser.logged_in = true;
+        const loginDbData = {
+          token: newUser.token,
+          email: newUser.email,
+          password: newUser.password,
+          logged_in: newUser.logged_in || false,
+          last_login: new Date(),
+        };
 
-      const loginDbData = {
-        token: newUser.token,
-        email: newUser.email,
-        password: newUser.password,
-        logged_in: newUser.logged_in || false,
-        last_login: new Date(),
-      };
-
-      try {
         await UserHelper.insertDb('login', loginDbData);
+
+        const signupData = {
+          token: newUser.token,
+          id: newlyRegUser.id,
+          first_name: newlyRegUser.first_name,
+          last_name: newlyRegUser.last_name,
+          email: newlyRegUser.email,
+          type: newlyRegUser.type,
+          is_admin: newlyRegUser.is_admin,
+          phoneNumber: newlyRegUser.phoneNumber,
+        };
+
+        return res.status(201).json({
+          status: 'success',
+          message: 'User is registered successfully',
+          token: signupData.token,
+          data: signupData,
+        });
       } catch (error) {
-        throw new Error('Something went wrong. Try again.');
+        // throw new Error('Something went wrong. Try again.');
       }
-
-      const signupData = {
-        token: newUser.token,
-        id: newlyRegUser.id,
-        first_name: newlyRegUser.first_name,
-        last_name: newlyRegUser.last_name,
-        email: newlyRegUser.email,
-        type: newlyRegUser.type,
-        is_admin: newlyRegUser.is_admin,
-        phoneNumber: newlyRegUser.phoneNumber,
-      };
-
-      return res.status(201).json({
-        status: 'success',
-        message: 'User is registered successfully',
-        token: signupData.token,
-        data: signupData,
-      });
     } catch (error) {
-      throw new Error('Something went wrong. Try again.');
+      throw new Error(`Something went wrong. Try again. ${error}`);
     }
   }
 }

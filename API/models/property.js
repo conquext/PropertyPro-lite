@@ -69,13 +69,13 @@ class Property {
     lastUpdatedOn,
   }) {
     this.id = id;
-    this.status = status || 'For Rent';
+    this.status = status;
     this.type = type;
     this.state = state;
     this.city = city;
     this.address = address;
     this.price = price;
-    this.created_on = created_on || new Date().toLocaleString();
+    this.created_on = created_on;
     this.image_url = image_url;
     this.baths = baths;
     this.rooms = rooms;

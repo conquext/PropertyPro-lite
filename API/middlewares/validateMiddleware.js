@@ -1,6 +1,16 @@
 import authMiddleware from './authMiddleware';
 
 export default class ValidateMiddleware {
+  static methodNotAllowed(req, res) {
+    const err = ['Method Not Allowed'];
+    return authMiddleware.errorResponse(res, 405, err);
+  }
+
+  static pageNotFound(req, res) {
+    const err = ['Page Not Found'];
+    return authMiddleware.errorResponse(res, 404, err);
+  }
+
   static loginCheck(req, res, next) {
     req.checkBody('email').isLength({ min: 1 }).withMessage('Email is required');
     req.checkBody('email').isEmail().withMessage('Email is invalid');
@@ -36,22 +46,22 @@ export default class ValidateMiddleware {
   }
 
   static propertyListingCheck(req, res, next) {
-    // req.checkBody('status').exists()
-    //   .withMessage('Specify property status')
-    //   .isIn(['For Rent ', 'For Sale'])
-    //   .withMessage('Select the property status [For Sale or For Rent]');
+    req.checkBody('status').exists()
+      .withMessage('Specify property status')
+      .isIn(['For Rent', 'For Sale'])
+      .withMessage('Select the property status [For Sale or For Rent]');
     req.checkBody('address').exists().withMessage('Provide address of your property')
       .isLength({ min: 3 })
       .withMessage('Address should contain more than 3 characters');
     req.checkBody('city').exists().withMessage('Provide city of your property location');
     req.checkBody('state').exists().withMessage('Provide state of your property location');
-    req.checkBody('type').exists().withMessage('Select type of property');
-    // .isIn(['Residential', 'Flat', 'Luxury', 'Rental', 'Commercial', 'Office Space', 'Garage', 'Apartment', 'Boys Quarter', 'Duplex', 'TownHouse'])
-    // .withMessage('Select the appropritate property type');
-    // req.checkBody('rooms').exists().withMessage('Select number of rooms').isDecimal()
-    //   .withMessage('Number of rooms should be numeric');
-    // req.checkBody('baths').exists().withMessage('Select number of baths').isInt()
-    //   .withMessage('Number of baths should be numeric');
+    req.checkBody('type').exists().withMessage('Select type of property')
+      .isIn(['Residential', 'Flat', 'Luxury', 'Rental', 'Commercial', 'Office Space', 'Garage', 'Apartment', 'Boys Quarter', 'Duplex', 'TownHouse'])
+      .withMessage('Select the appropritate property type');
+    req.checkBody('rooms').exists().withMessage('Select number of rooms').isDecimal()
+      .withMessage('Number of rooms should be numeric');
+    req.checkBody('baths').exists().withMessage('Select number of baths').isInt()
+      .withMessage('Number of baths should be numeric');
     req.checkBody('price').exists().withMessage('Provide price information');
     req.checkBody('price').isDecimal().withMessage('Price should be in decimal');
     req.checkBody('image_url').exists().withMessage('Provide image link')

@@ -13,12 +13,10 @@ export default class PermissionsMiddleware {
     next();
   }
 
-  static authPropertyOwner(req, res, next) {
+  static async authPropertyOwner(req, res, next) {
     const userId = req.data.id;
     const { id } = req.params || req.query;
-
-    const propertyOwner = UserHelper.findPropertyOwner(parseInt(id, 10));
-
+    const propertyOwner = await UserHelper.findDbPropertyOwner(parseInt(id, 10));
     if (req.data.type !== 'admin') {
       if (propertyOwner) {
         if (parseInt(userId, 10) !== parseInt(propertyOwner.id, 10)) {

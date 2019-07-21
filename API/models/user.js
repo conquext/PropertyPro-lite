@@ -91,9 +91,4 @@ export default class User {
     this.created_on = new Date();
     this.lastLoggedInAt = null;
   }
-
-  logIn() {
-    this.lastLoggedInAt = new Date();
-    this.loggedIn = true;
-  }
 }

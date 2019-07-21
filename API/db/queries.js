@@ -4,12 +4,12 @@ import 'babel-polyfill';
 import cassandraMap from 'cassandra-map';
 import Debug from 'debug';
 import { debug } from 'util';
-import { pool, tableName } from './config';
+import { pool, tableName, dbConfig } from './config';
 
 export default class Model {
   constructor({ table }) {
     this.table = table;
-    Model.logger(`Our table is ${this.table}`);
+    Model.logger(`Our table is ${this.table} in ${dbConfig.database}`);
   }
 
   static logger(message) {
@@ -21,7 +21,7 @@ export default class Model {
     try {
       return await client.query(theQuery);
     } catch (error) {
-      debug(`this error right here ${theQuery}: ${error}`);
+    //   debug(`this error right here ${theQuery}: ${error}`);
     } finally {
       client.release();
     }
@@ -35,7 +35,7 @@ export default class Model {
       const returnData = await Model.dbQuery(query);
       return returnData;
     } catch (error) {
-      Model.logger('Cannot execute insert query');
+    //   Model.logger('Cannot execute insert query');
     }
   }
 
@@ -44,7 +44,6 @@ export default class Model {
       let query;
       const columns = Object.values(returnFields) || '*';
       const theClause = Object.keys(clause).length === 0 ? '' : `WHERE (${this.table}.${Object.keys(clause)}) = (${Object.values(clause).map(eachClause => eachClause = cassandraMap.stringify(eachClause))})`;
-
       if (Object.keys(join).length === 0) {
         query = `SELECT ${columns} FROM ${this.table} ${theClause};`;
       } else {
@@ -56,20 +55,27 @@ export default class Model {
       const returnData = await Model.dbQuery(query);
       return returnData.rows;
     } catch (error) {
-      Model.logger('Cannot execute select query');
+    //   Model.logger('Cannot execute select query');
     }
   }
 
   async update({ data }, { clause }) {
-    let query;
-    const columns = Object.keys(data) || '*';
-    const values = Object.values(data);
-    const theClause = Object.keys(clause).length === 0 ? '' : `WHERE (${this.table}.${Object.keys(clause)}) = (${Object.values(clause).map(eachClause => eachClause = cassandraMap.stringify(eachClause))})`;
-    if (this.table === tableName.LOGIN) {
-      query = `UPDATE ${this.table} SET (${columns}) = (${values.map(value => value = cassandraMap.stringify(value))}) ${theClause};`;
-    } else query = `UPDATE ${this.table} SET (${columns}, lastUpdated) = (${values.map(value => value = cassandraMap.stringify(value))}, ${cassandraMap.stringify(new Date())}) ${theClause};`;
-    const returnData = Model.dbQuery(query);
-    return returnData;
+    try {
+      let query = '';
+      const columns = Object.keys(data) || '*';
+      const values = Object.values(data);
+      const theClause = Object.keys(clause).length === 0 ? '' : `WHERE (${this.table}.${Object.keys(clause)}) = (${Object.values(clause).map(eachClause => eachClause = cassandraMap.stringify(eachClause))})`;
+
+      if (this.table === tableName.LOGIN) {
+        query = `UPDATE ${this.table} SET (${columns}) = (${values.map(value => value = cassandraMap.stringify(value))}) ${theClause};`;
+      } else query = `UPDATE ${this.table} SET (${columns}, lastUpdated) = (${values.map(value => value = cassandraMap.stringify(value))}, ${cassandraMap.stringify(new Date())}) ${theClause};`;
+
+      const returnData = Model.dbQuery(query);
+
+      return returnData;
+    } catch (error) {
+    //   Model.logger('Cannot execute update query');
+    }
   }
 
   async delete({ clause }) {
@@ -79,7 +85,7 @@ export default class Model {
       const returnData = Model.dbQuery(query);
       return returnData;
     } catch (error) {
-      Model.logger('Cannot execute delete query');
+    //   Model.logger('Cannot execute delete query');
     }
   }
 }

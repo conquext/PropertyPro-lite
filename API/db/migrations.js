@@ -1,5 +1,5 @@
 import Debug from 'debug';
-import { pool, tableName } from './config';
+import { pool, tableName, dbConfig } from './config';
 
 // import 'make-runnable';
 
@@ -98,7 +98,7 @@ export default class Migration {
       await client.query(theQuery);
       client.release();
     } catch (error) {
-      debug(`this error right here ${theQuery}: ${error}`);
+    //   debug(`Error in ${theQuery}: ${error}`);
     }
   }
 
@@ -106,7 +106,7 @@ export default class Migration {
     try {
       await this.dbQuery(`CREATE TABLE IF NOT EXISTS ${table} ${fields};`);
     } catch (err) {
-      debug(`Error in creating ${table}: ${err}`);
+    //   debug(`Error in creating ${table}: ${err}`);
     }
   }
 
@@ -118,7 +118,7 @@ export default class Migration {
       await this.create(tableSchema.usersKey, `${tableName.USERS}`);
       debug('Users table created');
     } catch (err) {
-      debug(err);
+    //   debug(err);
     }
   }
 
@@ -130,7 +130,7 @@ export default class Migration {
       await this.create(tableSchema.propertyKey, `${tableName.PROPERTIES}`);
       await debug('Property table created');
     } catch (err) {
-      debug(err);
+    //   debug(err);
     }
   }
 
@@ -142,7 +142,7 @@ export default class Migration {
       await this.create(tableSchema.loginKey, `${tableName.LOGIN}`);
       debug('Login table created');
     } catch (err) {
-      debug(err);
+    //   debug(err);
     }
   }
 
@@ -154,7 +154,7 @@ export default class Migration {
       await this.create(tableSchema.listingKey, `${tableName.LISTINGS}`);
       debug('Property Listing table created');
     } catch (err) {
-      debug(err);
+    //   debug(err);
     }
   }
 
@@ -166,7 +166,7 @@ export default class Migration {
       await this.create(tableSchema.flagKey, `${tableName.FLAGS}`);
       await debug('Property Flags table created');
     } catch (err) {
-      debug(err);
+    //   debug(err);
     }
   }
 
@@ -178,7 +178,7 @@ export default class Migration {
       await this.create(tableSchema.deletedPropertyKey, `${tableName.DELETED}`);
       await debug('Deleted Properties table created');
     } catch (err) {
-      debug(err);
+    //   debug(err);
     }
   }
 
@@ -197,30 +197,30 @@ export default class Migration {
       await this.createDeletedTable();
       debug('Tables successfully created');
     } catch (err) {
-      debug(`Error while creating tables: ${err}`);
+    //   debug(`Error while creating tables: ${err}`);
     }
   }
 
   static dropUsersTable() {
-    this.dbQuery(`DROP TABLE IF EXISTS ${tableName.USERS} cascade;`);
+    // this.dbQuery(`DROP TABLE IF EXISTS ${tableName.USERS} cascade;`);
   }
 
   static dropPropertyTable() {
-    this.dbQuery(`DROP TABLE IF EXISTS ${tableName.PROPERTIES} cascade;`);
+    // this.dbQuery(`DROP TABLE IF EXISTS ${tableName.PROPERTIES} cascade;`);
   }
 
   static async createSchema(schemaType) {
     await this.dbQuery(`CREATE SCHEMA IF NOT EXISTS ${schemaType};`);
-    await this.dbQuery(`GRANT ALL ON SCHEMA ${schemaType} TO farce`);
-    await this.dbQuery(`GRANT USAGE ON SCHEMA ${schemaType} TO farce`);
-    await this.dbQuery(`GRANT ALL ON SCHEMA ${schemaType} To ${schemaType}`);
+    await this.dbQuery(`GRANT ALL ON SCHEMA ${schemaType} TO ${dbConfig.user}`);
+    await this.dbQuery(`GRANT USAGE ON SCHEMA ${schemaType} TO ${dbConfig.user}`);
+    await this.dbQuery(`GRANT ALL ON SCHEMA ${schemaType} To postgres`);
     await this.dbQuery(`COMMENT ON SCHEMA ${schemaType} IS 'standard public schema'`);
-    debug(`${schemaType} schema was created`);
+    // debug(`${schemaType} schema was created`);
   }
 
   static async dropSchema(schemaType) {
     await this.dbQuery(`DROP SCHEMA IF EXISTS ${schemaType} cascade;`);
-    debug('schema was deleted');
+    // debug('schema was deleted');
   }
 
   static async dropAllTables() {
@@ -230,7 +230,7 @@ export default class Migration {
       await this.dropSchema('public');
       await this.createSchema('public');
     } catch (error) {
-      debug(`Error while dropping tables ${error}`);
+    //   debug(`Error while dropping tables ${error}`);
     }
   }
 }

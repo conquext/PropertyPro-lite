@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import { debug } from 'util';
 import * as config from '../config';
 import UserHelper from '../helpers/userHelper';
 
@@ -29,6 +28,13 @@ export default class AuthMiddleware {
 
     currentToken = currentToken.replace('Bearer ', '');
     tokenFound = await UserHelper.findDbLogin('token', currentToken);
+
+    if (tokenFound === null) {
+      return res.status(403).json({
+        status: 'error',
+        error: 'Unathorized. Token invalid. Please login',
+      });
+    }
 
     if (Object.keys(tokenFound).length === 0) {
       return res.status(403).json({

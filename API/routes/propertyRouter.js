@@ -74,8 +74,8 @@ router.use(authenticateUser);
  *        description: Something went wrong try again
  *
  */
-// router.post('', authAgent, propertyListingCheck, listNewProperty);
-router.post('', authAgent, listNewProperty);
+router.post('', authAgent, propertyListingCheck, listNewProperty);
+// router.post('', authAgent, listNewProperty);
 
 /**
  * @swagger

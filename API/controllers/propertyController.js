@@ -16,7 +16,7 @@ export default class propertyController {
   static async listNewProperty(req, res) {
     try {
       const {
-        status = 'For Rent', price = 0, state, city, address, type, baths = 0, rooms = 0, image_url,
+        status = 'For Rent', price = 0, state, city, address = 'Not Available', type, baths = 0, rooms = 0, image_url,
       } = req.body;
       const ownerFound = await UserHelper.findDbUserById(parseInt(req.data.id, 10));
       if (Object.keys(ownerFound).length !== 0) {
@@ -65,7 +65,7 @@ export default class propertyController {
             data: newListing,
           });
         } catch (error) {
-          throw new Error('Something went wrong. Try again.');
+          // throw new Error('Something went wrong. Try again.');
         }
       }
     } catch (error) {
@@ -127,20 +127,27 @@ export default class propertyController {
     try {
       const thisId = parseInt(req.params.id, 10);
       let propertyFound = null;
-
       if (req.query.owner && !(req.query.type || req.query.status)) {
         const { owner } = req.query;
         const ownerFound = await UserHelper.findDbUserById(parseInt(owner, 10));
         if (ownerFound) {
           // propertyFound = property.filter(searchProperty => (searchProperty.owner === ownerFound.id) && (searchProperty.deleted === false));
-          propertyFound = await UserHelper.findDbProperty('owner', ownerFound.id);
+          const theOwnerId = await ownerFound.id;
+          propertyFound = await UserHelper.findDbProperty('owner', theOwnerId);
           if (req.query.baths) {
             const { baths } = req.query;
-            propertyFound = propertyFound.filter(props => props.baths === baths);
+            propertyFound = propertyFound.filter(props => props.baths === parseInt(baths, 10));
           }
           if (req.query.rooms) {
             const { rooms } = req.query;
-            propertyFound = propertyFound.filter(props => props.rooms === rooms);
+            propertyFound = propertyFound.filter(props => props.rooms === parseInt(rooms, 10));
+          }
+          if (req.query.price) {
+            let { price } = req.query;
+            price = price.split('-');
+            const priceUpper = price[0] || 0;
+            const priceLower = price[1] || Infinity;
+            propertyFound = propertyFound.filter(props => (props.price <= parseInt(priceLower, 10) && (props.price >= parseInt(priceUpper, 10))));
           }
         }
       }
@@ -151,11 +158,18 @@ export default class propertyController {
         if (Object.keys(propertyFound).length !== 0) {
           if (req.query.baths) {
             const { baths } = req.query;
-            propertyFound = propertyFound.filter(props => props.baths === baths);
+            propertyFound = propertyFound.filter(props => props.baths === parseInt(baths, 10));
           }
           if (req.query.rooms) {
             const { rooms } = req.query;
             propertyFound = propertyFound.filter(searchProperty => searchProperty.rooms === rooms);
+          }
+          if (req.query.price) {
+            let { price } = req.query;
+            price = price.split('-');
+            const priceUpper = price[0] || 0;
+            const priceLower = price[1] || Infinity;
+            propertyFound = propertyFound.filter(props => (props.price <= parseInt(priceLower, 10) && (props.price >= parseInt(priceUpper, 10))));
           }
         }
       }
@@ -166,18 +180,25 @@ export default class propertyController {
         if (Object.keys(propertyFound).length !== 0) {
           if (req.query.baths) {
             const { baths } = req.query;
-            propertyFound = propertyFound.filter(props => props.baths === baths);
+            propertyFound = propertyFound.filter(props => props.baths === parseInt(baths, 10));
           }
           if (req.query.rooms) {
             const { rooms } = req.query;
-            propertyFound = propertyFound.filter(props => props.rooms === rooms);
+            propertyFound = propertyFound.filter(props => props.rooms === parseInt(rooms, 10));
+          }
+          if (req.query.price) {
+            let { price } = req.query;
+            price = price.split('-');
+            const priceUpper = price[0] || 0;
+            const priceLower = price[1] || Infinity;
+            propertyFound = propertyFound.filter(props => (props.price <= parseInt(priceLower, 10) && (props.price >= parseInt(priceUpper, 10))));
           }
         }
       }
       if (req.query.owner && (req.query.type || req.query.status)) {
         if (req.query.owner) {
           const { owner } = req.query;
-          const ownerFound = UserHelper.findDbUserById(parseInt(owner, 10));
+          const ownerFound = await UserHelper.findDbUserById(parseInt(owner, 10));
           if (ownerFound) {
             // propertyFound = property.filter(searchProperty => (searchProperty.owner === ownerFound.id) && (searchProperty.deleted === false));
             propertyFound = await UserHelper.findDbProperty('owner', ownerFound.id);
@@ -192,11 +213,18 @@ export default class propertyController {
               }
               if (req.query.baths) {
                 const { baths } = req.query;
-                propertyFound = propertyFound.filter(props => props.baths === baths);
+                propertyFound = propertyFound.filter(props => props.baths === parseInt(baths, 10));
               }
               if (req.query.rooms) {
                 const { rooms } = req.query;
-                propertyFound = propertyFound.filter(props => props.rooms === rooms);
+                propertyFound = propertyFound.filter(props => props.rooms === parseInt(rooms, 10));
+              }
+              if (req.query.price) {
+                let { price } = req.query;
+                price = price.split('-');
+                const priceUpper = price[0] || 0;
+                const priceLower = price[1] || Infinity;
+                propertyFound = propertyFound.filter(props => (props.price <= parseInt(priceLower, 10) && (props.price >= parseInt(priceUpper, 10))));
               }
             }
           }
@@ -213,34 +241,55 @@ export default class propertyController {
           }
           if (req.query.baths) {
             const { baths } = req.query;
-            propertyFound = propertyFound.filter(props => props.baths === baths);
+            propertyFound = propertyFound.filter(props => props.baths === parseInt(baths, 10));
           }
           if (req.query.rooms) {
             const { rooms } = req.query;
-            propertyFound = propertyFound.filter(props => props.rooms === rooms);
+            propertyFound = propertyFound.filter(props => props.rooms === parseInt(rooms, 10));
+          }
+          if (req.query.price) {
+            let { price } = req.query;
+            price = price.split('-');
+            const priceUpper = price[0] || 0;
+            const priceLower = price[1] || Infinity;
+            propertyFound = propertyFound.filter(props => (props.price <= parseInt(priceLower, 10) && (props.price >= parseInt(priceUpper, 10))));
           }
         }
       }
       if (!req.query.owner && !req.query.type) {
         if (req.query.status) {
           const { status } = req.query;
-          propertyFound = propertyFound.filter(props => (props.status === status) && (props.deleted === false));
-          // propertyFound = await UserHelper.findDbProperty('status', status);
+          propertyFound = propertyFound.filter(props => (props.status === status));
         }
         if (req.query.baths) {
           const { baths } = req.query;
-          propertyFound = propertyFound.filter(props => props.baths === baths);
+          if (!propertyFound) {
+            propertyFound = await UserHelper.findDbProperties();
+          }
+          propertyFound = propertyFound.filter(props => props.baths === parseInt(baths, 10));
         }
         if (req.query.rooms) {
           const { rooms } = req.query;
-          propertyFound = propertyFound.filter(props => props.rooms === rooms);
+          if (!propertyFound) {
+            propertyFound = await UserHelper.findDbProperties();
+          }
+          propertyFound = propertyFound.filter(props => props.rooms === parseInt(rooms, 10));
+        }
+        if (req.query.price) {
+          let { price } = req.query;
+          price = price.split('-');
+          const priceUpper = price[0] || 0;
+          const priceLower = price[1] || 1000000000000000;
+          if (!propertyFound) {
+            propertyFound = await UserHelper.findDbProperties();
+          }
+          propertyFound = propertyFound.filter(props => (props.price <= parseInt(priceLower, 10) && (props.price >= parseInt(priceUpper, 10))));
         }
       }
       if (Object.keys(req.query).length === 0) {
         // propertyFound = property.filter(searchProperty => (searchProperty.id === thisId) && (searchProperty.deleted === false));
         propertyFound = await UserHelper.findDbProperty('property_id', thisId);
       }
-
       if (propertyFound.length === 1) {
         return res.status(200).json({
           status: 'success',
@@ -306,7 +355,7 @@ export default class propertyController {
       try {
         await UserHelper.updateDb('property', editDbProperty, 'property_id', thisId);
       } catch (error) {
-        throw new Error('Something went wrong. Try again.');
+        // throw new Error('Something went wrong. Try again.');
       }
 
       try {
@@ -316,7 +365,7 @@ export default class propertyController {
           data: theEditedProperty[0],
         });
       } catch (error) {
-        throw new Error('Something went wrong. Try again.');
+        // throw new Error('Something went wrong. Try again.');
       }
     } catch (error) {
       throw new Error('Something went wrong. Try again.');
@@ -353,7 +402,7 @@ export default class propertyController {
       try {
         await UserHelper.updateDb('property', updateDbProperty, 'property_id', thisId);
       } catch (error) {
-        throw new Error('Something went wrong. Try again.');
+        // throw new Error('Something went wrong. Try again.');
       }
 
       try {
@@ -363,7 +412,7 @@ export default class propertyController {
           data: theUpdatedProperty[0],
         });
       } catch (error) {
-        throw new Error('Something went wrong. Try again.');
+        // throw new Error('Something went wrong. Try again.');
       }
     } catch (error) {
       throw new Error('Something went wrong. Try again.');
@@ -397,7 +446,7 @@ export default class propertyController {
         await UserHelper.insertDb('deleted', updatedDbDeleted);
         await UserHelper.deleteDb('property', 'property_id', thisId);
       } catch (error) {
-        throw new Error('Something went wrong. Try again.');
+        // throw new Error('Something went wrong. Try again.');
       }
 
       return res.status(200).json({

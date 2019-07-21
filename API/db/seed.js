@@ -1,8 +1,7 @@
 import debug from 'debug';
 import Model from './queries';
-import { tableName, dbConfig } from './config';
+import { tableName } from './config';
 import Migration from './migrations';
-
 
 const usersTable = new Model({ table: tableName.USERS });
 const propertiesTable = new Model({ table: tableName.PROPERTIES });
@@ -28,10 +27,10 @@ const user1Login = {
   password: '$2a$10$mRLrXtSI/KMDivF8GUBwXuHqEYGEziZjL0hBwMNd5p.ZZ4K8aBgoC',
 };
 
-const user2Login = {
-  email: 'email2@email.com',
-  password: '$2b$15$l2ofh4pVyG7k2fKJ1KXspOL.vsXDoSHzPH8vkJDaYmCSzoTsUWMD.',
-};
+// const user2Login = {
+//   email: 'email2@email.com',
+//   password: '$2b$15$l2ofh4pVyG7k2fKJ1KXspOL.vsXDoSHzPH8vkJDaYmCSzoTsUWMD.',
+// };
 
 const agent1Login = {
   email: 'email3@email.com',
@@ -51,11 +50,11 @@ const user2 = {
   type: 'user',
 };
 
-const user2Update = {
-  email: 'email2@email.com',
-  first_name: 'NametwoUpdate',
-  last_name: 'Jones',
-};
+// const user2Update = {
+//   email: 'email2@email.com',
+//   first_name: 'NametwoUpdate',
+//   last_name: 'Jones',
+// };
 
 const agent1 = {
   email: 'email3@email.com',
@@ -95,28 +94,7 @@ const flag1 = {
   created_on: new Date(3, 1, 2019),
 };
 
-class Seeder {
-  /**
-     * Create and seed all tables
-     */
-  constructor() {
-    this.database = dbConfig.database;
-    debug(`Seeding Migration into ${this.database}`);
-    try {
-      Migration.createAllTables();
-    } catch (err) {
-      debug(err);
-    }
-  }
-
-  /**
-    * Insert data in Table
-    */
-  static insertSeed(data, table) {
-    const query = `${table}.insert({data: ${data}})`;
-    Model.dbQuery(query);
-  }
-
+export default class Seeder {
   /**
     * Inserts A sample entity in all Table
     */
@@ -126,36 +104,67 @@ class Seeder {
       await usersTable.insert({ data: user2 });
       await usersTable.insert({ data: agent1 });
       await loginTable.insert({ data: user1Login });
-      await loginTable.insert({ data: user2Login });
+      //   await loginTable.insert({ data: user2Login });
       await loginTable.insert({ data: agent1Login });
       await propertiesTable.insert({ data: property1 });
       await flagsTable.insert({ data: flag1 });
     } catch (err) {
-      debug(err);
+    //   debug(err);
     }
   }
 
-  static async updateData() {
+  //   static async updateData() {
+  //     try {
+  //       await usersTable.update({ data: user2Update }, { clause: { id: 2 } });
+  //     } catch (error) {
+  //       debug(error);
+  //     }
+  //   }
+
+  //   static async selectData() {
+  //     try {
+  //       await usersTable.select({ returnFields: ['id', 'created_on', 'first_name', 'last_name'] }, { clause: { type: 'agent' } }, { join: { } });
+  //     } catch (error) {
+  //       debug(error);
+  //     }
+  //   }
+
+  //   static async deleteData() {
+  //     try {
+  //       await usersTable.delete({ clause: { id: 2 } });
+  //     } catch (error) {
+  //       debug(error);
+  //     }
+  //   }
+
+  static async insertOneData() {
     try {
-      await usersTable.update({ data: user2Update }, { clause: { id: 2 } });
-    } catch (error) {
-      debug(error);
+    //   await usersTable.insert({ data: user1 });
+      await usersTable.insert({ data: agent1 });
+      //   await loginTable.insert({ data: user1Login });
+      await loginTable.insert({ data: agent1Login });
+      await propertiesTable.insert({ data: property1 });
+      await flagsTable.insert({ data: flag1 });
+    } catch (err) {
+    //   debug(err);
     }
   }
 
-  static async selectData() {
+  static async deleteAndSeedOne() {
     try {
-      await usersTable.select({ returnFields: ['id', 'created_on', 'first_name', 'last_name'] }, { clause: { type: 'agent' } }, { join: { } });
-    } catch (error) {
-      debug(error);
+      await this.deleteAllProperties();
+      await Seeder.insertOneData();
+    } catch (err) {
+    //   debug(err);
     }
   }
 
-  static async deleteData() {
+  static async deleteAllProperties() {
     try {
-      await usersTable.delete({ clause: { id: 2 } });
-    } catch (error) {
-      debug(error);
+      await Migration.dropPropertyTable();
+      await Migration.createPropertyTable();
+    } catch (err) {
+    //   debug(err);
     }
   }
 
@@ -165,13 +174,7 @@ class Seeder {
       await Migration.createAllTables();
       await Seeder.insertData();
     } catch (err) {
-      debug(err);
+    //   debug(err);
     }
   }
 }
-
-Seeder.seed();
-// Seeder.insertData();
-// Seeder.updateData();
-// Seeder.selectData();
-// Seeder.deleteData();

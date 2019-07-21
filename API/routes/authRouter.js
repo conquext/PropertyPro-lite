@@ -5,7 +5,7 @@ import validateMiddleware from '../middlewares/validateMiddleware';
 const router = Router();
 
 const { signin, signup } = userController;
-const { loginCheck, signupCheck } = validateMiddleware;
+const { loginCheck, signupCheck, methodNotAllowed } = validateMiddleware;
 
 
 /**
@@ -53,6 +53,7 @@ const { loginCheck, signupCheck } = validateMiddleware;
 *       description: Something went wrong. Try again
 */
 router.post('/signin', loginCheck, signin);
+// .all(methodNotAllowed);
 
 /**
 * @swagger

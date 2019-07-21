@@ -6,9 +6,9 @@ config();
 const debug = new Debug('dev');
 
 const dbConfig = {
-  user: 'farce',
-  host: 'localhost',
-  database: 'propertypro',
+  user: process.env.PGUSER || 'postgres',
+  host: process.env.PGHOST || 'localhost',
+  database: process.env.NODE_ENV === 'test' ? process.env.PGDATABASE : process.env.PGDATABASE_TEST || 'propertypro',
   port: 5432,
   idleTimeoutMillis: 30000,
 };
@@ -24,30 +24,15 @@ const tableName = {
 
 const pool = new Pool(dbConfig);
 
-
-pool.connect((err, client, release) => {
-  if (err) {
-    return debug(`this error ${err}`);
-  }
-
-  client.query('SELECT NOW()', (error, result) => {
-    if (error) {
-      release();
-      return debug(error);
-    }
-    debug(result.rows);
-  });
-});
-
 pool.on('error', (err) => {
-  debug(`Unexpected error on idle client: ${err}`);
+//   debug(`Unexpected error on idle client: ${err}`);
 //   process.exit();
 });
 pool.on('connect', () => {
-  debug('connected to the Database');
+  // debug('connected to the Database');
 });
 pool.on('remove', () => {
-  debug('removed');
+//   debug('removed');
   process.exit(0);
 });
 
