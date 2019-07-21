@@ -93,13 +93,13 @@ export default class Migration {
     */
 
   static async dbQuery(theQuery) {
+    const client = await pool.connect();
     try {
-      const client = await pool.connect();
       await client.query(theQuery);
       // client.release();
     } catch (error) {
     //   debug(`Error in ${theQuery}: ${error}`);
-    }
+    } finally { client.release(); }
   }
 
   static async create(fields, table) {

@@ -23,7 +23,7 @@ export default class Model {
     } catch (error) {
     //   debug(`this error right here ${theQuery}: ${error}`);
     } finally {
-      // client.release();
+      client.release();
     }
   }
 
