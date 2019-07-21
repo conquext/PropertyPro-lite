@@ -15,7 +15,8 @@
     "test:db": "cross-env NODE_ENV=test npm run seeder && nyc mocha --require babel-register API/test/*.js --timeout 95000 --exit -R spec",
     "seeder": "DEBUG=dev babel-node ./API/db/seeder",
     "coveralls": "cross-env NODE_ENV=test nyc --reporter=lcov --reporter=text-lcov npm test",
-    "coverage": "nyc npm run test"
+    "coverage": "nyc npm run test",
+    "heroku-postbuild": "npm run seeder"
   },
   "repository": {
     "type": "git",
