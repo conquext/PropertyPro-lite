@@ -24,12 +24,11 @@ export default class UserHelper {
 
   static async findDbUser(field, value) {
     try {
-      let userFound = null;
-      userFound = await usersTable.select({ returnFields: '*' }, { clause: { [field]: value } }, { join: { } });
-      if (Object.keys(userFound).length !== 0) {
+      const userFound = await usersTable.select({ returnFields: '*' }, { clause: { [field]: value } }, { join: { } });
+      if (userFound.length !== 0) {
         return userFound[0];
       }
-      return userFound;
+      return null;
     } catch (err) {
       // debug(`Error in finding ${field} in Users table: ${err}`);
     }
@@ -37,12 +36,11 @@ export default class UserHelper {
 
   static async findDbUserLogin(field, value) {
     try {
-      let userFound = null;
-      userFound = await usersTable.select({ returnFields: '*' }, { clause: { [field]: value } }, { join: { login: 'email' } });
-      if (Object.keys(userFound).length !== 0) {
+      const userFound = await usersTable.select({ returnFields: '*' }, { clause: { [field]: value } }, { join: { login: 'email' } });
+      if (userFound.length !== 0) {
         return userFound[0];
       }
-      return userFound;
+      return null;
     } catch (err) {
       // debug(`Error in finding user in login db: ${err}`);
     }
@@ -66,14 +64,11 @@ export default class UserHelper {
 
   static async findDbProperty(field, value) {
     try {
-      let propertyFound = null;
-      if (value) {
-        propertyFound = await propertiesTable.select({ returnFields: '*' }, { clause: { [field]: value } }, { join: { } });
-      }
-      if (Object.keys(propertyFound).length !== 0) {
+      const propertyFound = await propertiesTable.select({ returnFields: '*' }, { clause: { [field]: value } }, { join: { } });
+      if (propertyFound.length !== 0) {
         return propertyFound;
       }
-      return propertyFound;
+      return null;
     } catch (err) {
       // debug(`Error in finding property in db: ${err}`);
     }
@@ -81,12 +76,11 @@ export default class UserHelper {
 
   static async findDbProperties() {
     try {
-      let propertyFound = null;
-      propertyFound = await propertiesTable.select({ returnFields: '*' }, { clause: { } }, { join: { } });
-      if (Object.keys(propertyFound).length !== 0) {
+      const propertyFound = await propertiesTable.select({ returnFields: '*' }, { clause: { } }, { join: { } });
+      if (propertyFound.length !== 0) {
         return propertyFound;
       }
-      return propertyFound;
+      return null;
     } catch (err) {
       // debug(`Error in finding property in db: ${err}`);
     }
@@ -96,7 +90,7 @@ export default class UserHelper {
   static async findDbPropertyOwner(id) {
     try {
       const propertyFound = await propertiesTable.select({ returnFields: '*' }, { clause: { property_id: id } }, { join: { } });
-      if (Object.keys(propertyFound).length !== 0) {
+      if (propertyFound.length !== 0) {
         return this.findDbUser('id', propertyFound[0].owner);
       }
       return null;
@@ -107,9 +101,8 @@ export default class UserHelper {
 
   static async findDbLogin(field, value) {
     try {
-      let fieldFound = null;
-      fieldFound = await loginTable.select({ returnFields: [field] }, { clause: { [field]: value } }, { join: { } });
-      if (Object.keys(fieldFound).length !== 0) {
+      const fieldFound = await loginTable.select({ returnFields: [field] }, { clause: { [field]: value } }, { join: { } });
+      if (fieldFound.length !== 0) {
         return fieldFound[0];
       }
       return null;

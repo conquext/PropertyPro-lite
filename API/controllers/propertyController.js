@@ -19,7 +19,7 @@ export default class propertyController {
         status = 'For Rent', price = 0, state, city, address = 'Not Available', type, baths = 0, rooms = 0, image_url,
       } = req.body;
       const ownerFound = await UserHelper.findDbUserById(parseInt(req.data.id, 10));
-      if (Object.keys(ownerFound).length !== 0) {
+      if (ownerFound) {
         const newProperty = new Property(
           // @ts-ignore
           {
@@ -90,26 +90,24 @@ export default class propertyController {
       //   }
       // });
 
-      if (Object.keys(propertyFound).length === 1) {
+      if (propertyFound) {
+        if (propertyFound.length > 1) {
+          return res.status(200).json({
+            status: 'success',
+            message: 'Properties retrieved successfully',
+            data: propertyFound,
+          });
+        }
         return res.status(200).json({
           status: 'success',
           message: 'Property retrieved successfully',
           data: propertyFound[0],
         });
       }
-      if (Object.keys(propertyFound).length > 1) {
-        return res.status(200).json({
-          status: 'success',
-          message: 'Properties retrieved successfully',
-          data: propertyFound,
-        });
-      }
-      if (Object.keys(propertyFound).length < 1) {
-        return res.status(400).json({
-          status: 'error',
-          error: 'No property found',
-        });
-      }
+      return res.status(400).json({
+        status: 'error',
+        error: 'No property found',
+      });
     } catch (error) {
       throw new Error('Something went wrong. Try again.');
     }
@@ -155,7 +153,7 @@ export default class propertyController {
         const { type } = req.query;
         // propertyFound = property.filter(searchProperty => (searchProperty.type === type) && (searchProperty.deleted === false));
         propertyFound = await UserHelper.findDbProperty('type', type);
-        if (Object.keys(propertyFound).length !== 0) {
+        if (propertyFound) {
           if (req.query.baths) {
             const { baths } = req.query;
             propertyFound = propertyFound.filter(props => props.baths === parseInt(baths, 10));
@@ -177,7 +175,7 @@ export default class propertyController {
         const { status } = req.query;
         // propertyFound = property.filter(props => (props.status === status) && (props.deleted === false));
         propertyFound = await UserHelper.findDbProperty('status', status);
-        if (Object.keys(propertyFound).length !== 0) {
+        if (propertyFound) {
           if (req.query.baths) {
             const { baths } = req.query;
             propertyFound = propertyFound.filter(props => props.baths === parseInt(baths, 10));
@@ -202,7 +200,7 @@ export default class propertyController {
           if (ownerFound) {
             // propertyFound = property.filter(searchProperty => (searchProperty.owner === ownerFound.id) && (searchProperty.deleted === false));
             propertyFound = await UserHelper.findDbProperty('owner', ownerFound.id);
-            if (Object.keys(propertyFound).length !== 0) {
+            if (propertyFound) {
               if (req.query.type) {
                 const { type } = req.query;
                 propertyFound = propertyFound.filter(props => props.type === type);
@@ -234,7 +232,7 @@ export default class propertyController {
         const { type } = req.query;
         // propertyFound = property.filter(props => (props.type === type) && (props.deleted === false));
         propertyFound = await UserHelper.findDbProperty('type', type);
-        if (Object.keys(propertyFound).length !== 0) {
+        if (propertyFound) {
           if (req.query.status) {
             const { status } = req.query;
             propertyFound = propertyFound.filter(props => props.status === status);
@@ -290,24 +288,27 @@ export default class propertyController {
         // propertyFound = property.filter(searchProperty => (searchProperty.id === thisId) && (searchProperty.deleted === false));
         propertyFound = await UserHelper.findDbProperty('property_id', thisId);
       }
-      if (propertyFound.length === 1) {
-        return res.status(200).json({
-          status: 'success',
-          data: propertyFound[0],
-        });
+      if (propertyFound) {
+        if (propertyFound.length === 1) {
+          return res.status(200).json({
+            status: 'success',
+            data: propertyFound[0],
+          });
+        }
+        if (propertyFound.length >= 1) {
+          return res.status(200).json({
+            status: 'success',
+            data: propertyFound,
+          });
+        }
       }
-      if (propertyFound.length >= 1) {
-        return res.status(200).json({
-          status: 'success',
-          data: propertyFound,
-        });
-      }
+
       return res.status(404).json({
         status: 'error',
         error: 'Property not found',
       });
     } catch (error) {
-      throw new Error('Something went wrong. Try again.');
+      throw new Error(`Something went wrong. Try again. ${error}`);
     }
   }
 
@@ -325,7 +326,7 @@ export default class propertyController {
       let propertyFound = null;
       // propertyFound = property.filter(searchProperty => ((searchProperty.id === thisId) && (searchProperty.deleted === false)));
       propertyFound = await UserHelper.findDbProperty('property_id', thisId);
-      if (Object.keys(propertyFound).length === 0) {
+      if (!propertyFound) {
         return res.status(404).json({
           status: 'error',
           error: 'Property not found',
@@ -386,7 +387,7 @@ export default class propertyController {
       let propertyFound = null;
       // propertyFound = property.filter(searchProperty => ((searchProperty.id === thisId) && (searchProperty.deleted === false)));
       propertyFound = await UserHelper.findDbProperty('property_id', thisId);
-      if (Object.keys(propertyFound).length === 0) {
+      if (!propertyFound) {
         return res.status(404).json({
           status: 'error',
           error: 'Property not found',
@@ -432,7 +433,7 @@ export default class propertyController {
       const thisId = parseInt(req.params.id, 10);
       let propertyFound = null;
       propertyFound = await UserHelper.findDbProperty('property_id', thisId);
-      if (Object.keys(propertyFound).length === 0) {
+      if (!propertyFound) {
         return res.status(404).json({
           status: 'error',
           error: 'Property not found',

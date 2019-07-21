@@ -15,7 +15,7 @@ export default class UserController {
     try {
       const { email, password } = req.body;
       const userFound = await UserHelper.findDbUserByEmailLogin(email);
-      if (Object.keys(userFound).length < 1) {
+      if (!userFound) {
         return res.status(401).json({
           status: 'error',
           error: 'Incorrect email or Wrong password',
@@ -59,7 +59,7 @@ export default class UserController {
         data: loginData,
       });
     } catch (error) {
-      throw new Error('Something went wrong. Try again.');
+      throw new Error(`Something went wrong. Try again. ${error}`);
     }
   }
 
@@ -77,15 +77,15 @@ export default class UserController {
         first_name, last_name, email, phoneNumber, dob, address, type = 'user', password,
       } = req.body;
       const registeredUser = await UserHelper.findDbUserByEmail(email);
-      if (Object.keys(registeredUser).length !== 0) {
+      if (registeredUser) {
         return res.status(409).json({
           status: 'error',
           error: 'User already exists',
         });
       }
       const phoneNumberExist = await UserHelper.findDbUser('phonenumber', phoneNumber);
-      
-      if (Object.keys(phoneNumberExist).length !== 0) {
+
+      if (phoneNumberExist) {
         return res.status(409).json({
           status: 'error',
           error: 'Phone Number already exists',
