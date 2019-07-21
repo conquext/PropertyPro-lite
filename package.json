@@ -12,6 +12,7 @@
     "lint:fix": "./node_modules/.bin/eslint . --fix || true",
     "test": "cross-env NODE_ENV=test node node_modules/.bin/_mocha --require babel-register API/test/*.js --timeout 45000 --exit -R spec",
     "test:db": "cross-env NODE_ENV=test npm run seeder && nyc mocha --require babel-register API/test/*.js --timeout 95000 --exit -R spec",
+    "seeder": "DEBUG=dev babel-node ./API/db/seeder",
     "coveralls": "cross-env NODE_ENV=test nyc --reporter=lcov --reporter=text-lcov npm test",
     "coverage": "nyc npm run test"
   },
