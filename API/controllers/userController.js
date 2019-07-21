@@ -74,13 +74,21 @@ export default class UserController {
   static async signup(req, res) {
     try {
       const {
-        first_name, last_name, email, phoneNumber, dob, address, type = 'agent', password,
+        first_name, last_name, email, phoneNumber, dob, address, type = 'user', password,
       } = req.body;
       const registeredUser = await UserHelper.findDbUserByEmail(email);
-      if (registeredUser) {
+      if (Object.keys(registeredUser).length !== 0) {
         return res.status(409).json({
           status: 'error',
           error: 'User already exists',
+        });
+      }
+      const phoneNumberExist = await UserHelper.findDbUser('phonenumber', phoneNumber);
+      
+      if (Object.keys(phoneNumberExist).length !== 0) {
+        return res.status(409).json({
+          status: 'error',
+          error: 'Phone Number already exists',
         });
       }
       // if (password !== confirm_password) {

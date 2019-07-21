@@ -1,11 +1,10 @@
-/* eslint-disable camelcase */
 /**
 * @swagger
 * definitions:
 *   Property:
 *     type: object
 *     properties:
-*       id:
+*       property_id:
 *         type: string
 *       owner:
 *         type: string
@@ -48,7 +47,6 @@
 
 class Property {
   constructor({
-    id,
     owner,
     status,
     price,
@@ -68,7 +66,6 @@ class Property {
     deleted,
     lastUpdatedOn,
   }) {
-    this.id = id;
     this.status = status;
     this.type = type;
     this.state = state;

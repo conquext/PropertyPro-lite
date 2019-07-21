@@ -5,7 +5,7 @@ import validateMiddleware from '../middlewares/validateMiddleware';
 const router = Router();
 
 const { signin, signup } = userController;
-const { loginCheck, signupCheck, methodNotAllowed } = validateMiddleware;
+const { loginCheck, signupCheck } = validateMiddleware;
 
 
 /**
@@ -53,7 +53,6 @@ const { loginCheck, signupCheck, methodNotAllowed } = validateMiddleware;
 *       description: Something went wrong. Try again
 */
 router.post('/signin', loginCheck, signin);
-// .all(methodNotAllowed);
 
 /**
 * @swagger
@@ -61,7 +60,7 @@ router.post('/signin', loginCheck, signin);
 *   post:
 *     tags:
 *       - Users
-*     name: signin
+*     name: signup
 *     summary: Signs up a new user
 *     consumes:
 *       - application/json
@@ -85,9 +84,6 @@ router.post('/signin', loginCheck, signin);
 *            password:
 *              type: string
 *              format: password
-*            confirm_password:
-*              type: string
-*              format: password
 *            phoneNumber:
 *              type: string
 *              format: tel
@@ -108,7 +104,7 @@ router.post('/signin', loginCheck, signin);
 *              last_name
 *              email
 *              password
-*              confirm_password
+*              type
 *              phoneNumber
 *     responses:
 *       201:

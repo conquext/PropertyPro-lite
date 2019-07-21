@@ -29,7 +29,7 @@ export default class UserHelper {
       if (Object.keys(userFound).length !== 0) {
         return userFound[0];
       }
-      return null;
+      return userFound;
     } catch (err) {
       // debug(`Error in finding ${field} in Users table: ${err}`);
     }

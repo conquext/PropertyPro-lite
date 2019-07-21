@@ -161,7 +161,7 @@ describe('Specification-driven tests', () => {
   it('Should return 200 for the docs route', (done) => {
     chai
       .request(app)
-      .get('/docs.json')
+      .get('/docs')
       .end((err, res) => {
         expect(res.status).to.equal(200);
         done();
@@ -171,7 +171,7 @@ describe('Specification-driven tests', () => {
   it('Should follow documentation specifications', (done) => {
     chai
       .request(app)
-      .get('/docs.json')
+      .get('/')
       .end((err, res) => {
         expect(res.header['content-type']).to.equal('application/json; charset=utf-8');
         expect(res.body.paths).to.deep.include(
@@ -495,43 +495,43 @@ describe('POST /api/v1/auth/signup', () => {
         done();
       });
   });
-  // it('should specify user type', (done) => {
-  //   chai
-  //     .request(app)
-  //     .post(`${authSignupURL}`)
-  //     .send({
-  //       first_name: 'Name',
-  //       last_name: 'Name',
-  //       email: 'swall@gmail.com',
-  //       password: 'password1',
-  //       confirm_password: 'password1',
-  //     })
-  //     .end((err, res) => {
-  //       expect(res).to.have.status(400);
-  //       expect(res.body.status).to.be.equal('error');
-  //       expect(res.body.error).to.be.equal('Specify user type');
-  //       done();
-  //     });
-  // });
-  // it('should specify valid user type', (done) => {
-  //   chai
-  //     .request(app)
-  //     .post(`${authSignupURL}`)
-  //     .send({
-  //       first_name: 'Name',
-  //       last_name: 'Name',
-  //       type: '',
-  //       email: 'swall@gmail.com',
-  //       password: 'password1',
-  //       confirm_password: 'password1',
-  //     })
-  //     .end((err, res) => {
-  //       expect(res).to.have.status(400);
-  //       expect(res.body.status).to.be.equal('error');
-  //       expect(res.body.error).to.be.equal('Choose a valid user type');
-  //       done();
-  //     });
-  // });
+  it('should specify user type', (done) => {
+    chai
+      .request(app)
+      .post(`${authSignupURL}`)
+      .send({
+        first_name: 'Name',
+        last_name: 'Name',
+        email: 'swall@gmail.com',
+        password: 'password1',
+        confirm_password: 'password1',
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('error');
+        expect(res.body.error).to.be.equal('Specify user type');
+        done();
+      });
+  });
+  it('should specify valid user type', (done) => {
+    chai
+      .request(app)
+      .post(`${authSignupURL}`)
+      .send({
+        first_name: 'Name',
+        last_name: 'Name',
+        type: '',
+        email: 'swall@gmail.com',
+        password: 'password1',
+        confirm_password: 'password1',
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('error');
+        expect(res.body.error).to.be.equal('Choose a valid user type');
+        done();
+      });
+  });
 
   it('should register user', (done) => {
     chai
@@ -553,6 +553,27 @@ describe('POST /api/v1/auth/signup', () => {
         expect(res.body.status).to.be.equal('success');
         expect(res.body.message).to.be.equal('User is registered successfully');
         expect(res.body.data).to.have.key('token', 'id', 'first_name', 'last_name', 'email', 'type', 'is_admin');
+      });
+  });
+  it('should not register another user with the same phone number', (done) => {
+    chai
+      .request(app)
+      .post(`${authSignupURL}`)
+      .send({
+        first_name: 'Anothername',
+        last_name: 'AnotherName',
+        type: 'user',
+        email: 'swall5231@gmail.com',
+        password: 'password1',
+        // confirm_password: 'password1',
+        address: 'This is a fake address',
+        phoneNumber: '09048765342',
+      })
+      .end((err, res) => {
+        done();
+        expect(res).to.have.status(409);
+        expect(res.body.status).to.be.equal('error');
+        expect(res.body.error).to.be.equal('Phone Number already exists');
       });
   });
 

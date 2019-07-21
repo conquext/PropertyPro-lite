@@ -33,9 +33,9 @@ export default class ValidateMiddleware {
     req.checkBody('password').isLength({ min: 1 }).withMessage('Password is required');
     req.checkBody('email').isEmail().withMessage('Email is invalid');
     req.checkBody('password').isLength({ min: 2 }).withMessage('Password should be atleast 2 characters');
-    // req.checkBody('type').exists().withMessage('Specify user type')
-    //   .isIn(['user', 'agent', 'admin'])
-    //   .withMessage('Choose a valid user type');
+    req.checkBody('type').exists().withMessage('Specify user type')
+      .isIn(['user', 'agent', 'admin'])
+      .withMessage('Choose a valid user type');
 
     const errors = req.validationErrors();
     if (errors) {
