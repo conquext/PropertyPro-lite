@@ -24,7 +24,7 @@ const tableName = {
 
 const connectionstring = process.env.DATABASE_URL || 'propertypro';
 
-const pool = new Pool({ connectionString: connectionstring });
+const pool = new Pool(dbConfig);
 
 pool.on('error', (err) => {
 //   debug(`Unexpected error on idle client: ${err}`);
