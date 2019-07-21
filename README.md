@@ -13,8 +13,7 @@ Property Pro Lite is a platform where people can create and/or search properties
 #### Endpoints
 > * [Heroku](https://property-pro-lite1.herokuapp.com)
 #### Documentation
-> * [Test Docs UI](https://property-pro-lite1.herokuapp.com/docs)
-> * [Generate Docs JSON](https://property-pro-lite1.herokuapp.com/docs.json)
+> * [Generate Docs JSON](https://property-pro-lite1.herokuapp.com/api/v1/docs.json)
 
 #### Project Management
 > * Pivotal Tracker https://www.pivotaltracker.com/n/projects/2354400
@@ -47,12 +46,14 @@ To get the application running follow this steps:
 #### FrontEnd
 > * Html
 > * Css
+> * Vanilla JavaScript
 
 #### Backend
 > * NodeJS 
 > * Express JS 
 > * ESLint 
 > * Mocha/Chai
+> * Postgresql
 
 #### DevOps
 > * Git
