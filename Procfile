@@ -1,1 +1,1 @@
-web: ./node_modules/.bin/forever -m 5 npm start
+web: ./node_modules/.bin/forever start --minUptime 5000 --spinSleepTime 2000 -c "npm run start" 
