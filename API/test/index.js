@@ -161,7 +161,7 @@ describe('Specification-driven tests', () => {
   it('Should return 200 for the docs route', (done) => {
     chai
       .request(app)
-      .get(`${apiVersion}/docs.json`)
+      .get('/docs.json')
       .end((err, res) => {
         expect(res.status).to.equal(200);
         done();
@@ -171,7 +171,7 @@ describe('Specification-driven tests', () => {
   it('Should follow documentation specifications', (done) => {
     chai
       .request(app)
-      .get(`${apiVersion}/docs.json`)
+      .get('/docs.json')
       .end((err, res) => {
         expect(res.header['content-type']).to.equal('application/json; charset=utf-8');
         expect(res.body.paths).to.deep.include(

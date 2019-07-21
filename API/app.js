@@ -29,15 +29,12 @@ const swaggerOptions = {
 
 app.use(`${API_VERSION}/`, router);
 
-app.use('/', express.static(path.resolve(__dirname, '')));
-app.use(express.static(path.resolve(__dirname, '../UI')));
-
-router.get('/docs.json', (req, res) => {
+app.get('/docs.json', (req, res) => {
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
   res.status(200).json(specs);
 });
 
-app.get(['/', '/docs'], swaggerUi.serve, swaggerUi.setup(specs, { explorer: false, swaggerOptions }));
+app.get('/', swaggerUi.serve, swaggerUi.setup(specs, { explorer: false, swaggerOptions }));
 
 const endpoints = allRoutes(app);
 const endPointsPaths = [];
