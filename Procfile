@@ -1,1 +1,0 @@
-web: ./node_modules/.bin/forever start --minUptime 5000 --spinSleepTime 2000 -c node_modules/.bin/babel-node API/app.js
