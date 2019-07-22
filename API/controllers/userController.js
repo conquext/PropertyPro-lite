@@ -102,7 +102,7 @@ export default class UserController {
         first_name, last_name, email, phoneNumber, address, type, dob,
       });
 
-      newUser.password = UserHelper.hashPassword(password);
+      newUser.password = await UserHelper.hashPassword(password);
 
       // users.push(newUser);
 

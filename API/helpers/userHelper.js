@@ -166,11 +166,11 @@ export default class UserHelper {
     }
   }
 
-  static hashPassword(password) {
+  static async hashPassword(password) {
     // @ts-ignore
-    const salt = bcrypt.genSaltSync(10);
+    const salt = await bcrypt.genSaltSync(10);
     // @ts-ignore
-    const hash = bcrypt.hashSync(password, salt);
+    const hash = await bcrypt.hashSync(password, salt);
     return hash;
   }
 
