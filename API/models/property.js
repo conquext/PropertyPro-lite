@@ -1,6 +1,26 @@
 /**
 * @swagger
 * definitions:
+*   error:
+*     properties:
+*       statusCode:
+*         type: integer
+*         format: int32
+*         default: 400
+*       message:
+*         type: string
+*       error:
+*         type: string
+*   success:
+*     properties:
+*       statusCode:
+*         type: integer
+*         format: int32
+*         default: 200
+*       message:
+*         type: string
+*       data:
+*         type: object
 *   Property:
 *     type: object
 *     properties:
@@ -29,8 +49,6 @@
 *         type: integer
 *       price:
 *         type: integer
-*       marketer:
-*         type: string
 *       ownerEmail:
 *         type: string
 *       ownerPhoneNumber:

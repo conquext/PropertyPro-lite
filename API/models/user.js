@@ -32,6 +32,11 @@
 *         type: string
 *       last_name:
 *         type: string
+*       type:
+*         type: string
+*         enum:
+*           - "user"
+*           - "agent"
 *       email:
 *         type: string
 *         format: email

@@ -367,6 +367,45 @@ describe('POST /api/v1/auth/signup', () => {
         done();
       });
   });
+  it('should not register user without a phoneNumber', (done) => {
+    chai
+      .request(app)
+      .post(`${authSignupURL}`)
+      .send({
+        first_name: 'Name',
+        last_name: 'Name',
+        type: 'user',
+        email: 'swall@gmail.com',
+        password: 'password1',
+        confirm_password: 'password2',
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('error');
+        expect(res.body.error).to.be.equal('Phone Number is required');
+        done();
+      });
+  });
+  it('should not register user without valid phoneNumber', (done) => {
+    chai
+      .request(app)
+      .post(`${authSignupURL}`)
+      .send({
+        first_name: 'Name',
+        last_name: 'Name',
+        type: 'user',
+        email: 'swall@gmail.com',
+        password: 'password1',
+        confirm_password: 'password2',
+        phoneNumber: '09',
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('error');
+        expect(res.body.error).to.be.equal('Phone number should be atleast 3 characters');
+        done();
+      });
+  });
 
   it('should not register user with no password', (done) => {
     chai
@@ -1650,7 +1689,7 @@ describe('DELETE /api/v1/property/<:property-id>', () => {
 });
 
 describe('GET /api/v1/property', () => {
-  it('should get all properties for user', (done) => {
+  it('should get all properties for agent', (done) => {
     chai
       .request(app)
       .get(`${propertyURL}`)

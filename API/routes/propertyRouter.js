@@ -32,7 +32,6 @@ router.use(authenticateUser);
  *      - in: body
  *        name: body
  *        description: Property details
- *        required: true
  *        properties:
  *         status:
  *          type: string
@@ -57,6 +56,11 @@ router.use(authenticateUser);
  *         ownerPhoneNumber:
  *          type: string
  *          format: string
+ *         required:
+ *          status
+ *          type
+ *          address
+ *          price
  *      security:
  *        - bearerAuth: []
  *          type: apikey
