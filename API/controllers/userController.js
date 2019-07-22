@@ -120,9 +120,8 @@ export default class UserController {
       };
 
       try {
-        await UserHelper.insertDb('users', signupDbData);
-        const newlyRegUser = await UserHelper.findDbUser('email', email);
-        newUser.token = UserHelper.generateToken(newlyRegUser);
+        const newlyRegUser = await UserHelper.insertDb('users', signupDbData);
+        newUser.token = await UserHelper.generateToken(newlyRegUser);
         newUser.logged_in = true;
 
         const loginDbData = {

@@ -179,7 +179,7 @@ export default class UserHelper {
     return bcrypt.compareSync(password, hash);
   }
 
-  static generateToken(user) {
+  static async generateToken(user) {
     const payload = {
       id: user.id,
       email: user.email,
@@ -194,7 +194,7 @@ export default class UserHelper {
       country: user.country,
       createdAt: user.createdAt,
     };
-    const token = jwt.sign({ payload }, config.secret, { expiresIn: 86400 });
+    const token = await jwt.sign({ payload }, config.secret, { expiresIn: 86400 });
     return token;
   }
 }
