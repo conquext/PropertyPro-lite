@@ -13,7 +13,7 @@ import validateMiddleware from './middlewares/validateMiddleware';
 config();
 const app = express();
 const logger = new Debug('dev');
-const { PORT = 4000 } = process.env;
+const { PORT = 5000 } = process.env;
 const { methodNotAllowed, pageNotFound } = validateMiddleware;
 
 app.use(bodyParser.json({ type: 'application/json' }));

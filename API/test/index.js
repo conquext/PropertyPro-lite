@@ -485,6 +485,7 @@ describe('POST /api/v1/auth/signup', () => {
         email: 'email1@email.com',
         password: 'password1',
         confirm_password: 'password1',
+        phoneNumber: '090Email1',
       })
 
 
@@ -505,6 +506,7 @@ describe('POST /api/v1/auth/signup', () => {
         email: 'swall@gmail.com',
         password: 'password1',
         confirm_password: 'password1',
+        phoneNumber: '090Swall',
       })
       .end((err, res) => {
         expect(res).to.have.status(400);
@@ -524,6 +526,7 @@ describe('POST /api/v1/auth/signup', () => {
         email: 'swall@gmail.com',
         password: 'password1',
         confirm_password: 'password1',
+        phoneNumber: '090swall',
       })
       .end((err, res) => {
         expect(res).to.have.status(400);
