@@ -10,7 +10,7 @@ const dbConfig = {
   host: process.env.PGHOST || 'localhost',
   database: process.env.NODE_ENV === 'test' ? process.env.PGDATABASE : process.env.PGDATABASE_TEST || 'propertypro',
   port: process.env.PGPORT || 5432,
-  idleTimeoutMillis: 30000,
+  idleTimeoutMillis: 50000,
 };
 
 const tableName = {
@@ -22,9 +22,11 @@ const tableName = {
   DELETED: 'deleted',
 };
 
-const connectionstring = process.env.DATABASE_URL || 'propertypro';
+// let connectionstring;
+// process.env.NODE_ENV === 'test' ? connectionstring = process.env.DATABASE_URL_TEST : connectionstring = process.env.DATABASE_URL || 'propertypro';
 
-const pool = new Pool(dbConfig);
+const connectionstring = process.env.DATABASE_URL || 'propertypro';
+const pool = new Pool({ connectionString: connectionstring });
 
 pool.on('error', (err) => {
 //   debug(`Unexpected error on idle client: ${err}`);
