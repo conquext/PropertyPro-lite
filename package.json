@@ -16,7 +16,7 @@
     "seeder": "DEBUG=dev babel-node ./API/db/seeder",
     "coveralls": "cross-env NODE_ENV=test nyc --reporter=lcov --reporter=text-lcov npm test",
     "coverage": "nyc npm run test",
-    "heroku-postbuild": "pm2 start node --require babel-register API/app.js"
+    "heroku-postbuild": "pm2 start npm -- start"
   },
   "repository": {
     "type": "git",
