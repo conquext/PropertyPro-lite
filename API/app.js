@@ -72,4 +72,9 @@ app.listen(PORT, () => {
   logger(`Server is running on PORT ${PORT}`);
 });
 
+app.use((err, req, res, next) => {
+  logger(err.stack);
+  next();
+});
+
 export default app;
