@@ -93,14 +93,13 @@ export default class Migration {
     */
 
   static async dbQuery(theQuery) {
-    // let client;
+    const client = await pool.connect();
     try {
-      // client = await pool.connect();
-      await pool.query(theQuery);
+      await client.query(theQuery);
       // client.release();
     } catch (error) {
     //   debug(`Error in ${theQuery}: ${error}`);
-    } finally { pool.release(); }
+    } finally { client.release(); }
   }
 
   static async create(fields, table) {
@@ -198,7 +197,7 @@ export default class Migration {
       await this.createDeletedTable();
       debug('Tables successfully created');
     } catch (err) {
-      // debug(`Error while creating tables: ${err}`);
+      debug(`Error while creating tables: ${err}`);
     }
   }
 
