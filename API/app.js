@@ -20,6 +20,11 @@ app.use(bodyParser.json({ type: 'application/json' }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator());
 
+app.use((err, req, res, next) => {
+  logger(err.stack);
+  next();
+});
+
 const API_VERSION = '/api/v1';
 
 const swaggerOptions = {
@@ -70,11 +75,6 @@ app.all('*', (req, res) => {
 
 app.listen(PORT, () => {
   logger(`Server is running on PORT ${PORT}`);
-});
-
-app.use((err, req, res, next) => {
-  logger(err.stack);
-  next();
 });
 
 export default app;
