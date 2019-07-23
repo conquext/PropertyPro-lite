@@ -17,13 +17,13 @@ export default class Model {
   }
 
   static async dbQuery(theQuery) {
-    const client = await pool.connect();
+    // const client = await pool.connect();
     try {
-      return await client.query(theQuery);
+      return await pool.query(theQuery);
     } catch (error) {
     //   debug(`this error right here ${theQuery}: ${error}`);
     } finally {
-      client.release();
+      pool.release();
     }
   }
 
