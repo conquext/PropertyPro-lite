@@ -27,7 +27,7 @@ export default class UserController {
           error: 'Incorrect email or Wrong password',
         });
       }
-      const jwtToken = UserHelper.generateToken(userFound);
+      const jwtToken = await UserHelper.generateToken(userFound);
       userFound.token = jwtToken;
       userFound.last_login = new Date();
       userFound.logged_in = true;
