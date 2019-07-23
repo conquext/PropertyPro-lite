@@ -37,7 +37,7 @@ pool.on('connect', () => {
 });
 pool.on('remove', () => {
 //   debug('removed');
-  process.exit(0);
+  // process.exit(0);
 });
 
 export { pool, tableName, dbConfig };
