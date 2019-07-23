@@ -17,14 +17,14 @@ export default class Model {
   }
 
   static async dbQuery(theQuery) {
-    let client;
+    // let client;
     try {
-      client = await pool.connect();
-      await client.query(theQuery);
+      // client = await pool.connect();
+      await pool.query(theQuery);
       // client.release();
     } catch (error) {
     //   debug(`Error in ${theQuery}: ${error}`);
-    } finally { client.release(); }
+    } finally { pool.release(); }
   }
 
   async insert({ data }) {
