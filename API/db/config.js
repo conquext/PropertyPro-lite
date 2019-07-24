@@ -35,9 +35,11 @@ pool.on('error', (err) => {
 pool.on('connect', () => {
   // debug('connected to the Database');
 });
+
 pool.on('remove', () => {
 //   debug('removed');
-  process.exit(0);
+  // process.exit(0);
+  pool.connect();
 });
 
 export { pool, tableName, dbConfig };
