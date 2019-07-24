@@ -25,7 +25,7 @@ const tableName = {
 // let connectionstring;
 // process.env.NODE_ENV === 'test' ? connectionstring = process.env.DATABASE_URL_TEST : connectionstring = process.env.DATABASE_URL || 'propertypro';
 
-const connectionstring = process.env.DATABASE_URL || 'propertypro';
+const connectionstring = process.env.DATABASE_URL || 'propertypro_test';
 const pool = new Pool({ connectionString: connectionstring });
 
 pool.on('error', (err) => {
