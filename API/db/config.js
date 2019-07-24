@@ -25,7 +25,7 @@ const tableName = {
 // let connectionstring;
 // process.env.NODE_ENV === 'test' ? connectionstring = process.env.DATABASE_URL_TEST : connectionstring = process.env.DATABASE_URL || 'propertypro';
 
-const connectionstring = process.env.DATABASE_URL || 'propertypro';
+const connectionstring = process.env.DATABASE_URL;
 const pool = new Pool({ connectionString: connectionstring });
 
 pool.on('error', (err) => {
@@ -37,7 +37,7 @@ pool.on('connect', () => {
 });
 pool.on('remove', () => {
 //   debug('removed');
-  process.exit(0);
+  // process.exit(0);
 });
 
 export { pool, tableName, dbConfig };

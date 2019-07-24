@@ -132,10 +132,10 @@ export default class UserController {
           last_login: new Date(),
         };
 
-        await UserHelper.insertDb('login', loginDbData);
+        const insertLogin = await UserHelper.insertDb('login', loginDbData);
 
         const signupData = {
-          token: newUser.token,
+          token: insertLogin.token,
           id: newlyRegUser.id,
           first_name: newlyRegUser.first_name,
           last_name: newlyRegUser.last_name,

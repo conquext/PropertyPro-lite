@@ -72,4 +72,13 @@ app.listen(PORT, () => {
   logger(`Server is running on PORT ${PORT}`);
 });
 
+app.use((err, req, res, next) => {
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: {},
+  });
+  next(err);
+});
+
 export default app;

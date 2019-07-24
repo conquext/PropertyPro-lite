@@ -132,7 +132,8 @@ export default class UserHelper {
   static async updateDb(table, data, field, value) {
     const tableModel = this.pickTable(table);
     try {
-      await tableModel.update({ data }, { clause: { [field]: value } });
+      const returnData = await tableModel.update({ data }, { clause: { [field]: value } });
+      return returnData.rows[0];
     } catch (error) {
       // debug(`Error in updating ${table} db: ${error}`);
     }
@@ -160,7 +161,8 @@ export default class UserHelper {
 
   static async updateDbLogin(data, email) {
     try {
-      await loginTable.update({ data }, { clause: { email } });
+      const returnData = await loginTable.update({ data }, { clause: { email } });
+      return returnData.rows[0];
     } catch (error) {
       // debug(`Error in updating login db: ${error}`);
     }
