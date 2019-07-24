@@ -30,7 +30,6 @@ const pool = new Pool({ connectionString: connectionstring });
 
 pool.on('error', (err) => {
   debug(`Unexpected error on idle client: ${err}`);
-  pool.connect();
 //   process.exit();
 });
 pool.on('connect', () => {

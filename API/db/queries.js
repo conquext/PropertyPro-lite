@@ -21,7 +21,7 @@ export default class Model {
     try {
       return await pool.query(theQuery);
     } catch (error) {
-      debug(`this error right here ${theQuery}: ${error}`);
+      // debug(`this error right here ${theQuery}: ${error}`);
     } finally {
       // pool.release();
     }
@@ -53,7 +53,6 @@ export default class Model {
         query = `SELECT ${columns} FROM ${this.table} INNER JOIN ${theJoin} ${theClause};`;
       }
       const returnData = await Model.dbQuery(query);
-      console.log(returnData.rows);
       return returnData.rows;
     } catch (error) {
     //   Model.logger('Cannot execute select query');

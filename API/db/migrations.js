@@ -96,7 +96,6 @@ export default class Migration {
     const client = await pool.connect();
     try {
       await client.query(theQuery);
-      // client.release();
     } catch (error) {
       client.release();
     //   debug(`Error in ${theQuery}: ${error}`);
