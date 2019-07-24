@@ -25,8 +25,10 @@ export default class UserHelper {
   static async findDbUser(field, value) {
     try {
       const userFound = await usersTable.select({ returnFields: '*' }, { clause: { [field]: value } }, { join: { } });
-      if (userFound.length !== 0) {
-        return userFound[0];
+      if (userFound.length) {
+        if (userFound.length !== 0) {
+          return userFound[0];
+        }
       }
       return null;
     } catch (err) {
@@ -37,8 +39,10 @@ export default class UserHelper {
   static async findDbUserLogin(field, value) {
     try {
       const userFound = await usersTable.select({ returnFields: '*' }, { clause: { [field]: value } }, { join: { login: 'email' } });
-      if (userFound.length !== 0) {
-        return userFound[0];
+      if (userFound.length) {
+        if (userFound.length !== 0) {
+          return userFound[0];
+        }
       }
       return null;
     } catch (err) {
@@ -65,8 +69,10 @@ export default class UserHelper {
   static async findDbProperty(field, value) {
     try {
       const propertyFound = await propertiesTable.select({ returnFields: '*' }, { clause: { [field]: value } }, { join: { } });
-      if (propertyFound.length !== 0) {
-        return propertyFound;
+      if (propertyFound.length) {
+        if (propertyFound.length !== 0) {
+          return propertyFound;
+        }
       }
       return null;
     } catch (err) {
@@ -77,8 +83,10 @@ export default class UserHelper {
   static async findDbProperties() {
     try {
       const propertyFound = await propertiesTable.select({ returnFields: '*' }, { clause: { } }, { join: { } });
-      if (propertyFound.length !== 0) {
-        return propertyFound;
+      if (propertyFound.length) {
+        if (propertyFound.length !== 0) {
+          return propertyFound;
+        }
       }
       return null;
     } catch (err) {
@@ -90,8 +98,10 @@ export default class UserHelper {
   static async findDbPropertyOwner(id) {
     try {
       const propertyFound = await propertiesTable.select({ returnFields: '*' }, { clause: { property_id: id } }, { join: { } });
-      if (propertyFound.length !== 0) {
-        return this.findDbUser('id', propertyFound[0].owner);
+      if (propertyFound.length) {
+        if (propertyFound.length !== 0) {
+          return this.findDbUser('id', propertyFound[0].owner);
+        }
       }
       return null;
     } catch (error) {
@@ -102,8 +112,10 @@ export default class UserHelper {
   static async findDbLogin(field, value) {
     try {
       const fieldFound = await loginTable.select({ returnFields: [field] }, { clause: { [field]: value } }, { join: { } });
-      if (fieldFound.length !== 0) {
-        return fieldFound[0];
+      if (fieldFound.length) {
+        if (fieldFound.length !== 0) {
+          return fieldFound[0];
+        }
       }
       return null;
     } catch (err) {
@@ -142,7 +154,10 @@ export default class UserHelper {
     const tableModel = this.pickTable(table);
     try {
       const returnData = await tableModel.insert({ data });
-      return returnData.rows[0];
+      if (returnData.rows.length !== 0) {
+        return returnData.rows[0];
+      }
+      return returnData;
     } catch (error) {
       debug(`Error in inserting into ${table} db: ${error}`);
     }
