@@ -43,7 +43,7 @@ pool.on('remove', () => {
   debug(`idleCount on remove ${pool.idleCount}`);
   debug(`totalClient on remove ${pool.totalCount}`);
   debug('removed');
-  process.exit(0);
+  // process.exit(0);
   // process.exit(0);
 });
 
