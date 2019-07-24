@@ -40,14 +40,12 @@ pool.on('connect', () => {
 });
 
 pool.on('remove', () => {
+  pool.release();
   debug(`idleCount on remove ${pool.idleCount}`);
   debug(`totalClient on remove ${pool.totalCount}`);
   debug('removed');
   // process.exit(0);
-  (async function () {
-    const client = await pool.connect();
-    await client.query('SELECT NOW()');
-  }());
+  pool.release();
 });
 
 export { pool, tableName, dbConfig };
