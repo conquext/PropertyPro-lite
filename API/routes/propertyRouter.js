@@ -69,7 +69,7 @@ router.use(authenticateUser);
  *        description: New Property listed successfully
  *        schema:
  *         type: object
- *         $ref: '#/definitions/property'
+ *         $ref: '#/definitions/Property'
  *       403:
  *        description: Unathorized
  *       400:
