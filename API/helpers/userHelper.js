@@ -167,7 +167,10 @@ export default class UserHelper {
     const tableModel = this.pickTable(table);
     try {
       const returnData = await tableModel.delete({ clause: { [field]: value } });
-      return returnData.rows[0];
+      if (returnData.rows.length !== 0) {
+        return returnData.rows[0];
+      }
+      return returnData;
     } catch (error) {
       debug(`Error in inserting into ${table} db: ${error}`);
     }
