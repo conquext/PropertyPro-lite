@@ -29,7 +29,8 @@ const connectionstring = process.env.DATABASE_URL || 'propertypro';
 const pool = new Pool({ connectionString: connectionstring });
 
 pool.on('error', (err) => {
-//   debug(`Unexpected error on idle client: ${err}`);
+  debug(`Unexpected error on idle client: ${err}`);
+  pool.connect();
 //   process.exit();
 });
 pool.on('connect', () => {
@@ -37,7 +38,7 @@ pool.on('connect', () => {
 });
 
 pool.on('remove', () => {
-//   debug('removed');
+  debug('removed');
   // process.exit(0);
   pool.connect();
 });
