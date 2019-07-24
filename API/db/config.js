@@ -43,7 +43,6 @@ pool.on('remove', () => {
   debug(`idleCount on remove ${pool.idleCount}`);
   debug(`totalClient on remove ${pool.totalCount}`);
   debug('removed');
-  pool.end();
   // process.exit(0);
   (async function () {
     const client = await pool.connect();
