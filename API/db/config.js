@@ -40,7 +40,10 @@ pool.on('connect', () => {
 pool.on('remove', () => {
   debug('removed');
   // process.exit(0);
-  pool.connect();
+  (async function () {
+    const client = await pool.connect();
+    await client.query('SELECT NOW()');
+  }());
 });
 
 export { pool, tableName, dbConfig };

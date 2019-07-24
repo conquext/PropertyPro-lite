@@ -21,7 +21,7 @@ export default class Model {
     try {
       return await pool.query(theQuery);
     } catch (error) {
-    //   debug(`this error right here ${theQuery}: ${error}`);
+      debug(`this error right here ${theQuery}: ${error}`);
     } finally {
       // pool.release();
     }

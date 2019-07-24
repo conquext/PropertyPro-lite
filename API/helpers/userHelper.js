@@ -30,7 +30,7 @@ export default class UserHelper {
       }
       return null;
     } catch (err) {
-      // debug(`Error in finding ${field} in Users table: ${err}`);
+      debug(`Error in finding ${field} in Users table: ${err}`);
     }
   }
 
@@ -42,7 +42,7 @@ export default class UserHelper {
       }
       return null;
     } catch (err) {
-      // debug(`Error in finding user in login db: ${err}`);
+      debug(`Error in finding user in login db: ${err}`);
     }
   }
 
@@ -70,7 +70,7 @@ export default class UserHelper {
       }
       return null;
     } catch (err) {
-      // debug(`Error in finding property in db: ${err}`);
+      debug(`Error in finding property in db: ${err}`);
     }
   }
 
@@ -82,7 +82,7 @@ export default class UserHelper {
       }
       return null;
     } catch (err) {
-      // debug(`Error in finding property in db: ${err}`);
+      debug(`Error in finding property in db: ${err}`);
     }
   }
 
@@ -95,7 +95,7 @@ export default class UserHelper {
       }
       return null;
     } catch (error) {
-      // debug(`Error in finding property ${id} in property table: ${error}`);
+      debug(`Error in finding property ${id} in property table: ${error}`);
     }
   }
 
@@ -107,7 +107,7 @@ export default class UserHelper {
       }
       return null;
     } catch (err) {
-      // debug(`Error in finding ${field} in Login table: ${err}`);
+      debug(`Error in finding ${field} in Login table: ${err}`);
     }
   }
 
@@ -134,7 +134,7 @@ export default class UserHelper {
     try {
       await tableModel.update({ data }, { clause: { [field]: value } });
     } catch (error) {
-      // debug(`Error in updating ${table} db: ${error}`);
+      debug(`Error in updating ${table} db: ${error}`);
     }
   }
 
@@ -144,7 +144,7 @@ export default class UserHelper {
       const returnData = await tableModel.insert({ data });
       return returnData.rows[0];
     } catch (error) {
-      // debug(`Error in inserting into ${table} db: ${error}`);
+      debug(`Error in inserting into ${table} db: ${error}`);
     }
   }
 
@@ -154,7 +154,7 @@ export default class UserHelper {
       const returnData = await tableModel.delete({ clause: { [field]: value } });
       return returnData.rows[0];
     } catch (error) {
-      // debug(`Error in inserting into ${table} db: ${error}`);
+      debug(`Error in inserting into ${table} db: ${error}`);
     }
   }
 
@@ -162,7 +162,7 @@ export default class UserHelper {
     try {
       await loginTable.update({ data }, { clause: { email } });
     } catch (error) {
-      // debug(`Error in updating login db: ${error}`);
+      debug(`Error in updating login db: ${error}`);
     }
   }
 
