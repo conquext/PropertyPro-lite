@@ -15,7 +15,7 @@ const tableName = {
   FORGOTPASSWORD: 'forgotpassword',
 };
 
-const connectionstring = process.env.NODE_ENV === 'test' ? process.env.DATABASE_URL_TEST : process.env.DATABASE_URL || 'propertypro';
+const connectionstring = process.env.NODE_ENV === 'test' ? process.env.DATABASE_URL_TEST : process.env.DATABASE_URL || 'postgres://postgres@localhost:5432/propertypro';
 const dbConfig = {
   user: connectionstring.slice(11, connectionstring.length).split('@')[0].split(':')[0] || 'postgres',
   password: connectionstring.slice(11, connectionstring.length).split('@')[0].split(':')[1] || '',

@@ -11,6 +11,8 @@ cache:
     - "node_modules"
 install:
   - npm ci
+env:
+  - DATABASE_URL_TEST=postgres://postgres@localhost:5432/propertypro_test
 before_script:
   - psql -c 'drop database if exists propertypro_test;' -U postgres
   - psql -c 'create database propertypro_test;' -U postgres
