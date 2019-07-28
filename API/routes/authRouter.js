@@ -158,7 +158,7 @@ router.post('/forgotpassword', forgetPasswordCheck, forgotPassword);
 
 /**
 * @swagger
-* /auth/resetpassword:
+* /auth/resetpassword/{id}/{resetToken}:
 *   post:
 *    tags:
 *     - Users
@@ -174,7 +174,7 @@ router.post('/forgotpassword', forgetPasswordCheck, forgotPassword);
 *        required: true
 *        type: string
 *      - in: path
-*        name: restToken
+*        name: resetToken
 *        required: true
 *        type: string
 *      - in: body
@@ -201,7 +201,8 @@ router.post('/forgotpassword', forgetPasswordCheck, forgotPassword);
 *      500:
 *       description: Something went wrong. Try again
 */
-router.all('/resetpassword/:id/:resetToken', resetPasswordCheck, resetPassword);
+// router.use('/resetpassword', resetPasswordCheck, resetPassword);
+router.post('/resetpassword/:id/:resetToken', resetPasswordCheck, resetPassword);
 
 
 export default router;
