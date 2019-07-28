@@ -187,12 +187,12 @@ router.post('/forgotpassword', forgetPasswordCheck, forgotPassword);
 *           password:
 *            type: string
 *            format: password
-*           confirmPassword:
+*           confirm_password:
 *            type: string
 *            format: password
 *           required:
 *            password
-*            confirmPassword
+*            confirm_password
 *    responses:
 *      200:
 *       description: Password Reset successfully

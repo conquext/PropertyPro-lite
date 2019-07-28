@@ -52,21 +52,6 @@ export default class UserHelper {
     }
   }
 
-  // static async find(table, field, value) {
-  //   const tableModel = this.pickTable(table);
-  //   try {
-  //     const entityFound = await tableModel.select({ returnFields: '*' }, { clause: { [field]: value } }, { join: { } });
-  //     if (entityFound) {
-  //       if (entityFound.length !== 0) {
-  //         return entityFound;
-  //       }
-  //     }
-  //     return null;
-  //   } catch (error) {
-  //     debug(`Error in selecting from ${table} table: ${error}`);
-  //   }
-  // }
-
   static async findOne(table, field, value) {
     const tableModel = this.pickTable(table);
     try {
