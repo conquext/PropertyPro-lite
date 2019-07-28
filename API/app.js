@@ -6,6 +6,7 @@ import { config } from 'dotenv';
 import allRoutes from 'express-list-endpoints';
 import swaggerUi from 'swagger-ui-express';
 import fileupload from 'express-fileupload';
+import cors from 'cors';
 import specs from '../swaggerDoc';
 import router from './routes';
 import validateMiddleware from './middlewares/validateMiddleware';
@@ -19,6 +20,7 @@ const { methodNotAllowed, pageNotFound } = validateMiddleware;
 app.use(bodyParser.json({ type: 'application/json' }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator());
+app.use(cors());
 
 const API_VERSION = '/api/v1';
 
