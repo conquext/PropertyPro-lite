@@ -168,6 +168,14 @@ export default class Seeder {
     }
   }
 
+  static async sync() {
+    try {
+      await Migration.createAllTables();
+    } catch (err) {
+    //   debug(err);
+    }
+  }
+
   static async seed() {
     try {
       await Migration.dropAllTables();

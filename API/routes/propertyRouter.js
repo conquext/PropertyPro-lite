@@ -3,8 +3,11 @@ import authMiddleware from '../middlewares/authMiddleware';
 import propertyController from '../controllers/propertyController';
 import permissionMiddleware from '../middlewares/permissionMiddleware';
 import validateMiddleware from '../middlewares/validateMiddleware';
+import upload from '../service/cloudinaryConfig';
 
 const router = Router();
+
+const { uploadImage } = upload;
 
 const {
   listNewProperty, getAllProperty, getProperty, editProperty, updateProperty, deleteProperty,
@@ -78,7 +81,7 @@ router.use(authenticateUser);
  *        description: Something went wrong try again
  *
  */
-router.post('', authAgent, propertyListingCheck, listNewProperty);
+router.post('', authAgent, uploadImage, propertyListingCheck, listNewProperty);
 // router.post('', authAgent, listNewProperty);
 
 /**
@@ -223,8 +226,12 @@ router.patch('/:id', authPropertyOwner, listingEditCheck, editProperty);
  *      tags:
  *        - Property
  *      parameters:
-*        - in: path
+ *        - in: path
  *          name: id
+ *          required: true
+ *          type: string
+ *        - in: path
+ *          name: status
  *          required: true
  *          type: string
  *      security:

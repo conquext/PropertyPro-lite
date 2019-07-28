@@ -85,6 +85,15 @@ const tableSchema = {
         ownerPhoneNumber VARCHAR(128) NOT NULL REFERENCES users(phoneNumber),
         lastUpdated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
     )`,
+
+  forgotPassword: `(
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      email  VARCHAR(128) NOT NULL REFERENCES users(email) ON DELETE CASCADE,
+      resetToken VARCHAR(128) NOT NULL,
+      created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      expire_time TIMESTAMP NOT NULL
+    )`,
 };
 
 export default class Migration {
@@ -97,7 +106,7 @@ export default class Migration {
     try {
       await client.query(theQuery);
     } catch (error) {
-      client.release();
+      // client.release();
     //   debug(`Error in ${theQuery}: ${error}`);
     } finally { client.release(); }
   }
@@ -182,6 +191,17 @@ export default class Migration {
     }
   }
 
+  /**
+    * Create forgot password Table
+    */
+  static async createForgotPasswordTable() {
+    try {
+      await this.create(tableSchema.forgotPassword, `${tableName.FORGOTPASSWORD}`);
+      await debug('Forgot password table created');
+    } catch (err) {
+    //   debug(err);
+    }
+  }
 
   /**
     * Create All Table
@@ -195,9 +215,10 @@ export default class Migration {
       await this.createListingTable();
       await this.createFlagTable();
       await this.createDeletedTable();
+      await this.createForgotPasswordTable();
       debug('Tables successfully created');
     } catch (err) {
-      debug(`Error while creating tables: ${err}`);
+      // debug(`Error while creating tables: ${err}`);
     }
   }
 
@@ -226,7 +247,7 @@ export default class Migration {
   static async dropAllTables() {
     try {
       debug('all tables to be removed');
-      //   await this.dbQuery(`DROP TABLE IF EXISTS ${tableName.USERS}, ${tableName.PROPERTIES}, ${tableName.LISTINGS}, ${tableName.LOGIN}, ${tableName.FLAGS}, ${tableName.DELETED};`);
+      //   await this.dbQuery(`DROP TABLE IF EXISTS ${tableName.USERS}, ${tableName.PROPERTIES}, ${tableName.LISTINGS}, ${tableName.LOGIN}, ${tableName.FLAGS}, ${tableName.DELETED}, ${tableName.FORGOTPASSWORD};`);
       await this.dropSchema('public');
       await this.createSchema('public');
     } catch (error) {

@@ -1,5 +1,8 @@
+/* eslint-disable no-unused-expressions */
+/* eslint-disable no-nested-ternary */
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import nodemailer from 'nodemailer';
 import Debug from 'debug';
 import * as config from '../config';
 import Model from '../db/queries';
@@ -11,16 +14,73 @@ const propertiesTable = new Model({ table: tableName.PROPERTIES });
 const flagsTable = new Model({ table: tableName.FLAGS });
 const loginTable = new Model({ table: tableName.LOGIN });
 const deletedTable = new Model({ table: tableName.DELETED });
+const forgotPasswordTable = new Model({ table: tableName.FORGOTPASSWORD });
+
+const smtpTransport = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,
+  auth: {
+    type: 'OAuth2',
+    user: process.env.EMAIL,
+    clientId: process.env.GMAIL_ID,
+    clientSecret: process.env.GMAIL_SECRET,
+    refreshToken: process.env.GMAIL_REFRESH,
+  },
+});
 
 export default class UserHelper {
-  // static async find({ table }, { returnFields }, { fields }, { values }, { join }) {
+  static async sendMail(userFound, resetToken) {
+    const mailOptions = {
+      from: process.env.EMAIL,
+      to: userFound.email,
+      subject: 'Reset password',
+      html: `${'<h4><b>Reset Password</b></h4>'
+                      + '<p>To reset your password, click link to complete this form:</p>'
+                      + '<a href='}${process.env.CLIENT_URL}/resetpassword/${userFound.id}/${resetToken}">${process.env.CLIENT_URL}/resetpassword/${userFound.id}/${resetToken}</a>`
+                      + '<p>This link expires in 5 hours<p>'
+                      + '<br><br>'
+                      + '<p>--Team</p>',
+    };
+    try {
+      await smtpTransport.sendMail(mailOptions, (info) => {
+        // debug('INFO', info);
+      });
+    } catch (error) {
+      // debug('ERROR IN SENDING EMAIL', error);
+      return 'sent';
+    }
+  }
+
+  // static async find(table, field, value) {
   //   const tableModel = this.pickTable(table);
   //   try {
-  //     await tableModel.select({ returnFields }, { clause: { [fields]: values } }, { join });
+  //     const entityFound = await tableModel.select({ returnFields: '*' }, { clause: { [field]: value } }, { join: { } });
+  //     if (entityFound) {
+  //       if (entityFound.length !== 0) {
+  //         return entityFound;
+  //       }
+  //     }
+  //     return null;
   //   } catch (error) {
-  //     // debug(`Error in selecting from ${table} table: ${error}`);
+  //     debug(`Error in selecting from ${table} table: ${error}`);
   //   }
   // }
+
+  static async findOne(table, field, value) {
+    const tableModel = this.pickTable(table);
+    try {
+      const entityFound = await tableModel.select({ returnFields: '*' }, { clause: { [field]: value } }, { join: { } });
+      if (entityFound) {
+        if (entityFound.length !== 0) {
+          return entityFound[0];
+        }
+      }
+      return null;
+    } catch (error) {
+      // debug(`Error in selecting from ${table} table: ${error}`);
+    }
+  }
 
   static async findDbUser(field, value) {
     try {
@@ -32,7 +92,7 @@ export default class UserHelper {
       }
       return null;
     } catch (err) {
-      debug(`Error in finding ${field} in Users table: ${err}`);
+      // debug(`Error in finding ${field} in Users table: ${err}`);
     }
   }
 
@@ -46,7 +106,7 @@ export default class UserHelper {
       }
       return null;
     } catch (err) {
-      debug(`Error in finding user in login db: ${err}`);
+      // debug(`Error in finding user in login db: ${err}`);
     }
   }
 
@@ -57,10 +117,6 @@ export default class UserHelper {
   static findDbUserByEmailLogin(email) {
     return this.findDbUserLogin('email', email);
   }
-
-  // static findDbUserByToken(token) {
-  //   return this.findDbLogin('token', token);
-  // }
 
   static findDbUserByEmail(email) {
     return this.findDbUser('email', email);
@@ -76,7 +132,7 @@ export default class UserHelper {
       }
       return null;
     } catch (err) {
-      debug(`Error in finding property in db: ${err}`);
+      // debug(`Error in finding property in db: ${err}`);
     }
   }
 
@@ -90,7 +146,7 @@ export default class UserHelper {
       }
       return null;
     } catch (err) {
-      debug(`Error in finding property in db: ${err}`);
+      // debug(`Error in finding property in db: ${err}`);
     }
   }
 
@@ -105,7 +161,7 @@ export default class UserHelper {
       }
       return null;
     } catch (error) {
-      debug(`Error in finding property ${id} in property table: ${error}`);
+      // debug(`Error in finding property ${id} in property table: ${error}`);
     }
   }
 
@@ -119,24 +175,19 @@ export default class UserHelper {
       }
       return null;
     } catch (err) {
-      debug(`Error in finding ${field} in Login table: ${err}`);
+      // debug(`Error in finding ${field} in Login table: ${err}`);
     }
   }
 
   static pickTable(table) {
-    // tableName.array.forEach(element => {
-    //   const `${table}Table` = new Model({ table: tableName.USERS });
-    // });
-    // const tableSelected = table.toString().toUpperCase();
-    // return `${tableSelected}Table`;
-
     let tableModel;
-    table === 'users' ? tableModel = usersTable
-      : table === 'login' ? tableModel = loginTable
-        : table === 'property' ? tableModel = propertiesTable
-          : table === 'flags' ? tableModel = flagsTable
-            : table === 'deleted' ? tableModel = deletedTable
-              : tableModel = null;
+    table === tableName.USERS ? tableModel = usersTable
+      : table === tableName.LOGIN ? tableModel = loginTable
+        : table === tableName.PROPERTIES ? tableModel = propertiesTable
+          : table === tableName.FLAGS ? tableModel = flagsTable
+            : table === tableName.DELETED ? tableModel = deletedTable
+              : table === tableName.FORGOTPASSWORD ? tableModel = forgotPasswordTable
+                : tableModel = null;
 
     return tableModel;
   }
@@ -146,7 +197,7 @@ export default class UserHelper {
     try {
       await tableModel.update({ data }, { clause: { [field]: value } });
     } catch (error) {
-      debug(`Error in updating ${table} db: ${error}`);
+      // debug(`Error in updating ${table} db: ${error}`);
     }
   }
 
@@ -159,7 +210,7 @@ export default class UserHelper {
       }
       return returnData;
     } catch (error) {
-      debug(`Error in inserting into ${table} db: ${error}`);
+      // debug(`Error in inserting into ${table} db: ${error}`);
     }
   }
 
@@ -172,7 +223,7 @@ export default class UserHelper {
       }
       return returnData;
     } catch (error) {
-      debug(`Error in inserting into ${table} db: ${error}`);
+      // debug(`Error in inserting into ${table} db: ${error}`);
     }
   }
 
@@ -180,7 +231,7 @@ export default class UserHelper {
     try {
       await loginTable.update({ data }, { clause: { email } });
     } catch (error) {
-      debug(`Error in updating login db: ${error}`);
+      // debug(`Error in updating login db: ${error}`);
     }
   }
 
@@ -192,7 +243,7 @@ export default class UserHelper {
     return hash;
   }
 
-  static comparePassword(password, hash) {
+  static compareWithHash(password, hash) {
     // @ts-ignore
     return bcrypt.compareSync(password, hash);
   }

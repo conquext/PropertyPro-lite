@@ -1,14 +1,16 @@
 import authMiddleware from './authMiddleware';
 
+const { errorResponse } = authMiddleware;
+
 export default class ValidateMiddleware {
   static methodNotAllowed(req, res) {
     const err = ['Method Not Allowed'];
-    return authMiddleware.errorResponse(res, 405, err);
+    return errorResponse(res, 405, err);
   }
 
   static pageNotFound(req, res) {
     const err = ['Page Not Found'];
-    return authMiddleware.errorResponse(res, 404, err);
+    return errorResponse(res, 404, err);
   }
 
   static loginCheck(req, res, next) {
@@ -19,7 +21,7 @@ export default class ValidateMiddleware {
     const errors = req.validationErrors();
     if (errors) {
       const err = authMiddleware.validationError(errors);
-      return authMiddleware.errorResponse(res, 400, err);
+      return errorResponse(res, 400, err);
     }
     next();
   }
@@ -43,7 +45,37 @@ export default class ValidateMiddleware {
     const errors = req.validationErrors();
     if (errors) {
       const err = authMiddleware.validationError(errors);
-      return authMiddleware.errorResponse(res, 400, err);
+      return errorResponse(res, 400, err);
+    }
+    next();
+  }
+
+  static forgetPasswordCheck(req, res, next) {
+    req.checkBody('email').isLength({ min: 1 }).withMessage('Email is required');
+    const errors = req.validationErrors();
+    if (errors) {
+      const err = authMiddleware.validationError(errors);
+      return errorResponse(res, 400, err);
+    }
+    next();
+  }
+
+  static resetPasswordCheck(req, res, next) {
+    // if (!req.params.id && !req.params.resetToken) {
+    //   return errorResponse(res, 400, ['Reset Link is invalid']);
+    // }
+    if (!req.body.password) {
+      return errorResponse(res, 400, ['New Password is required']);
+    }
+    if (req.body.password.length <= 1) {
+      return errorResponse(res, 400, ['New Password should be atleast 2 characters']);
+    }
+    if (!req.body.confirm_password) {
+      return errorResponse(res, 400, ['Confirm your password']);
+    }
+
+    if (req.body.password !== req.body.confirm_password) {
+      return errorResponse(res, 409, ['Passwords must match']);
     }
     next();
   }
@@ -74,7 +106,7 @@ export default class ValidateMiddleware {
     const errors = req.validationErrors();
     if (errors) {
       const err = authMiddleware.validationError(errors);
-      return authMiddleware.errorResponse(res, 400, err);
+      return errorResponse(res, 400, err);
     }
     next();
   }
@@ -100,7 +132,7 @@ export default class ValidateMiddleware {
     const errors = req.validationErrors();
     if (errors) {
       const err = authMiddleware.validationError(errors);
-      return authMiddleware.errorResponse(res, 400, err);
+      return errorResponse(res, 400, err);
     }
     next();
   }

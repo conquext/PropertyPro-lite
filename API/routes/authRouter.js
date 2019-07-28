@@ -4,8 +4,8 @@ import validateMiddleware from '../middlewares/validateMiddleware';
 
 const router = Router();
 
-const { signin, signup } = userController;
-const { loginCheck, signupCheck } = validateMiddleware;
+const { signin, signup, forgotPassword, resetPassword } = userController;
+const { loginCheck, signupCheck, forgetPasswordCheck, resetPasswordCheck } = validateMiddleware;
 
 
 /**
@@ -120,5 +120,88 @@ router.post('/signin', loginCheck, signin);
 *         description: Something went wrong. Try again
 */
 router.post('/signup', signupCheck, signup);
+
+/**
+* @swagger
+* /auth/forgotpassword:
+*   post:
+*     tags:
+*       - Users
+*     name: Request Password Reset
+*     summary: Generate link to reset password for a registered user
+*     consumes:
+*       - application/json
+*     produces:
+*       - application/html
+*     parameters:
+*       - in: body
+*         name: body
+*         description: User Email
+*         required: true
+*         schema:
+*          type: object
+*          properties:
+*            email:
+*              type: string
+*              format: email
+*            required:
+*              email
+*     responses:
+*       200:
+*         description: Check your mail to reset your password.
+*       400:
+*         description: Bad request
+*       500:
+*         description: Something went wrong. Try again
+*/
+router.post('/forgotpassword', forgetPasswordCheck, forgotPassword);
+
+/**
+* @swagger
+* /auth/resetpassword:
+*   post:
+*    tags:
+*     - Users
+*    name: Reset Password
+*    summary: Reset a user password
+*    consumes:
+*     - application/json
+*    produces:
+*     - application/json
+*    parameters:
+*      - in: path
+*        name: id
+*        required: true
+*        type: string
+*      - in: path
+*        name: restToken
+*        required: true
+*        type: string
+*      - in: body
+*        name: body
+*        description: User
+*        required: true
+*        schema:
+*          type: object
+*          properties:
+*           password:
+*            type: string
+*            format: password
+*           confirmPassword:
+*            type: string
+*            format: password
+*           required:
+*            password
+*            confirmPassword
+*    responses:
+*      200:
+*       description: Password Reset successfully
+*      400:
+*       description: Bad request
+*      500:
+*       description: Something went wrong. Try again
+*/
+router.all('/resetpassword/:id/:resetToken', resetPasswordCheck, resetPassword);
+
 
 export default router;

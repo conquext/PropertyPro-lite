@@ -18,6 +18,8 @@ const apiVersion = '/api/v1';
 const authLoginURL = `${apiVersion}/auth/signin`;
 const authSignupURL = `${apiVersion}/auth/signup`;
 const propertyURL = `${apiVersion}/property`;
+const forgotPasswordURL = `${apiVersion}/auth/forgotpassword`;
+const resetPasswordURL = `${apiVersion}/auth/resetpassword`;
 
 let userToken = '';
 let agentToken = '';
@@ -101,13 +103,8 @@ before(async () => {
   agent2Token = resp.body.data.token;
 });
 
-// after(async () => {
-//   await UserHelper.deleteDb('users', 'email', 'email1e23329@email.com');
-//   await UserHelper.deleteDb('users', 'email', 'email13@email.com');
-// });
 
 // Test default route
-
 describe('Test default route', () => {
   // Test for default route
 
@@ -583,9 +580,9 @@ describe('POST /api/v1/auth/signup', () => {
         first_name: 'Name',
         last_name: 'Name',
         type: 'user',
-        email: 'swall523@gmail.com',
+        email: 'swall523@gggmail.com',
         password: 'password1',
-        // confirm_password: 'password1',
+        confirm_password: 'password1',
         address: 'This is a fake address',
         phoneNumber: '09048765342',
       })
@@ -605,9 +602,9 @@ describe('POST /api/v1/auth/signup', () => {
         first_name: 'Anothername',
         last_name: 'AnotherName',
         type: 'user',
-        email: 'swall5231@gmail.com',
+        email: 'swall523@gsmail.com',
         password: 'password1',
-        // confirm_password: 'password1',
+        confirm_password: 'password1',
         address: 'This is a fake address',
         phoneNumber: '09048765342',
       })
@@ -755,6 +752,115 @@ describe('POST /api/v1/auth/signin', () => {
 
   //   done();
   // });
+});
+
+// Test Auth Controller for reset password
+describe('POST /api/v1/auth/resetpassword', () => {
+  it('should not generate reset link without a valid email of an existing user', (done) => {
+    chai
+      .request(app)
+      .post(`${forgotPasswordURL}`)
+      .send({
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('error');
+        expect(res.body.error).to.be.equal('Email is required');
+        done();
+      });
+  });
+
+  it('should not generate reset link for email does not exist user', (done) => {
+    chai
+      .request(app)
+      .post(`${forgotPasswordURL}`)
+      .send({
+        email: 'emaildoesnotexist1000@email.com',
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+        expect(res.body.status).to.be.equal('error');
+        expect(res.body.error).to.be.equal('User Not Found');
+        done();
+      });
+  });
+
+  it('should not reset password without new password from existing user', (done) => {
+    chai
+      .request(app)
+      .post(`${resetPasswordURL}/2/2`)
+      .send({
+        confirm_password: '',
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('error');
+        expect(res.body.error).to.be.equal('New Password is required');
+        done();
+      });
+  });
+
+  it('should not reset password without valid password', (done) => {
+    chai
+      .request(app)
+      .post(`${resetPasswordURL}/2/2`)
+      .send({
+        password: '1',
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('error');
+        expect(res.body.error).to.be.equal('New Password should be atleast 2 characters');
+        done();
+      });
+  });
+
+  it('should not reset password without confirm password from existing user', (done) => {
+    chai
+      .request(app)
+      .post(`${resetPasswordURL}/1/2`)
+      .send({
+        password: 'password10',
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('error');
+        expect(res.body.error).to.be.equal('Confirm your password');
+        done();
+      });
+  });
+
+  it('should not reset password if passwords do not match', (done) => {
+    chai
+      .request(app)
+      .post(`${resetPasswordURL}/2/2`)
+      .send({
+        password: 'password10',
+        confirm_password: 'password9',
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(409);
+        expect(res.body.status).to.be.equal('error');
+        expect(res.body.error).to.be.equal('Passwords must match');
+        done();
+      });
+  });
+
+  it('should not reset password if reset password link is invalid', (done) => {
+    chai
+      .request(app)
+      .post(`${resetPasswordURL}/2/2`)
+      .send({
+        password: 'password10',
+        confirm_password: 'password10',
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.be.equal('error');
+        expect(res.body.error).to.be.equal('Invalid or expired reset token');
+        done();
+      });
+  });
 });
 
 // Test Property Controller
@@ -1663,7 +1769,7 @@ describe('DELETE /api/v1/property/<:property-id>', () => {
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect(res.body.status).to.be.equal('success');
-        expect(res.body.data.message).to.be.equal('Property deleted successfully');
+        expect(res.body.message).to.be.equal('Property deleted successfully');
         done();
       });
   });

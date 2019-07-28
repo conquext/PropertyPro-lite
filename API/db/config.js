@@ -5,14 +5,6 @@ import Debug from 'debug';
 config();
 const debug = new Debug('dev');
 
-const dbConfig = {
-  user: process.env.PGUSER || 'postgres',
-  host: process.env.PGHOST || 'localhost',
-  database: process.env.NODE_ENV === 'test' ? process.env.PGDATABASE : process.env.PGDATABASE_TEST || 'propertypro',
-  port: process.env.PGPORT || 5432,
-  idleTimeoutMillis: 50000,
-};
-
 const tableName = {
   USERS: 'users',
   PROPERTIES: 'property',
@@ -20,20 +12,25 @@ const tableName = {
   LOGIN: 'login',
   LISTINGS: 'listing',
   DELETED: 'deleted',
+  FORGOTPASSWORD: 'forgotpassword',
 };
 
-// let connectionstring;
-// process.env.NODE_ENV === 'test' ? connectionstring = process.env.DATABASE_URL_TEST : connectionstring = process.env.DATABASE_URL || 'propertypro';
-
-const connectionstring = process.env.DATABASE_URL || 'propertypro_test';
+const connectionstring = process.env.NODE_ENV === 'test' ? process.env.DATABASE_URL_TEST : process.env.DATABASE_URL || 'propertypro';
+const dbConfig = {
+  user: connectionstring.slice(11, connectionstring.length).split('@')[0].split(':')[0] || 'postgres',
+  password: connectionstring.slice(11, connectionstring.length).split('@')[0].split(':')[1] || '',
+  host: connectionstring.slice(11, connectionstring.length).split('@')[1].split('/')[0].split(':')[0] || 'localhost',
+  database: connectionstring.slice(11, connectionstring.length).split('@')[1].split('/')[1] || 'propertypro',
+  port: connectionstring.slice(11, connectionstring.length).split('@')[1].split('/')[0].split(':')[1] || 5432,
+  idleTimeoutMillis: 50000,
+};
 const pool = new Pool({ connectionString: connectionstring });
 
 pool.on('error', (err) => {
-  debug(`Unexpected error on idle client: ${err}`);
+  // debug(`Unexpected error on idle client: ${err}`);
 //   process.exit();
 });
 pool.on('connect', () => {
-  debug(`idleCount on connect ${pool.idleCount}`);
   debug(`totalClient on connect ${pool.totalCount}`);
   // debug('connected to the Database');
 });

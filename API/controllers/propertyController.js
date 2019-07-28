@@ -3,6 +3,9 @@
 /* eslint-disable camelcase */
 import UserHelper from '../helpers/userHelper';
 import Property from '../models/property';
+import authMiddleware from '../middlewares/authMiddleware';
+
+const { errorResponse, successResponse } = authMiddleware;
 
 export default class propertyController {
   /**
@@ -18,7 +21,7 @@ export default class propertyController {
       const {
         status = 'For Rent', price = 0, state, city, address = 'Not Available', type, baths = 0, rooms = 0, image_url,
       } = req.body;
-      const ownerFound = await UserHelper.findDbUserById(parseInt(req.data.id, 10));
+      const ownerFound = await UserHelper.findDbUserById(parseInt(req.data.id, 10)); // Retrieve agent details from database
       if (ownerFound) {
         const newProperty = new Property(
           // @ts-ignore
@@ -41,7 +44,7 @@ export default class propertyController {
           },
         );
 
-        const listingDbData = {
+        const listingDbData = { // Database record to insert for new property
           owner: ownerFound.id,
           status: newProperty.status,
           price: newProperty.price,
@@ -65,11 +68,11 @@ export default class propertyController {
             data: newListing,
           });
         } catch (error) {
-          // throw new Error('Something went wrong. Try again.');
+          return errorResponse(res, 400, [error]);
         }
       }
     } catch (error) {
-      throw new Error('Something went wrong. Try again.');
+      return errorResponse(res, 500, [error]);
     }
   }
 
@@ -84,11 +87,6 @@ export default class propertyController {
   static async getAllProperty(req, res) {
     try {
       const propertyFound = await UserHelper.findDbProperties();
-      // property.map((searchProperty) => {
-      //   if (searchProperty.deleted === false) {
-      //     propertyFound.push(searchProperty);
-      //   }
-      // });
 
       if (propertyFound) {
         if (propertyFound.length > 1) {
@@ -104,12 +102,9 @@ export default class propertyController {
           data: propertyFound[0],
         });
       }
-      return res.status(400).json({
-        status: 'error',
-        error: 'No property found',
-      });
+      return errorResponse(res, 400, ['No property found']);
     } catch (error) {
-      throw new Error('Something went wrong. Try again.');
+      return errorResponse(res, 500, [error]);
     }
   }
 
@@ -129,7 +124,6 @@ export default class propertyController {
         const { owner } = req.query;
         const ownerFound = await UserHelper.findDbUserById(parseInt(owner, 10));
         if (ownerFound) {
-          // propertyFound = property.filter(searchProperty => (searchProperty.owner === ownerFound.id) && (searchProperty.deleted === false));
           const theOwnerId = await ownerFound.id;
           propertyFound = await UserHelper.findDbProperty('owner', theOwnerId);
           if (req.query.baths) {
@@ -151,7 +145,6 @@ export default class propertyController {
       }
       if (req.query.type && !(req.query.owner || req.query.status)) {
         const { type } = req.query;
-        // propertyFound = property.filter(searchProperty => (searchProperty.type === type) && (searchProperty.deleted === false));
         propertyFound = await UserHelper.findDbProperty('type', type);
         if (propertyFound) {
           if (req.query.baths) {
@@ -173,7 +166,6 @@ export default class propertyController {
       }
       if (req.query.status && !(req.query.owner || req.query.type)) {
         const { status } = req.query;
-        // propertyFound = property.filter(props => (props.status === status) && (props.deleted === false));
         propertyFound = await UserHelper.findDbProperty('status', status);
         if (propertyFound) {
           if (req.query.baths) {
@@ -198,7 +190,6 @@ export default class propertyController {
           const { owner } = req.query;
           const ownerFound = await UserHelper.findDbUserById(parseInt(owner, 10));
           if (ownerFound) {
-            // propertyFound = property.filter(searchProperty => (searchProperty.owner === ownerFound.id) && (searchProperty.deleted === false));
             propertyFound = await UserHelper.findDbProperty('owner', ownerFound.id);
             if (propertyFound) {
               if (req.query.type) {
@@ -230,7 +221,6 @@ export default class propertyController {
       }
       if (!req.query.owner && req.query.type) {
         const { type } = req.query;
-        // propertyFound = property.filter(props => (props.type === type) && (props.deleted === false));
         propertyFound = await UserHelper.findDbProperty('type', type);
         if (propertyFound) {
           if (req.query.status) {
@@ -285,7 +275,6 @@ export default class propertyController {
         }
       }
       if (Object.keys(req.query).length === 0) {
-        // propertyFound = property.filter(searchProperty => (searchProperty.id === thisId) && (searchProperty.deleted === false));
         propertyFound = await UserHelper.findDbProperty('property_id', thisId);
       }
       if (propertyFound) {
@@ -302,13 +291,9 @@ export default class propertyController {
           });
         }
       }
-
-      return res.status(404).json({
-        status: 'error',
-        error: 'Property not found',
-      });
+      return errorResponse(res, 404, ['Property not found']);
     } catch (error) {
-      throw new Error(`Something went wrong. Try again. ${error}`);
+      return errorResponse(res, 500, [error]);
     }
   }
 
@@ -324,13 +309,9 @@ export default class propertyController {
     try {
       const thisId = parseInt(req.params.id, 10);
       let propertyFound = null;
-      // propertyFound = property.filter(searchProperty => ((searchProperty.id === thisId) && (searchProperty.deleted === false)));
       propertyFound = await UserHelper.findDbProperty('property_id', thisId);
       if (!propertyFound) {
-        return res.status(404).json({
-          status: 'error',
-          error: 'Property not found',
-        });
+        return errorResponse(res, 404, ['Property not found']);
       }
 
       if (Object.keys(req.body).length >= 1) {
@@ -356,7 +337,7 @@ export default class propertyController {
       try {
         await UserHelper.updateDb('property', editDbProperty, 'property_id', thisId);
       } catch (error) {
-        // throw new Error('Something went wrong. Try again.');
+        return errorResponse(res, 400, [error]);
       }
 
       try {
@@ -366,10 +347,10 @@ export default class propertyController {
           data: theEditedProperty[0],
         });
       } catch (error) {
-        // throw new Error('Something went wrong. Try again.');
+        return errorResponse(res, 400, [error]);
       }
     } catch (error) {
-      throw new Error('Something went wrong. Try again.');
+      return errorResponse(res, 500, [error]);
     }
   }
 
@@ -385,13 +366,9 @@ export default class propertyController {
     try {
       const thisId = parseInt(req.params.id, 10);
       let propertyFound = null;
-      // propertyFound = property.filter(searchProperty => ((searchProperty.id === thisId) && (searchProperty.deleted === false)));
       propertyFound = await UserHelper.findDbProperty('property_id', thisId);
       if (!propertyFound) {
-        return res.status(404).json({
-          status: 'error',
-          error: 'Property not found',
-        });
+        return errorResponse(res, 404, ['Property not found']);
       }
 
       propertyFound[0].status = 'Sold';
@@ -403,7 +380,7 @@ export default class propertyController {
       try {
         await UserHelper.updateDb('property', updateDbProperty, 'property_id', thisId);
       } catch (error) {
-        // throw new Error('Something went wrong. Try again.');
+        return errorResponse(res, 400, [error]);
       }
 
       try {
@@ -413,10 +390,10 @@ export default class propertyController {
           data: theUpdatedProperty[0],
         });
       } catch (error) {
-        // throw new Error('Something went wrong. Try again.');
+        return errorResponse(res, 400, [error]);
       }
     } catch (error) {
-      throw new Error('Something went wrong. Try again.');
+      return errorResponse(res, 500, [error]);
     }
   }
 
@@ -434,10 +411,7 @@ export default class propertyController {
       let propertyFound = null;
       propertyFound = await UserHelper.findDbProperty('property_id', thisId);
       if (!propertyFound) {
-        return res.status(404).json({
-          status: 'error',
-          error: 'Property not found',
-        });
+        return errorResponse(res, 404, ['Property not found']);
       }
       // @ts-ignore
       try {
@@ -447,17 +421,12 @@ export default class propertyController {
         await UserHelper.insertDb('deleted', updatedDbDeleted);
         await UserHelper.deleteDb('property', 'property_id', thisId);
       } catch (error) {
-        // throw new Error('Something went wrong. Try again.');
+        return errorResponse(res, 400, [error]);
       }
 
-      return res.status(200).json({
-        status: 'success',
-        data: {
-          message: 'Property deleted successfully',
-        },
-      });
+      return successResponse(res, 200, ['Property deleted successfully']);
     } catch (error) {
-      throw new Error('Something went wrong. Try again.');
+      return errorResponse(res, 500, [error]);
     }
   }
 }

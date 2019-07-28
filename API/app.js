@@ -2,10 +2,10 @@ import bodyParser from 'body-parser';
 import Debug from 'debug';
 import express from 'express';
 import expressValidator from 'express-validator';
-import path from 'path';
 import { config } from 'dotenv';
 import allRoutes from 'express-list-endpoints';
 import swaggerUi from 'swagger-ui-express';
+import fileupload from 'express-fileupload';
 import specs from '../swaggerDoc';
 import router from './routes';
 import validateMiddleware from './middlewares/validateMiddleware';
@@ -20,11 +20,6 @@ app.use(bodyParser.json({ type: 'application/json' }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator());
 
-app.use((err, req, res, next) => {
-  logger(err.stack);
-  next();
-});
-
 const API_VERSION = '/api/v1';
 
 const swaggerOptions = {
@@ -32,6 +27,9 @@ const swaggerOptions = {
   customCss: '.swagger-ui .topbar { display: none }',
 };
 
+app.use(fileupload({
+  useTempFiles: true,
+}));
 app.use(`${API_VERSION}/`, router);
 
 app.get('/', (req, res) => {

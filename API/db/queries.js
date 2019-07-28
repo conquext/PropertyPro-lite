@@ -4,7 +4,9 @@ import 'babel-polyfill';
 import cassandraMap from 'cassandra-map';
 import Debug from 'debug';
 import { debug } from 'util';
+import moment from 'moment';
 import { pool, tableName, dbConfig } from './config';
+import { flush } from 'pm2';
 
 export default class Model {
   constructor({ table }) {
@@ -33,6 +35,11 @@ export default class Model {
       const values = Object.values(data);
       const query = `INSERT INTO ${this.table} (${columns}) VALUES (${values.map(value => value = cassandraMap.stringify(value))}) RETURNING *;`;
       const returnData = await Model.dbQuery(query);
+      if (this.table === tableName.FORGOTPASSWORD) {
+        const flushQuery = `DELETE FROM ${this.table} WHERE moment().isAfter(${this.table}.expireTime) RETURNING *;`;
+        await Model.dbQuery(flushQuery);
+      }
+
       return returnData;
     } catch (error) {
     //   Model.logger('Cannot execute insert query');
@@ -69,9 +76,7 @@ export default class Model {
       if (this.table === tableName.LOGIN) {
         query = `UPDATE ${this.table} SET (${columns}) = (${values.map(value => value = cassandraMap.stringify(value))}) ${theClause};`;
       } else query = `UPDATE ${this.table} SET (${columns}, lastUpdated) = (${values.map(value => value = cassandraMap.stringify(value))}, ${cassandraMap.stringify(new Date())}) ${theClause};`;
-
-      const returnData = Model.dbQuery(query);
-
+      const returnData = await Model.dbQuery(query);
       return returnData;
     } catch (error) {
     //   Model.logger('Cannot execute update query');
@@ -82,7 +87,7 @@ export default class Model {
     try {
       const theClause = `WHERE ${this.table}.${Object.keys(clause)} = (${Object.values(clause).map(eachClause => eachClause = cassandraMap.stringify(eachClause))})`;
       const query = `DELETE FROM ${this.table} ${theClause} RETURNING *`;
-      const returnData = Model.dbQuery(query);
+      const returnData = await Model.dbQuery(query);
       return returnData;
     } catch (error) {
     //   Model.logger('Cannot execute delete query');
