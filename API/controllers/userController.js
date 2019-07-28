@@ -207,6 +207,9 @@ export default class UserController {
 
       if (thisUserResetDetail) {
         const expireTime = moment.utc(thisUserResetDetail.expire); // Check if reset token is not expired
+        console.log('isBefore', moment().isBefore(expireTime));
+        console.log('isAfter', moment().isAfter(expireTime));
+        console.log('hash', UserHelper.compareWithHash(resetToken, thisUserResetDetail.resettoken));
         if (moment().isAfter(expireTime) && UserHelper.compareWithHash(resetToken, thisUserResetDetail.resettoken)) {
           const newPassword = await UserHelper.hashPassword(password);
           const loginDbData = {
