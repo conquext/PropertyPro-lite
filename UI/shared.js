@@ -1,6 +1,9 @@
+/* eslint-disable */
 const backdrop = document.querySelector(".main-auth__backdrop");
 const modal = document.querySelector(".modal");
 const signupButton = document.querySelectorAll(".signup");
+const signup = document.querySelector(".signup-button");
+const signupModalForm = document.querySelector(".modal-content__signup");
 const signupLinks = document.querySelectorAll("[href='#signup']");
 const loginButton  = document.querySelectorAll(".login");
 const loginLinks  = document.querySelectorAll("[href='#login']");
@@ -19,6 +22,7 @@ const updateListing = document.querySelector("#update-listing");
 const listingType = document.querySelectorAll(".property-status a");
 const propertyView = document.querySelectorAll(".property-view");
 const viewModal = document.getElementById('view-property-modal');
+const api = "https://property-pro-lite1.herokuapp.com/api/v1";
 
 
 for (var i = 0; i < signupButton.length; i++) {
@@ -28,6 +32,32 @@ for (var i = 0; i < signupButton.length; i++) {
     loginForm.classList.remove("open");
   });
 }
+
+signupModalForm.addEventListener("submit", (event) => {
+ fetch(`${api}/signup`, {
+   method: 'post',
+   headers: {'Content-Type': 'application/json'},
+   body: JSON.stringify({
+     first_name: event.target.fname.value,
+     last_name: event.target.lname.value,
+     email: event.target.email.value,
+     password: event.target.password.value,
+     confirm_password: event.target.cpassword.value,
+     phoneNumber: event.target.phonenumber.value,
+     address: event.target.address.value,
+     state: event.target.state.value,
+     country: event.target.country.value,
+     dob: event.target.dob.value,
+     type: event.target.type.value
+   })
+ })
+ .then(response => console.log(response))
+ .then(user => {
+  //  if (user) {
+  //    loadUser(user);
+  //    onRouteChange(home);
+   })
+ });
 
 for (var i = 0; i < signupLinks.length; i++) {
   signupLinks[i].addEventListener("click", function() {
