@@ -3,8 +3,8 @@ const backdrop = document.querySelector(".main-auth__backdrop");
 const modal = document.querySelector(".modal");
 const signupButton = document.querySelectorAll(".signup");
 const signup = document.querySelector(".signup-button");
-const signupModalForm = document.querySelector(".modal-content__signup");
 const signupLinks = document.querySelectorAll("[href='#signup']");
+const login = document.querySelector(".login-button");
 const loginButton  = document.querySelectorAll(".login");
 const loginLinks  = document.querySelectorAll("[href='#login']");
 const signupForm = document.querySelector("#signup");
@@ -24,6 +24,43 @@ const propertyView = document.querySelectorAll(".property-view");
 const viewModal = document.getElementById('view-property-modal');
 const api = "https://property-pro-lite1.herokuapp.com/api/v1";
 
+let docCookies = {
+  getItem: function (sKey) {
+    return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null;
+  },
+  setItem: function (sKey, sValue, vEnd, sPath, sDomain, bSecure) {
+    if (!sKey || /^(?:expires|max\-age|path|domain|secure)$/i.test(sKey)) { return false; }
+    var sExpires = "";
+    if (vEnd) {
+      switch (vEnd.constructor) {
+        case Number:
+          sExpires = vEnd === Infinity ? "; expires=Fri, 31 Dec 9999 23:59:59 GMT" : "; max-age=" + vEnd;
+          break;
+        case String:
+          sExpires = "; expires=" + vEnd;
+          break;
+        case Date:
+          sExpires = "; expires=" + vEnd.toUTCString();
+          break;
+      }
+    }
+    document.cookie = encodeURIComponent(sKey) + "=" + encodeURIComponent(sValue) + sExpires + (sDomain ? "; domain=" + sDomain : "") + (sPath ? "; path=" + sPath : "") + (bSecure ? "; secure" : "");
+    return true;
+  },
+  removeItem: function (sKey, sPath, sDomain) {
+    if (!sKey || !this.hasItem(sKey)) { return false; }
+    document.cookie = encodeURIComponent(sKey) + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT" + ( sDomain ? "; domain=" + sDomain : "") + ( sPath ? "; path=" + sPath : "");
+    return true;
+  },
+  hasItem: function (sKey) {
+    return (new RegExp("(?:^|;\\s*)" + encodeURIComponent(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=")).test(document.cookie);
+  },
+  keys: /* optional method: you can safely remove it! */ function () {
+    var aKeys = document.cookie.replace(/((?:^|\s*;)[^\=]+)(?=;|$)|^\s*|\s*(?:\=[^;]*)?(?:\1|$)/g, "").split(/\s*(?:\=[^;]*)?;\s*/);
+    for (var nIdx = 0; nIdx < aKeys.length; nIdx++) { aKeys[nIdx] = decodeURIComponent(aKeys[nIdx]); }
+    return aKeys;
+  }
+};
 
 for (var i = 0; i < signupButton.length; i++) {
   signupButton[i].addEventListener("click", function() {
@@ -32,32 +69,6 @@ for (var i = 0; i < signupButton.length; i++) {
     loginForm.classList.remove("open");
   });
 }
-
-signupModalForm.addEventListener("submit", (event) => {
- fetch(`${api}/signup`, {
-   method: 'post',
-   headers: {'Content-Type': 'application/json'},
-   body: JSON.stringify({
-     first_name: event.target.fname.value,
-     last_name: event.target.lname.value,
-     email: event.target.email.value,
-     password: event.target.password.value,
-     confirm_password: event.target.cpassword.value,
-     phoneNumber: event.target.phonenumber.value,
-     address: event.target.address.value,
-     state: event.target.state.value,
-     country: event.target.country.value,
-     dob: event.target.dob.value,
-     type: event.target.type.value
-   })
- })
- .then(response => console.log(response))
- .then(user => {
-  //  if (user) {
-  //    loadUser(user);
-  //    onRouteChange(home);
-   })
- });
 
 for (var i = 0; i < signupLinks.length; i++) {
   signupLinks[i].addEventListener("click", function() {
@@ -88,7 +99,7 @@ backdrop.addEventListener("click", function() {
   closeModal();
 });
 
-closeModal = () => {
+const closeModal = () => {
   if (modal) {
     modal.classList.remove("open");
   }
@@ -117,14 +128,14 @@ window.onclick = function(event) {
 for (var i = 0; i < cancelButton.length; i++) {
   cancelButton[i].addEventListener("click", function() {
     modal.classList.remove("open");
-    editingModal.classList.remove("open");
+    // editingModal.classList.remove("open");
   });
 }
 
 for (var i = 0; i < closeIcon.length; i++) {
   closeIcon[i].addEventListener("click", function() {
     modal.classList.remove("open");
-    editingModal.classList.remove("open");
+    // editingModal.classList.remove("open");
   });
 }
 
