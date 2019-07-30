@@ -26,6 +26,9 @@ app.use(bodyParser.json({ type: 'application/json' }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator());
 app.use(cors({
+  'Access-Control-Allow-Credentials': true,
+  'Access-Control-Allow-Methods': ['GET', 'POST', 'OPTIONS'],
+  'Access-Control-Allow-Headers': ['Origin', 'Content-Type', 'Accept'],
   credentials: true,
   origin(origin, callback) {
     if (!origin) return callback(null, true);
