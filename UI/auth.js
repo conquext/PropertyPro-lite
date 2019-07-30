@@ -28,7 +28,10 @@ signupModalForm.addEventListener('submit', (event) => {
   fetch(`${api}/auth/signup`, {
     method: 'post',
     mode: 'cors',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+      'Accept': 'application/json, text/plain, */*',
+      'Content-Type': 'application/json',
+    },
     credentials: 'include',
     cache: 'no-cache',
     body: JSON.stringify({
@@ -60,7 +63,7 @@ signupModalForm.addEventListener('submit', (event) => {
       if (res.status === 'sucess') {
         resForm.classList.add('success');
         resForm.innerHTML = res.message;
-        localStorage.id = res.data.id;
+        localStorage.setItem('id', res.data.id);
         loginUser(res.data, 5000);
       }
     })
