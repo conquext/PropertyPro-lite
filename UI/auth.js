@@ -1,13 +1,20 @@
 const signupModalForm = document.querySelector('.modal-content__signup');
 const loginModalForm = document.querySelector('.modal-content__login');
+const signup = document.querySelector('.signup-button');
+const login = document.querySelector('.login-button');
+const refresh = document.querySelector('.signup-button .fa-refresh');
 
-signup.addEventListener('click', () => {
-  const refresh = document.querySelector('.signup-button .fa-refresh');
+const headers = new Headers();
+
+headers.append('Content-Type', 'application/json');
+headers.append('Accept', 'application/json');
+headers.append('Origin', 'http://localhost:5500');
+
+signup.addEventListener('click', (e) => {
   refresh.style.display = 'inline';
 });
 
 login.addEventListener('click', () => {
-  const refresh = document.querySelector('.login-button .fa-refresh');
   refresh.style.display = 'inline';
 });
 
@@ -25,13 +32,11 @@ const loginUser = (data, delay) => {
 signupModalForm.addEventListener('submit', (event) => {
   event.preventDefault();
   signup.disabled = true;
+  signup.classList.add('disabled');
   fetch(`${api}/auth/signup`, {
     method: 'post',
     mode: 'cors',
-    headers: { 
-      'Accept': 'application/json, text/plain, */*',
-      'Content-Type': 'application/json',
-    },
+    headers,
     credentials: 'include',
     cache: 'no-cache',
     body: JSON.stringify({
@@ -53,14 +58,15 @@ signupModalForm.addEventListener('submit', (event) => {
     .then((res) => {
       const resForm = document.querySelector('.signup-msg');
       const refresh = document.querySelector('.signup-button .fa-refresh');
-      refresh.style.display = 'inline';
+      refresh.style.display = 'none';
       if (res.status === 'error') {
         signup.disabled = false;
+        signup.classList.remove('disabled');
         refresh.style.display = 'none';
         resForm.innerHTML = res.error;
         resForm.classList.add('error');
       }
-      if (res.status === 'sucess') {
+      if (res.status === 'success') {
         resForm.classList.add('success');
         resForm.innerHTML = res.message;
         localStorage.setItem('id', res.data.id);
