@@ -1822,7 +1822,7 @@ describe('GET /api/v1/property', () => {
       .end((err, res) => {
         expect(res).to.have.status(403);
         expect(res.body.status).to.be.equal('error');
-        expect(res.body.error).to.be.equal('Unathorized. Token invalid. Please login');
+        expect(res.body.error).to.be.equal('Unauthorized. Please login');
         done();
       });
   });
@@ -1834,7 +1834,7 @@ describe('GET /api/v1/property', () => {
       .end((err, res) => {
         expect(res).to.have.status(403);
         expect(res.body.status).to.be.equal('error');
-        expect(res.body.error).to.be.equal('Unathorized. Token not found');
+        expect(res.body.error).to.be.equal('Unauthorized. Please login');
         done();
       });
   });
@@ -1854,7 +1854,7 @@ describe('GET /api/v1/property/<:property-id>/', () => {
       .end((err, res) => {
         expect(res).to.have.status(403);
         expect(res.body.status).to.be.equal('error');
-        expect(res.body.error).to.be.equal('Unathorized. Token not found');
+        expect(res.body.error).to.be.equal('Unauthorized. Please login');
         done();
       });
   });

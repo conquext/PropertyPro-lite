@@ -23,10 +23,12 @@ export default class AuthMiddleware {
   }
 
   static async sessionActive(req) {
-    const currentToken = req.cookies.token || req.body.token;
+    let currentToken = req.cookies.token || req.body.token || req.headers.token || req.headers.authorization;
+
+    // this approach is stateful. Checks database for user and return user
     if (currentToken) {
-      // currentToken = currentToken.replace('Bearer ', '');
-      const userFound = await UserHelper.findDbLogin('token', currentToken);
+      currentToken = currentToken.replace('Bearer ', '');
+      const userFound = await UserHelper.findDbUserByTokenLogin(currentToken);
       if (userFound && Object.keys(userFound).length > 0) {
         const decoded = jwt.decode(currentToken, { secret: config.secret });
         if (decoded) {
@@ -34,53 +36,48 @@ export default class AuthMiddleware {
         }
       }
     }
-    return null;
+
+    // this approach is stateless, checks token for validity and return decoded token object
+    // if (currentToken) {
+    //   currentToken = currentToken.replace('Bearer ', '');
+    //   const tokenFound = await UserHelper.findDbLogin('token', currentToken);
+    //   if (tokenFound && Object.keys(tokenFound).length > 0) {
+    //     const decoded = jwt.decode(currentToken, { secret: config.secret });
+    //     if (decoded) {
+    //       const returnUser = {
+    //         id: decoded.payload.id || '',
+    //         first_name: decoded.payload.first_name || '',
+    //         last_name: decoded.payload.last_name || '',
+    //         address: decoded.payload.address || '',
+    //         type: decoded.payload.type || '',
+    //         email: decoded.payload.email || '',
+    //         phoneNumber: decoded.payload.phoneNumber || '',
+    //         dob: decoded.payload.dob || '',
+    //         country: decoded.payload.country || '',
+    //       };
+    //       return returnUser;
+    //     }
+    //   }
+    // }
+    // return null;
   }
 
   static async authenticateUser(req, res, next) {
-    let currentToken = req.headers.authorization || req.headers.token || req.cookies.token || req.body.token;
-    let tokenFound = null;
-
-    if (!currentToken) {
-      return res.status(403).json({
-        status: 'error',
-        error: 'Unathorized. Token not found',
-      });
+    const inSession = await AuthMiddleware.sessionActive(req);
+    if (!inSession) {
+      return AuthMiddleware.errorResponse(res, 403, ['Unauthorized. Please login']);
     }
 
-    currentToken = currentToken.replace('Bearer ', '');
-    tokenFound = await UserHelper.findDbLogin('token', currentToken);
-
-    if (tokenFound === null) {
-      return res.status(403).json({
-        status: 'error',
-        error: 'Unathorized. Token invalid. Please login',
-      });
-    }
-
-    if (Object.keys(tokenFound).length === 0) {
-      return res.status(403).json({
-        status: 'error',
-        error: 'Unathorized. Token invalid. Please login',
-      });
-    }
-    const decoded = jwt.decode(currentToken, { secret: config.secret });
-    if (!decoded) {
-      return res.status(403).json({
-        status: 'error',
-        error: 'Unathorized. Token invalid. Please login',
-      });
-    }
     req.data = {
-      id: decoded.payload.id || '',
-      first_name: decoded.payload.first_name || '',
-      last_name: decoded.payload.last_name || '',
-      address: decoded.payload.address || '',
-      type: decoded.payload.type || '',
-      email: decoded.payload.email || '',
-      phoneNumber: decoded.payload.phoneNumber || '',
-      dob: decoded.payload.dob || '',
-      country: decoded.payload.country || '',
+      id: inSession.id || '',
+      first_name: inSession.first_name || '',
+      last_name: inSession.last_name || '',
+      address: inSession.address || '',
+      type: inSession.type || '',
+      email: inSession.email || '',
+      phoneNumber: inSession.phoneNumber || '',
+      dob: inSession.dob || '',
+      country: inSession.country || '',
     };
 
     next();

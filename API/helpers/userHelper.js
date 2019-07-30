@@ -83,7 +83,7 @@ export default class UserHelper {
 
   static async findDbUserLogin(field, value) {
     try {
-      const userFound = await usersTable.select({ returnFields: '*' }, { clause: { [field]: value } }, { join: { login: 'email' } });
+      const userFound = await loginTable.select({ returnFields: '*' }, { clause: { [field]: value } }, { join: { users: 'email' } });
       if (userFound.length) {
         if (userFound.length !== 0) {
           return userFound[0];
@@ -101,6 +101,10 @@ export default class UserHelper {
 
   static findDbUserByEmailLogin(email) {
     return this.findDbUserLogin('email', email);
+  }
+
+  static findDbUserByTokenLogin(token) {
+    return this.findDbUserLogin('token', token);
   }
 
   static findDbUserByEmail(email) {

@@ -71,9 +71,20 @@ export default class UserController {
         return errorResponse(res, 500, [error]);
       }
     }
+
+    const currentSession = await sessionActive(req);
+    const sessionData = {
+      token: currentSession.token,
+      id: currentSession.id,
+      first_name: currentSession.first_name,
+      last_name: currentSession.last_name,
+      email: currentSession.email,
+      type: currentSession.type,
+    };
+
     res.json({
       message: 'Active session',
-      data: await sessionActive(req),
+      data: sessionData,
     });
   }
 
@@ -89,25 +100,21 @@ export default class UserController {
     try {
       const sessionFound = await sessionActive(req);
       if (!sessionFound) {
-        return errorResponse(res, 400, ['Invalid Request, please sign in']);
+        return errorResponse(res, 400, ['Invalid session. Please log in']);
       }
       const userFound = sessionFound;
 
-      userFound.token = '';
-      userFound.last_login = new Date();
-      userFound.logged_in = false;
-
       const isSecure = req.app.get('env') !== 'development';
-      res.cookie('token', userFound.token, {
+      res.cookie('token', '', {
         httpOnly: true,
         secure: isSecure,
       });
       res.clearCookie('token');
 
       const loginDbData = {
-        token: userFound.token,
-        logged_in: userFound.logged_in,
-        last_login: new Date(),
+        token: '',
+        logged_in: false,
+        last_login: userFound.last_login,
       };
 
       try {
@@ -217,9 +224,20 @@ export default class UserController {
         return errorResponse(res, 500, [error]);
       }
     }
+
+    const currentSession = await sessionActive(req);
+    const sessionData = {
+      token: currentSession.token,
+      id: currentSession.id,
+      first_name: currentSession.first_name,
+      last_name: currentSession.last_name,
+      email: currentSession.email,
+      type: currentSession.type,
+    };
+
     res.json({
       message: 'Active session',
-      data: await sessionActive(req),
+      data: sessionData,
     });
   }
 
