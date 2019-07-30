@@ -18,7 +18,7 @@ const logger = new Debug('dev');
 const { PORT = 4000 } = process.env;
 const { methodNotAllowed, pageNotFound } = validateMiddleware;
 
-const allowedOrigins = ['http://localhost', '127.0.0.1',
+const allowedOrigins = ['http://localhost', '127.0.0.1', 'http://127.0.0.1',
   'https://conquext.github.io/PropertyPro-lite/UI/', 'https://property-pro-lite1.herokuapp.com'];
 
 app.use(cookieParser());
