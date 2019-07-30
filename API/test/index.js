@@ -4,7 +4,6 @@ import swaggerTest from 'swagger-test';
 // import preq from 'preq';
 import app from '../app';
 import specs from '../../swaggerDoc';
-import UserHelper from '../helpers/userHelper';
 import Migration from '../db/migrations';
 import Seeder from '../db/seed';
 import { pool } from '../db/config';
@@ -644,8 +643,6 @@ describe('POST /api/v1/auth/signin', () => {
         email: 'emai@email.com',
         password: 'password0',
       })
-
-
       .end((err, res) => {
         done();
         expect(res).to.have.status(401);
@@ -662,8 +659,6 @@ describe('POST /api/v1/auth/signin', () => {
         email: 'email1@email.com',
         password: 'password12',
       })
-
-
       .end((err, res) => {
         done();
         expect(res).to.have.status(401);
@@ -680,8 +675,6 @@ describe('POST /api/v1/auth/signin', () => {
         email: '',
         password: 'password1',
       })
-
-
       .end((err, res) => {
         expect(res).to.have.status(400);
         expect(res.body.status).to.be.equal('error');
@@ -698,8 +691,6 @@ describe('POST /api/v1/auth/signin', () => {
         email: 'swall.gmail.com',
         password: 'password1',
       })
-
-
       .end((err, res) => {
         expect(res).to.have.status(400);
         expect(res.body.status).to.be.equal('error');
@@ -716,8 +707,6 @@ describe('POST /api/v1/auth/signin', () => {
         email: 'swall@gmail.com',
         password: '',
       })
-
-
       .end((err, res) => {
         expect(res).to.have.status(400);
         expect(res.body.status).to.be.equal('error');

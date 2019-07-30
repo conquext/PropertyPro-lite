@@ -47,6 +47,7 @@
     "chai-things": "^0.2.0",
     "cloudinary": "^1.11.0",
     "connect": "^3.7.0",
+    "cookie-parser": "^1.4.4",
     "cordova": "^9.0.0",
     "cors": "^2.8.5",
     "debug": "^4.1.1",

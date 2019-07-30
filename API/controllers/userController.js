@@ -8,7 +8,7 @@ import authMiddleware from '../middlewares/authMiddleware';
 import { tableName } from '../db/config';
 
 config();
-const { errorResponse, successResponse } = authMiddleware;
+const { errorResponse, successResponse, sessionActive } = authMiddleware;
 
 export default class UserController {
   /**
@@ -20,28 +20,84 @@ export default class UserController {
    * @memberof UserController
    */
   static async signin(req, res) {
-    try {
-      const { email, password } = req.body;
-      const userFound = await UserHelper.findDbUserByEmailLogin(email);
-      if (!userFound) {
-        return errorResponse(res, 401, ['Incorrect email or Wrong password']);
-      }
-      if (!UserHelper.compareWithHash(password, userFound.password)) {
-        return errorResponse(res, 401, ['Incorrect email or Wrong password']);
-      }
-      const jwtToken = await UserHelper.generateToken(userFound);
-      userFound.token = jwtToken;
-      userFound.last_login = new Date();
-      userFound.logged_in = true;
+    if (!await sessionActive(req)) {
+      try {
+        const { email, password } = req.body;
+        const userFound = await UserHelper.findDbUserByEmailLogin(email);
+        if (!userFound) {
+          return errorResponse(res, 401, ['Incorrect email or Wrong password']);
+        }
+        if (!UserHelper.compareWithHash(password, userFound.password)) {
+          return errorResponse(res, 401, ['Incorrect email or Wrong password']);
+        }
+        const jwtToken = await UserHelper.generateToken(userFound);
+        userFound.token = jwtToken;
+        userFound.last_login = new Date();
+        userFound.logged_in = true;
 
-      const loginData = {
-        token: userFound.token,
-        id: userFound.id,
-        first_name: userFound.first_name,
-        last_name: userFound.last_name,
-        email: userFound.email,
-        type: userFound.type,
-      };
+        const loginData = {
+          token: userFound.token,
+          id: userFound.id,
+          first_name: userFound.first_name,
+          last_name: userFound.last_name,
+          email: userFound.email,
+          type: userFound.type,
+        };
+
+        const loginDbData = {
+          token: userFound.token,
+          logged_in: userFound.logged_in,
+          last_login: new Date(),
+        };
+
+        try {
+          await UserHelper.updateDb(tableName.LOGIN, loginDbData, 'email', userFound.email);
+        } catch (error) {
+          return errorResponse(res, 400, [error]);
+        }
+
+        res.cookie('token', loginDbData.token, {
+          httpOnly: true,
+          secure: true,
+        });
+
+        return res.status(200).json({
+          status: 'success',
+          token: loginData.token,
+          data: loginData,
+        });
+      } catch (error) {
+        return errorResponse(res, 500, [error]);
+      }
+    }
+    res.redirect('/UI/');
+  }
+
+  /**
+   * @description Sign out a logged in user
+   * @static
+   * @param {*} req
+   * @param {*} res
+   * @returns Promise {UserController} A signed-in user
+   * @memberof UserController
+   */
+  static async signout(req, res) {
+    try {
+      const sessionFound = await sessionActive(req);
+      if (!sessionFound) {
+        return errorResponse(res, 400, ['Invalid Request, please sign in']);
+      }
+      const userFound = sessionFound;
+
+      userFound.token = '';
+      userFound.last_login = new Date();
+      userFound.logged_in = false;
+
+      res.cookie('token', userFound.token, {
+        httpOnly: true,
+        secure: true,
+      });
+      res.clearCookie('token');
 
       const loginDbData = {
         token: userFound.token,
@@ -57,8 +113,8 @@ export default class UserController {
 
       return res.status(200).json({
         status: 'success',
-        token: loginData.token,
-        data: loginData,
+        message: 'User signed out successfully',
+        data: loginDbData,
       });
     } catch (error) {
       return errorResponse(res, 500, [error]);
@@ -136,6 +192,11 @@ export default class UserController {
           phoneNumber: newlyRegUser.phoneNumber,
         };
 
+        res.cookie('token', signupData.token, {
+          httpOnly: true,
+          secure: true,
+        });
+
         return res.status(201).json({
           status: 'success',
           message: 'User is registered successfully',
@@ -207,6 +268,12 @@ export default class UserController {
 
       if (thisUserResetDetail) {
         const expireTime = moment.utc(thisUserResetDetail.expire); // Check if reset token is not expired
+
+        res.cookie('token', '', {
+          httpOnly: true,
+          secure: true,
+        });
+        res.clearCookie('token');
 
         if (moment().isAfter(expireTime) && UserHelper.compareWithHash(resetToken, thisUserResetDetail.resettoken)) {
           const newPassword = await UserHelper.hashPassword(password);

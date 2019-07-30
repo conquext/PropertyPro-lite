@@ -6,6 +6,7 @@ import { config } from 'dotenv';
 import allRoutes from 'express-list-endpoints';
 import swaggerUi from 'swagger-ui-express';
 import fileupload from 'express-fileupload';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import specs from '../swaggerDoc';
 import router from './routes';
@@ -17,10 +18,25 @@ const logger = new Debug('dev');
 const { PORT = 4000 } = process.env;
 const { methodNotAllowed, pageNotFound } = validateMiddleware;
 
+const allowedOrigins = ['http://localhost', '127.0.0.1',
+  'https://conquext.github.io/PropertyPro-lite/UI/'];
+
+app.use(cookieParser());
 app.use(bodyParser.json({ type: 'application/json' }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator());
-app.use(cors());
+app.use(cors({
+  credentials: true,
+  origin(origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not '
+                + 'allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+}));
 
 const API_VERSION = '/api/v1';
 
@@ -32,6 +48,7 @@ const swaggerOptions = {
 app.use(fileupload({
   useTempFiles: true,
 }));
+
 app.use(`${API_VERSION}/`, router);
 
 app.get('/', (req, res) => {

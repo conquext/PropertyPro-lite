@@ -22,8 +22,23 @@ export default class AuthMiddleware {
     return err;
   }
 
+  static async sessionActive(req) {
+    const currentToken = req.cookies.token || req.body.token;
+    if (currentToken) {
+      // currentToken = currentToken.replace('Bearer ', '');
+      const userFound = await UserHelper.findDbLogin('token', currentToken);
+      if (userFound && Object.keys(userFound).length > 0) {
+        const decoded = jwt.decode(currentToken, { secret: config.secret });
+        if (decoded) {
+          return userFound;
+        }
+      }
+    }
+    return null;
+  }
+
   static async authenticateUser(req, res, next) {
-    let currentToken = req.headers.authorization || req.headers.token || req.body.token;
+    let currentToken = req.headers.authorization || req.headers.token || req.cookies.token || req.body.token;
     let tokenFound = null;
 
     if (!currentToken) {

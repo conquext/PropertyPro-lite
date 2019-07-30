@@ -4,7 +4,7 @@ import validateMiddleware from '../middlewares/validateMiddleware';
 
 const router = Router();
 
-const { signin, signup, forgotPassword, resetPassword } = userController;
+const { signin, signout, signup, forgotPassword, resetPassword } = userController;
 const { loginCheck, signupCheck, forgetPasswordCheck, resetPasswordCheck } = validateMiddleware;
 
 
@@ -53,6 +53,52 @@ const { loginCheck, signupCheck, forgetPasswordCheck, resetPasswordCheck } = val
 *       description: Something went wrong. Try again
 */
 router.post('/signin', loginCheck, signin);
+
+/**
+* @swagger
+* /auth/signout:
+*   post:
+*    tags:
+*     - Users
+*    name: Signout
+*    summary: Signs out a user
+*    consumes:
+*     - application/json
+*    produces:
+*     - application/json
+*    parameters:
+*       - in: body
+*         name: body
+*         description: User
+*         required: true
+*         schema:
+*          type: object
+*          properties:
+*           email:
+*            type: string
+*            format: email
+*           password:
+*            type: string
+*            format: password
+*           required:
+*            email
+*            password
+*    responses:
+*      200:
+*       description: User found and logged in successfully
+*       schema:
+*         type: object
+*         $ref: '#/definitions/User'
+*      400:
+*       description: Bad request
+*      401:
+*       description: User not found
+*      403:
+*       description: Username and password don't match
+*      500:
+*       description: Something went wrong. Try again
+*/
+router.post('/signout', signout);
 
 /**
 * @swagger
