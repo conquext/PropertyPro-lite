@@ -74,27 +74,17 @@ router.post('/signin', loginCheck, signin);
 *         schema:
 *          type: object
 *          properties:
-*           email:
+*           token:
 *            type: string
-*            format: email
-*           password:
-*            type: string
-*            format: password
 *           required:
-*            email
-*            password
+*            token
 *    responses:
 *      200:
-*       description: User found and logged in successfully
+*       description: User signed out successfully
 *       schema:
 *         type: object
-*         $ref: '#/definitions/User'
 *      400:
-*       description: Bad request
-*      401:
-*       description: User not found
-*      403:
-*       description: Username and password don't match
+*       description: Invalid Request, please sign in
 *      500:
 *       description: Something went wrong. Try again
 */

@@ -56,9 +56,10 @@ export default class UserController {
           return errorResponse(res, 400, [error]);
         }
 
+        const isSecure = req.app.get('env') !== 'development';
         res.cookie('token', loginDbData.token, {
           httpOnly: true,
-          secure: true,
+          secure: isSecure,
         });
 
         return res.status(200).json({
@@ -70,7 +71,10 @@ export default class UserController {
         return errorResponse(res, 500, [error]);
       }
     }
-    res.redirect('/UI/');
+    res.json({
+      message: 'Active session',
+      data: await sessionActive(req),
+    });
   }
 
   /**
@@ -93,9 +97,10 @@ export default class UserController {
       userFound.last_login = new Date();
       userFound.logged_in = false;
 
+      const isSecure = req.app.get('env') !== 'development';
       res.cookie('token', userFound.token, {
         httpOnly: true,
-        secure: true,
+        secure: isSecure,
       });
       res.clearCookie('token');
 
@@ -130,85 +135,92 @@ export default class UserController {
    * @memberof UserController
    */
   static async signup(req, res) {
-    try {
-      const {
-        first_name, last_name, email, phoneNumber, dob, address, type = 'user', password,
-      } = req.body;
-      const registeredUser = await UserHelper.findDbUserByEmail(email); // Check if email exists in database
-      if (registeredUser) {
-        return errorResponse(res, 409, ['User already exists']);
-      }
-      const phoneNumberExist = await UserHelper.findDbUser('phonenumber', phoneNumber); // Check if number exists in database
-
-      if (phoneNumberExist) {
-        return errorResponse(res, 409, ['Phone Number already exists']);
-      }
-      // if (password !== confirm_password) {
-      // return errorResponse(res, 409, ['Passwords must match']);
-      // }
-      // @ts-ignore
-      const newUser = new User({
-        first_name, last_name, email, phoneNumber, address, type, dob,
-      });
-
-      newUser.password = await UserHelper.hashPassword(password);
-
-      const signupDbData = {
-        first_name: newUser.first_name,
-        last_name: newUser.last_name,
-        email: newUser.email,
-        type: newUser.type,
-        is_admin: newUser.is_admin,
-        address: newUser.address || 'Not Available',
-        phoneNumber: newUser.phoneNumber,
-        dob: newUser.dob || new Date(),
-        state: newUser.state || 'Not Available',
-        country: newUser.country || 'Not Available',
-      };
-
+    if (!await sessionActive(req)) {
       try {
-        const newlyRegUser = await UserHelper.insertDb(tableName.USERS, signupDbData); // Insert new users details in db
-        newUser.token = await UserHelper.generateToken(newlyRegUser);
-        newUser.logged_in = true;
+        const {
+          first_name, last_name, email, phoneNumber, dob, address, type = 'user', password,
+        } = req.body;
+        const registeredUser = await UserHelper.findDbUserByEmail(email); // Check if email exists in database
+        if (registeredUser) {
+          return errorResponse(res, 409, ['User already exists']);
+        }
+        const phoneNumberExist = await UserHelper.findDbUser('phonenumber', phoneNumber); // Check if number exists in database
 
-        const loginDbData = {
-          token: newUser.token,
+        if (phoneNumberExist) {
+          return errorResponse(res, 409, ['Phone Number already exists']);
+        }
+        // if (password !== confirm_password) {
+        // return errorResponse(res, 409, ['Passwords must match']);
+        // }
+        // @ts-ignore
+        const newUser = new User({
+          first_name, last_name, email, phoneNumber, address, type, dob,
+        });
+
+        newUser.password = await UserHelper.hashPassword(password);
+
+        const signupDbData = {
+          first_name: newUser.first_name,
+          last_name: newUser.last_name,
           email: newUser.email,
-          password: newUser.password,
-          logged_in: newUser.logged_in || false,
-          last_login: new Date(),
+          type: newUser.type,
+          is_admin: newUser.is_admin,
+          address: newUser.address || 'Not Available',
+          phoneNumber: newUser.phoneNumber,
+          dob: newUser.dob || new Date(),
+          state: newUser.state || 'Not Available',
+          country: newUser.country || 'Not Available',
         };
 
-        await UserHelper.insertDb(tableName.LOGIN, loginDbData); // Insert new login details in login
+        try {
+          const newlyRegUser = await UserHelper.insertDb(tableName.USERS, signupDbData); // Insert new users details in db
+          newUser.token = await UserHelper.generateToken(newlyRegUser);
+          newUser.logged_in = true;
 
-        const signupData = {
-          token: newUser.token,
-          id: newlyRegUser.id,
-          first_name: newlyRegUser.first_name,
-          last_name: newlyRegUser.last_name,
-          email: newlyRegUser.email,
-          type: newlyRegUser.type,
-          is_admin: newlyRegUser.is_admin,
-          phoneNumber: newlyRegUser.phoneNumber,
-        };
+          const loginDbData = {
+            token: newUser.token,
+            email: newUser.email,
+            password: newUser.password,
+            logged_in: newUser.logged_in || false,
+            last_login: new Date(),
+          };
 
-        res.cookie('token', signupData.token, {
-          httpOnly: true,
-          secure: true,
-        });
+          await UserHelper.insertDb(tableName.LOGIN, loginDbData); // Insert new login details in login
 
-        return res.status(201).json({
-          status: 'success',
-          message: 'User is registered successfully',
-          token: signupData.token,
-          data: signupData,
-        });
+          const signupData = {
+            token: newUser.token,
+            id: newlyRegUser.id,
+            first_name: newlyRegUser.first_name,
+            last_name: newlyRegUser.last_name,
+            email: newlyRegUser.email,
+            type: newlyRegUser.type,
+            is_admin: newlyRegUser.is_admin,
+            phoneNumber: newlyRegUser.phoneNumber,
+          };
+
+          const isSecure = req.app.get('env') !== 'development';
+          res.cookie('token', signupData.token, {
+            httpOnly: true,
+            secure: isSecure,
+          });
+
+          return res.status(201).json({
+            status: 'success',
+            message: 'User is registered successfully',
+            token: signupData.token,
+            data: signupData,
+          });
+        } catch (error) {
+          return errorResponse(res, 400, [error]);
+        }
       } catch (error) {
-        return errorResponse(res, 400, [error]);
+        return errorResponse(res, 500, [error]);
       }
-    } catch (error) {
-      return errorResponse(res, 500, [error]);
     }
+    res.json({
+      message: 'Active session',
+      data: await sessionActive(req),
+    });
   }
 
   /**
@@ -269,9 +281,10 @@ export default class UserController {
       if (thisUserResetDetail) {
         const expireTime = moment.utc(thisUserResetDetail.expire); // Check if reset token is not expired
 
+        const isSecure = req.app.get('env') !== 'development';
         res.cookie('token', '', {
           httpOnly: true,
-          secure: true,
+          secure: isSecure,
         });
         res.clearCookie('token');
 
