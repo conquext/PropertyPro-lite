@@ -48,7 +48,7 @@ const clearAndPopulateView = async () => {
                         </a>
                     </div>
                     <div class="description-body">
-                        <h1 class="description-body__listing">A once in a lifetime opportunity! live in this grand home with its stunning entry and staircase, bedroom suites, firepla</h1>
+                        <h1 class="description-body__listing">${pList[i].description}</h1>
                         <h1 class="property-price">${pList[i].price}</h1> 
                         <a href="#googlemap">
                             <div class="property-location">
