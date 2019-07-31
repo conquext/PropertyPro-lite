@@ -35,6 +35,8 @@
 *           - "For Sale"
 *       type:
 *         type: string
+*       description:
+*         type: string
 *       address:
 *         type: string
 *       state:
@@ -70,6 +72,7 @@ class Property {
     price,
     state,
     city,
+    description,
     address,
     type,
     created_on,
@@ -88,6 +91,7 @@ class Property {
     this.type = type;
     this.state = state;
     this.city = city;
+    this.description = description || 'No description';
     this.address = address;
     this.price = price;
     this.created_on = created_on;

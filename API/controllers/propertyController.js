@@ -19,7 +19,7 @@ export default class propertyController {
   static async listNewProperty(req, res) {
     try {
       const {
-        status = 'For Rent', price = 0, state, city, address = 'Not Available', type, baths = 0, rooms = 0, image_url,
+        status = 'For Rent', price = 0, state, city, description, address = 'Not Available', type, baths = 0, rooms = 0, image_url,
       } = req.body;
       const ownerFound = await UserHelper.findDbUserById(parseInt(req.data.id, 10)); // Retrieve agent details from database
       if (ownerFound) {
@@ -31,6 +31,7 @@ export default class propertyController {
             type,
             state,
             city,
+            description,
             address,
             price,
             created_on: new Date().toLocaleString(),
@@ -50,6 +51,7 @@ export default class propertyController {
           price: newProperty.price,
           state: newProperty.state,
           city: newProperty.city,
+          description: newProperty.description,
           address: newProperty.address,
           type: newProperty.type,
           created_on: newProperty.created_on,

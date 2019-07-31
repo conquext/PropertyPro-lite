@@ -29,6 +29,7 @@ const tableSchema = {
           price INTEGER NOT NULL,
           city VARCHAR(128) NOT NULL,
           state VARCHAR(128) NOT NULL,
+          description VARCHAR(500) NOT NULL,
           address VARCHAR(128) NOT NULL,
           type VARCHAR(128) NOT NULL,
           created_on TIMESTAMP NOT NULL DEFAULT now(),

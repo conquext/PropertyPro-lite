@@ -19,7 +19,7 @@ const { PORT = 4000 } = process.env;
 const { methodNotAllowed, pageNotFound } = validateMiddleware;
 
 const allowedOrigins = ['http://localhost', '127.0.0.1', 'http://localhost:5500', '127.0.0.1:5500', 'http://127.0.0.1:5500',
-  'https://conquext.github.io/PropertyPro-lite/UI/', 'https://property-pro-lite1.herokuapp.com'];
+  'https://conquext.github.io', 'https://property-pro-lite1.herokuapp.com'];
 
 app.use(cookieParser());
 app.use(bodyParser.json({ type: 'application/json' }));

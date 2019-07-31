@@ -75,6 +75,7 @@ const property1 = {
   price: '40000',
   state: 'Lagos',
   city: 'Ikeja',
+  description: 'Decent building in the center of lagos',
   address: '234, Eleyele, Ikeja',
   type: 'Flat',
   created_on: new Date(1, 1, 2019),

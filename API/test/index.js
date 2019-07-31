@@ -1,7 +1,6 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import swaggerTest from 'swagger-test';
-// import preq from 'preq';
 import app from '../app';
 import specs from '../../swaggerDoc';
 import Migration from '../db/migrations';
@@ -28,8 +27,6 @@ let createPropertyId;
 
 before(async () => {
   try {
-    // await Migration.dropAllTables();
-    // await Migration.createAllTables();
     await Seeder.seed();
   } catch (err) {
     //
@@ -38,10 +35,6 @@ before(async () => {
 
 after(async () => {
   try {
-    await Migration.dropUsersTable;
-    await Migration.dropPropertyTable;
-    await Migration.dropAllTables();
-    await Migration.createAllTables();
     pool.end();
   } catch (err) {
     //
@@ -857,30 +850,33 @@ describe('POST /api/v1/property', () => {
   const newListing = {
     status: 'For Sale',
     address: 'Oshodi Park',
+    description: 'Very good property, nice landlord',
     city: 'Lekki',
     state: 'Lagos',
     type: 'Flat',
     rooms: 2,
     baths: '3',
     price: 40000,
-    image_url: 'www.google.com',
+    image_url: 'https://res.cloudinary.com/conquext/image/upload/v1564309311/tokf0261immguylnqn0f.jpg',
   };
 
   const noStatus = {
     address: 'Oshodi Park',
     city: 'Lekki',
     state: 'Lagos',
+    description: 'Very good property, nice landlord',
     type: 'Flat',
     rooms: 2,
     baths: '3',
     price: 40000,
-    image_url: 'www.google.com',
+    image_url: 'https://res.cloudinary.com/conquext/image/upload/v1564309311/tokf0261immguylnqn0f.jpg',
   };
 
   const notCorrectStatus = {
     status: 'Sold',
     address: 'Oshodi Park',
     city: 'Lekki',
+    description: 'Very good property, nice landlord',
     state: 'Lagos',
     type: 'Flat',
     rooms: 2,
@@ -893,6 +889,7 @@ describe('POST /api/v1/property', () => {
     status: 'For Sale',
     city: 'Lekki',
     state: 'Lagos',
+    description: 'Very good property, nice landlord',
     type: 'Flat',
     rooms: 2,
     baths: '3',
@@ -903,6 +900,7 @@ describe('POST /api/v1/property', () => {
   const notCorrectAddress = {
     status: 'For Sale',
     address: 55,
+    description: 'Very good property, nice landlord',
     city: 'Lekki',
     state: 'Lagos',
     type: 'Flat',
@@ -915,6 +913,7 @@ describe('POST /api/v1/property', () => {
   const noType = {
     status: 'For Sale',
     address: 'Oshodi Park',
+    description: 'Very good property, nice landlord',
     city: 'Lekki',
     state: 'Lagos',
     rooms: 2,
@@ -926,6 +925,7 @@ describe('POST /api/v1/property', () => {
   const noCity = {
     status: 'For Sale',
     address: 'Oshodi Park',
+    description: 'Very good property, nice landlord',
     type: 'Flat',
     state: 'Lagos',
     rooms: 2,
@@ -1038,6 +1038,7 @@ describe('POST /api/v1/property', () => {
   const notCorrectImageLink = {
     status: 'For Sale',
     address: 'Oshodi Park',
+    description: 'Very good property, nice landlord',
     city: 'Lekki',
     state: 'Lagos',
     type: 'Flat',

@@ -41,6 +41,8 @@ router.use(authenticateUser);
  *          format: ['For Sale', 'For Rent']
  *         type:
  *          type: string
+ *         description:
+ *          type: string
  *         address:
  *          type: string
  *          format: address
