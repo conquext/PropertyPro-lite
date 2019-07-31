@@ -20,7 +20,10 @@ const updateListing = document.querySelector("#update-listing");
 const listingType = document.querySelectorAll(".property-status a");
 const propertyView = document.querySelectorAll(".property-view");
 const viewModal = document.getElementById('view-property-modal');
+const signout = document.querySelector('#signout');
 const api = "https://property-pro-lite1.herokuapp.com/api/v1";
+
+const headers = new Headers();
 
 let docCookies = {
   getItem: function (sKey) {
@@ -60,37 +63,163 @@ let docCookies = {
   }
 };
 
+const inSession = async() => {
+  let response = false;
+  let res = await fetch(`${api}/auth/signin`, {
+    method: 'post',
+    mode: 'cors',
+    headers,
+    credentials: 'include',
+    // cache: 'no-cache',
+    body: JSON.stringify({
+      email: 'property@email.com',
+      password: 'propertypro',
+    }),
+    redirect: 'follow',
+  });
+  res = await res.json();
+  console.log(res);
+  if (res.message === 'Active session') { 
+    response = res;
+  }
+  return response;
+}
+
+headers.append('Content-Type', 'application/json');
+headers.append('Accept', 'application/json');
+headers.append('Origin', 'http://localhost:5500');
+headers.append('token', docCookies.getItem('Authorization'));
+
+const signoutUser = () => {
+  document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  document.cookie = "Authorization=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  document.cookie = `token=''`;
+  docCookies.removeItem('token');
+  docCookies.removeItem('access_token');
+  docCookies.removeItem('Authorization');
+  window.location.pathname !== '/PropertyPro-lite/UI/index.html' ?
+  redirectTo('login') : '';
+};
+
+const redirectTo = async (page, callback=openLoginModal) => {
+  // if(!await inSession()) {
+    const hashLogin = encodeURI('#');
+    const fragment = `${hashLogin}${page}`;
+    const origin = window.location.origin;
+    await location.replace(`${origin}/PropertyPro-lite/UI/index.html${fragment}`);
+    // window.location.href =  origin + '/PropertyPro-lite/UI/index.html' + fragment;
+    // window.location.pathname = '/PropertyPro-lite/UI/index.html';
+    // callback();
+    // await document.addEventListener('DOMContentLoaded', openModal);
+  // }
+}
+
+const openLoginModal = async () => {
+  if (window.location.pathname.split('#')[0] === '/PropertyPro-lite/UI/index.html') {
+    if(!await inSession()) {
+      modal.classList.contains('open') ? '' : modal.classList.add("open");
+      loginForm.classList.contains('open') ? '' : loginForm.classList.add("open");
+      signupForm.classList.contains('open') ?  signupForm.classList.remove("open") : '';
+    }
+  }
+}
+
+window.addEventListener('DOMContentLoaded', openLoginModal);
+
+
 for (var i = 0; i < signupButton.length; i++) {
-  signupButton[i].addEventListener("click", function() {
-    modal.classList.add("open");
-    signupForm.classList.add("open");
-    loginForm.classList.remove("open");
+  signupButton[i].addEventListener("click", async function(e) {
+    if (!await inSession()) {
+      e.preventDefault();
+      modal.classList.add("open");
+      signupForm.classList.add("open");
+      loginForm.classList.remove("open");
+    }
+    else {
+      const data = await inSession();
+      console.log('trying to redirect');
+      loginUser(data.data, 0);
+    }
+  });
+}
+
+if (signout) {
+  signout.addEventListener('click', (event) => {
+    event.preventDefault();
+    fetch(`${api}/auth/signout`, {
+      method: 'post',
+      mode: 'cors',
+      headers,
+      credentials: 'include',
+      cache: 'no-cache',
+      redirect: 'follow',
+    })
+      .then(response => response.json())
+      .then((res) => {
+        console.log(res);
+        if (res.status === 'error') {
+          signoutUser();
+        } else {
+          localStorage.removeItem('id');
+          signoutUser();
+        }
+      });
   });
 }
 
 for (var i = 0; i < signupLinks.length; i++) {
-  signupLinks[i].addEventListener("click", function() {
-    modal.classList.add("open");
-    signupForm.classList.add("open");
-    loginForm.classList.remove("open");
+  signupLinks[i].addEventListener("click", async function(e) {
+    if(!await inSession()) {
+      e.preventDefault();
+      modal.classList.add("open");
+      signupForm.classList.add("open");
+      loginForm.classList.remove("open");
+    }
+    else {
+      const data = await inSession();
+      loginUser(data.data, 0);
+    }
   });
 }
 
 for (var i = 0; i < loginButton.length; i++) {
-  loginButton[i].addEventListener("click", function() {
-    modal.classList.add("open");
-    loginForm.classList.add("open");
-    signupForm.classList.remove("open");
+  loginButton[i].addEventListener("click", async function(e) {
+    if (!await inSession()) {
+      e.preventDefault();
+      modal.classList.add("open");
+      loginForm.classList.add("open");
+      signupForm.classList.remove("open");
+    }
+    else {
+      const data = await inSession();
+      loginUser(data.data, 0);
+    }
   });
 }
 
 for (var i = 0; i < loginLinks.length; i++) {
-  loginLinks[i].addEventListener("click", function() {
-    modal.classList.add("open");
-    loginForm.classList.add("open");
-    signupForm.classList.remove("open");
+  loginLinks[i].addEventListener("click", async function(e) {
+    if (!await inSession()) {
+      e.preventDefault();
+      modal.classList.add("open");
+      loginForm.classList.add("open");
+      signupForm.classList.remove("open");
+    }
+    else {
+      const data = await inSession();
+      loginUser(data.data, 0);
+    }
   });
 }
+
+window.onload = async function (event) {
+  if (location.pathname.split('#')[0] !== '/PropertyPro-lite/UI/index.html') {
+    if (!await inSession()) {
+      event.preventDefault();
+        signoutUser()
+      };
+    }
+};
 
 backdrop.addEventListener("click", function() {
   mobileNav.classList.remove("open");
